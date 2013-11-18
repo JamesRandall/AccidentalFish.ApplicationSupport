@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<application-configuration>
+  <!-- The system section contains your infrastructure configuration information and your deployment specifc secrets -->
+  <!-- In general these are pulled out into settings files -->
+  <infrastructure>
+    <storage-account>
+      <fqn>com.accidental-fish.application-support.storage</fqn>
+      <connection-string>{{appsupport-storage-connection-string}}</connection-string>
+    </storage-account>
+  </infrastructure>
+  
+  <!-- the components section describes how the application makes use of the infrastructure - in general this should not be edited -->
+  <component fqn="com.accidental-fish.application-support">
+    <storage-account>com.accidental-fish.application-support.storage</storage-account>
+    <settings>
+      <logger-queue resource-type="queue">logger</logger-queue>
+      <realtime-settings-table resource-type="table">realtimesettings</realtime-settings-table>
+    </settings>
+  </component>
+</application-configuration>

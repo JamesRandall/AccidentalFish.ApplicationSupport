@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+  <setting key="appsupport-storage-connection-string">DefaultEndpointsProtocol=https;AccountName=**accountname**;AccountKey=**accountkey**;</setting>
+</settings>
