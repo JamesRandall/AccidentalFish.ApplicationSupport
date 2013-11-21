@@ -125,6 +125,8 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\AbstractHostableComponent.cs" />
+    <Compile Include="Components\ComponentConfiguration.cs" />
+    <Compile Include="Components\IComponentHostConfigurationProvider.cs" />
     <Compile Include="Components\IHostableComponent.cs" />
     <Compile Include="Configuration\ApplicationComponentSetting.cs" />
     <Compile Include="Configuration\ApplicationConfigurationSettings.cs" />
