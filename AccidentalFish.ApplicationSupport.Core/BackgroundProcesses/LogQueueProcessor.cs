@@ -10,26 +10,25 @@ using AccidentalFish.ApplicationSupport.Core.Queues;
 
 namespace AccidentalFish.ApplicationSupport.Core.BackgroundProcesses
 {
-    internal class LogQueueProcessor : AbstractHostableComponent
+    [ComponentIdentity(HostableComponentNames.LogQueueProcessor)]
+    internal class LogQueueProcessor : AbstractApplicationComponent, IHostableComponent
     {
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
         private readonly IAsynchronousQueue<LogQueueItem> _queue;
 
-        public LogQueueProcessor(IApplicationResourceFactory applicationResourceFactory)
+        public LogQueueProcessor(IApplicationResourceFactory applicationResourceFactory, IAsynchronousBackoffPolicy backoffPolicy)
         {
             _queue = applicationResourceFactory.GetLoggerQueue();
-        }
-
-        public LogQueueProcessor(IAsynchronousBackoffPolicy backoffPolicy)
-        {
             _backoffPolicy = backoffPolicy;
         }
 
-        protected override Action<CancellationToken> Activity
+        // TODO: This is a bleed through of the component host not being correct
+        public async Task Start(CancellationToken cancellationToken)
         {
-            get
+            _backoffPolicy.Execute(AttemptDequeue, cancellationToken);
+            while (!cancellationToken.IsCancellationRequested)
             {
-                return (t) =>  _backoffPolicy.Execute(AttemptDequeue, t);
+                await Task.Delay(500, cancellationToken);
             }
         }
 
@@ -54,7 +53,8 @@ namespace AccidentalFish.ApplicationSupport.Core.BackgroundProcesses
             }
 
             // TODO: Spray into table store!
-            return await Task.FromResult(false);
+            backoffResultAction(true);
+            return await Task.FromResult(true);
         }
     }
 }

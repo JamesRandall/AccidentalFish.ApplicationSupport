@@ -3,6 +3,7 @@ using System.Diagnostics;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using CuttingEdge.Conditions;
+using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 {
@@ -83,6 +84,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 
         private LogQueueItem CreateLogQueueItem(LogLevelEnum level, string message, Exception exception)
         {
+            string roleName = "local";
+            string roleId = "local";
+            if (!RoleEnvironment.IsEmulated)
+            {
+                roleId = RoleEnvironment.CurrentRoleInstance.Id;
+                roleName = RoleEnvironment.CurrentRoleInstance.Role.Name;
+            }
+
             return new LogQueueItem
             {
                 ExceptionName = exception != null ? exception.GetType().FullName : null,
@@ -90,6 +99,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
                 Level = level,
                 LoggedAt = DateTimeOffset.UtcNow,
                 Message = message,
+                RoleIdentifier = roleId,
+                RoleName = roleName,
                 Source = _source.FullyQualifiedName,
                 StackTrace = exception != null ? exception.StackTrace : null
             };

@@ -1,27 +1,43 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Threading;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
+using AccidentalFish.ApplicationSupport.Core.Components;
+using AccidentalFish.ApplicationSupport.Core.Logging;
+using AccidentalFish.ApplicationSupport.Core.Runtime;
+using Microsoft.Practices.Unity;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.Storage;
 
 namespace AccidentalFish.Operations.Diagnostics
 {
     public class WorkerRole : RoleEntryPoint
     {
+        private IUnityContainer _container;
         public override void Run()
         {
             // This is a sample worker implementation. Replace with your logic.
-            Trace.TraceInformation("AccidentalFish.Operations.Diagnostics entry point called", "Information");
+
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            ILogger logger = _container.Resolve<ILoggerFactory>().CreateLongLivedLogger(Constants.DiagnosticRole);
+            logger.Information("Starting diagnostic role");
+
+            IComponentHost componentHost = _container.Resolve<IComponentHost>();
+
+            componentHost.Start(new StaticComponentHostConfigurationProvider(new List<ComponentConfiguration>
+            {
+                new ComponentConfiguration
+                {
+                    ComponentIdentity =
+                        new ComponentIdentity(ApplicationSupport.Core.BackgroundProcesses.HostableComponentNames.LogQueueProcessor),
+                    Instances = 2,
+                    RestartEvaluator = (ex, retryCount) => retryCount < 5
+                }
+            }), cancellationTokenSource);
 
             while (true)
             {
                 Thread.Sleep(10000);
-                Trace.TraceInformation("Working", "Information");
+                Trace.TraceInformation("Diagnostic role active");
             }
         }
 
@@ -32,6 +48,11 @@ namespace AccidentalFish.Operations.Diagnostics
 
             // For information on handling configuration changes
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
+
+            _container = new UnityContainer();
+            ApplicationSupport.Core.Bootstrapper.RegisterDependencies(_container);
+            ApplicationSupport.Azure.Bootstrapper.RegisterDependencies(_container);
+            ApplicationSupport.Core.Bootstrapper.RegisterInfrastructure(_container);
 
             return base.OnStart();
         }

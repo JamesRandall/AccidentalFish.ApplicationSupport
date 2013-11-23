@@ -4,5 +4,11 @@
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>
+    <ConfigurationSettings>
+      <Setting name="com.accidental-fish.application-support.storage-account-connection-string" />
+      <Setting name="com.accidental-fish.application-support.setting.logger-queue" />
+      <Setting name="com.accidental-fish.application-support.setting.logger-table" />
+      <Setting name="com.accidental-fish.application-support.setting.realtime-settings-table" />
+    </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

@@ -33,9 +33,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         {
             get
             {
-                return !String.IsNullOrWhiteSpace(DefaultBlobContainerName) ||
-                       !String.IsNullOrWhiteSpace(DefaultQueueName) ||
-                       !String.IsNullOrWhiteSpace(DefaultTableName);
+                return !String.IsNullOrWhiteSpace(StorageAccountConnectionString);
             }
         }
     }

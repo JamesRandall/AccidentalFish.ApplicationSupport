@@ -1,9 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceConfiguration serviceName="AccidentalFish.Operations.Cloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2013-10.2.2">
   <Role name="AccidentalFish.Operations.Diagnostics">
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="com.accidental-fish.application-support.storage-account-connection-string" value="DefaultEndpointsProtocol=https;AccountName=**accountname**;AccountKey=**accountkey**;" />
+      <Setting name="com.accidental-fish.application-support.setting.logger-queue" value="logger" />
+      <Setting name="com.accidental-fish.application-support.setting.logger-table" value="logcomponentdesc" />
+      <Setting name="com.accidental-fish.application-support.setting.realtime-settings-table" value="realtimesettings" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

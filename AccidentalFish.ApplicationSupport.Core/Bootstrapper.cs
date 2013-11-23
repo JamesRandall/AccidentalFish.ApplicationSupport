@@ -1,4 +1,5 @@
 ﻿using System;
+using AccidentalFish.ApplicationSupport.Core.BackgroundProcesses;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Components.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Email;
@@ -9,6 +10,8 @@ using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Policies.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using AccidentalFish.ApplicationSupport.Core.Repository.Implementaton;
+using AccidentalFish.ApplicationSupport.Core.Runtime;
+using AccidentalFish.ApplicationSupport.Core.Runtime.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Threading;
 using AccidentalFish.ApplicationSupport.Core.Threading.Implementation;
 using Microsoft.Practices.Unity;
@@ -51,6 +54,14 @@ namespace AccidentalFish.ApplicationSupport.Core
             container.RegisterType<IApplicationResourceFactory, ApplicationResourceFactory>();
             container.RegisterType<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>();
             container.RegisterType<ILoggerFactory, LoggerFactory>();
+            container.RegisterType<IComponentHost, ComponentHost>();
+
+            container.RegisterInstance(container);
+        }
+
+        public static void RegisterInfrastructure(IUnityContainer container)
+        {
+            container.RegisterType<IHostableComponent, LogQueueProcessor>(HostableComponentNames.LogQueueProcessor);
         }
     }
 }

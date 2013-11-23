@@ -18,6 +18,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging
 
         public string InnerExceptionName { get; set; }
 
+        public string RoleIdentifier { get; set; }
+
+        public string RoleName { get; set; }
+
         public LogLevelEnum Level { get; set; }
 
         public DateTimeOffset LoggedAt { get; set; }

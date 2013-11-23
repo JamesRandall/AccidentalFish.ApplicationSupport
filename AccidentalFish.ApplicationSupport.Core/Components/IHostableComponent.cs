@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Components
@@ -14,11 +15,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         /// <summary>
         /// Starts the component
         /// </summary>
+        /// <param name="token"></param>
         /// <returns>The task the component is running in</returns>
-        Task Start();
-        /// <summary>
-        /// Stop the component
-        /// </summary>
-        void Stop();
+        Task Start(CancellationToken token);
     }
 }

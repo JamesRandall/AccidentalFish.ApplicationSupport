@@ -19,6 +19,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
 
         public string FullyQualifiedName { get { return _fullyQualifiedName; } }
 
+        public override string ToString()
+        {
+            return FullyQualifiedName;
+        }
+
         public override bool Equals(object obj)
         {
             IComponentIdentity other = obj as IComponentIdentity;

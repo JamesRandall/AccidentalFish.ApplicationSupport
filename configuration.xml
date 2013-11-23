@@ -14,6 +14,9 @@
     <storage-account>com.accidental-fish.application-support.storage</storage-account>
     <settings>
       <logger-queue resource-type="queue">logger</logger-queue>
+      <logger-table resource-type="table">logdatedesc</logger-table>
+      <logger-table resource-type="table">logseveritydesc</logger-table>
+      <logger-table resource-type="table">logcomponentdesc</logger-table>
       <realtime-settings-table resource-type="table">realtimesettings</realtime-settings-table>
     </settings>
   </component>

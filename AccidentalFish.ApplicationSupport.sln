@@ -22,13 +22,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.Helpers.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{8C6C23A4-210C-4BE6-9CFA-9A37B5D5D92E}"
 	ProjectSection(SolutionItems) = preProject
+		build-tools.ps1 = build-tools.ps1
 		configuration.xml = configuration.xml
 		deploy-cloud.ps1 = deploy-cloud.ps1
 		deploy-local.ps1 = deploy-local.ps1
+		deploy-private.ps1 = deploy-private.ps1
 		deploy-website.ps1 = deploy-website.ps1
 		deploy.ps1 = deploy.ps1
 		settings-cloud.xml = settings-cloud.xml
 		settings-local.xml = settings-local.xml
+		settings-private.xml = settings-private.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Operations", "Operations", "{F70B2FDC-5E10-4EDF-A9FB-863DDD61DE0E}"
@@ -114,11 +117,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{120C9550-5A83-4E1C-A5B5-1C336E1FCC49} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
+		{A2BAC876-5913-4A98-971B-D398DE9F5562} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
+		{F6A4199C-708E-4B1A-B62E-185AFB1DB51A} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
 		{357C0E62-C3BF-49C5-B93B-EFDD30802CE9} = {F70B2FDC-5E10-4EDF-A9FB-863DDD61DE0E}
 		{1DE725EA-7B9E-418B-90A2-5F22A358721E} = {F70B2FDC-5E10-4EDF-A9FB-863DDD61DE0E}
 		{B1792655-86D2-4A33-903E-475ACC03D112} = {F70B2FDC-5E10-4EDF-A9FB-863DDD61DE0E}
-		{F6A4199C-708E-4B1A-B62E-185AFB1DB51A} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
-		{A2BAC876-5913-4A98-971B-D398DE9F5562} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
-		{120C9550-5A83-4E1C-A5B5-1C336E1FCC49} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
 	EndGlobalSection
 EndGlobal
