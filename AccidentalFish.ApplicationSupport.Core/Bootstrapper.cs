@@ -4,6 +4,7 @@ using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Components.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.Core.Email.Providers;
+using AccidentalFish.ApplicationSupport.Core.InternalMappers;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Policies;
@@ -61,6 +62,7 @@ namespace AccidentalFish.ApplicationSupport.Core
 
         public static void RegisterInfrastructure(IUnityContainer container)
         {
+            container.RegisterType<IMapperFactory, MapperFactory>();
             container.RegisterType<IHostableComponent, LogQueueProcessor>(HostableComponentNames.LogQueueProcessor);
         }
     }

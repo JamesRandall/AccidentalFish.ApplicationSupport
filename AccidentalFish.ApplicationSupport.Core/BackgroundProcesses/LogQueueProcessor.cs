@@ -3,7 +3,10 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.Logging;
+using AccidentalFish.ApplicationSupport.Core.InternalMappers;
+using AccidentalFish.ApplicationSupport.Core.Logging.Model;
+using AccidentalFish.ApplicationSupport.Core.Mappers;
+using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Private;
 using AccidentalFish.ApplicationSupport.Core.Queues;
@@ -14,12 +17,28 @@ namespace AccidentalFish.ApplicationSupport.Core.BackgroundProcesses
     internal class LogQueueProcessor : AbstractApplicationComponent, IHostableComponent
     {
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
+        private readonly IMapperFactory _mapperFactory;
         private readonly IAsynchronousQueue<LogQueueItem> _queue;
+        private readonly IAsynchronousNoSqlRepository<LogTableItem> _bySourceTable;
+        private readonly IAsynchronousNoSqlRepository<LogTableItem> _bySeverityTable;
+        private readonly IAsynchronousNoSqlRepository<LogTableItem> _byDateTable;
 
-        public LogQueueProcessor(IApplicationResourceFactory applicationResourceFactory, IAsynchronousBackoffPolicy backoffPolicy)
+        public LogQueueProcessor(
+            IApplicationResourceFactory applicationResourceFactory,
+            IAsynchronousBackoffPolicy backoffPolicy,
+            IMapperFactory mapperFactory)
         {
             _queue = applicationResourceFactory.GetLoggerQueue();
             _backoffPolicy = backoffPolicy;
+            _mapperFactory = mapperFactory;
+
+            string byDateTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bydate-table");
+            string bySeverityTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-byseverity-table");
+            string bySourceTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bysource-table");
+
+            _bySourceTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySourceTableName, ComponentIdentity);
+            _bySeverityTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySeverityTableName, ComponentIdentity);
+            _byDateTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateTableName, ComponentIdentity);
         }
 
         // TODO: This is a bleed through of the component host not being correct
@@ -52,9 +71,33 @@ namespace AccidentalFish.ApplicationSupport.Core.BackgroundProcesses
                 return await Task.FromResult(false);
             }
 
-            // TODO: Spray into table store!
+            IMapper<LogQueueItem, LogTableItem> mapper = _mapperFactory.GetLogQueueItemLogTableItemMapper();
+
+            LogTableItem bySource = mapper.Map(item);
+            LogTableItem bySeverity = mapper.Map(item);
+            LogTableItem byDate = mapper.Map(item);
+            bySource.SetPartitionAndRowKeyForLogBySource();
+            bySeverity.SetPartitionAndRowKeyForLogBySeverity();
+            byDate.SetPartitionAndRowKeyForLogByDate();
+
+            Task[] tasks = new Task[3];
+            bool success = false;
+            try
+            {
+                tasks[0] = _bySourceTable.InsertAsync(bySource);
+                tasks[1] = _bySeverityTable.InsertAsync(bySeverity);
+                tasks[2] = _byDateTable.InsertAsync(byDate);
+
+                await Task.WhenAll(tasks);
+                success = true;
+            }
+            catch (Exception)
+            {
+                Trace.TraceError("Unable to store items in log");
+            }
+
             backoffResultAction(true);
-            return await Task.FromResult(true);
+            return await Task.FromResult(success);
         }
     }
 }

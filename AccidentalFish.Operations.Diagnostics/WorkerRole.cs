@@ -29,7 +29,7 @@ namespace AccidentalFish.Operations.Diagnostics
                 {
                     ComponentIdentity =
                         new ComponentIdentity(ApplicationSupport.Core.BackgroundProcesses.HostableComponentNames.LogQueueProcessor),
-                    Instances = 2,
+                    Instances = 1,
                     RestartEvaluator = (ex, retryCount) => retryCount < 5
                 }
             }), cancellationTokenSource);

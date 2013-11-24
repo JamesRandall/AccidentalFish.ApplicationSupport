@@ -1,4 +1,5 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Naming;
+﻿using AccidentalFish.ApplicationSupport.Core.Logging.Model;
+using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging

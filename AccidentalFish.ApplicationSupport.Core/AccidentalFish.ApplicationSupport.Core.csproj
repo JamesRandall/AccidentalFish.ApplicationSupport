@@ -130,10 +130,15 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
+    <Compile Include="InternalMappers\IMapperFactory.cs" />
+    <Compile Include="InternalMappers\LogQueueItemLogTableItemMapper.cs" />
+    <Compile Include="InternalMappers\MapperFactory.cs" />
+    <Compile Include="Logging\Model\LogTableItem.cs" />
     <Compile Include="Runtime\IComponentHost.cs" />
     <Compile Include="Runtime\IComponentHostConfigurationProvider.cs" />
     <Compile Include="Components\IHostableComponent.cs" />
     <Compile Include="Runtime\Implementation\ComponentHost.cs" />
+    <Compile Include="Runtime\IRuntimeEnvironment.cs" />
     <Compile Include="Runtime\StaticComponentHostConfigurationProvider.cs" />
     <Compile Include="Configuration\ApplicationComponentSetting.cs" />
     <Compile Include="Configuration\ApplicationConfigurationSettings.cs" />
@@ -164,7 +169,7 @@
     <Compile Include="Logging\Implementation\Logger.cs" />
     <Compile Include="Logging\Implementation\LoggerFactory.cs" />
     <Compile Include="Logging\LoggerSource.cs" />
-    <Compile Include="Logging\LogQueueItem.cs" />
+    <Compile Include="Logging\Model\LogQueueItem.cs" />
     <Compile Include="Mappers\AbstractMapper.cs" />
     <Compile Include="Mappers\AbstractMapperWithContext.cs" />
     <Compile Include="Mappers\IMapper.cs" />

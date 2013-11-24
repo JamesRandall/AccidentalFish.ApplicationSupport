@@ -95,7 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AccidentalFish.Operations.Web\AccidentalFish.Operations.Web.csproj">
-      <Project>{357C0E62-C3BF-49C5-B93B-EFDD30802CE9}</Project>
+      <Project>{76061fd8-6acb-412f-8a62-1951b1941d8e}</Project>
       <Name>AccidentalFish.Operations.Web</Name>
     </ProjectReference>
   </ItemGroup>

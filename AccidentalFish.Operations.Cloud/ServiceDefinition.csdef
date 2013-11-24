@@ -7,8 +7,13 @@
     <ConfigurationSettings>
       <Setting name="com.accidental-fish.application-support.storage-account-connection-string" />
       <Setting name="com.accidental-fish.application-support.setting.logger-queue" />
-      <Setting name="com.accidental-fish.application-support.setting.logger-table" />
       <Setting name="com.accidental-fish.application-support.setting.realtime-settings-table" />
+      <Setting name="com.accidentalfish.log-queue-processor.storage-account-connection-string" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-queue" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bydate-table" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-byseverity-table" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bysource-table" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.realtime-settings-table" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

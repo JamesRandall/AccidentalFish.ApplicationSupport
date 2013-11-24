@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
+using AccidentalFish.ApplicationSupport.Core.Runtime;
 using CuttingEdge.Conditions;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
@@ -9,14 +11,20 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 {
     internal class Logger : ILogger
     {
+        private readonly IRuntimeEnvironment _runtimeEnvironment;
         private readonly IAsynchronousQueue<LogQueueItem> _queue;
         private readonly IFullyQualifiedName _source;
         private readonly LogLevelEnum _minimumLoggingLevel;
 
-        public Logger(IAsynchronousQueue<LogQueueItem> queue, IFullyQualifiedName source, LogLevelEnum minimumLoggingLevel)
+        public Logger(
+            IRuntimeEnvironment runtimeEnvironment,
+            IAsynchronousQueue<LogQueueItem> queue,
+            IFullyQualifiedName source,
+            LogLevelEnum minimumLoggingLevel)
         {
             Condition.Requires(queue).IsNotNull();
             Condition.Requires(source).IsNotNull();
+            _runtimeEnvironment = runtimeEnvironment;
             _queue = queue;
             _source = source;
             _minimumLoggingLevel = minimumLoggingLevel;
@@ -84,14 +92,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 
         private LogQueueItem CreateLogQueueItem(LogLevelEnum level, string message, Exception exception)
         {
-            string roleName = "local";
-            string roleId = "local";
-            if (!RoleEnvironment.IsEmulated)
-            {
-                roleId = RoleEnvironment.CurrentRoleInstance.Id;
-                roleName = RoleEnvironment.CurrentRoleInstance.Role.Name;
-            }
-
             return new LogQueueItem
             {
                 ExceptionName = exception != null ? exception.GetType().FullName : null,
@@ -99,8 +99,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
                 Level = level,
                 LoggedAt = DateTimeOffset.UtcNow,
                 Message = message,
-                RoleIdentifier = roleId,
-                RoleName = roleName,
+                RoleIdentifier = _runtimeEnvironment.RoleIdentifier,
+                RoleName = _runtimeEnvironment.RoleName,
                 Source = _source.FullyQualifiedName,
                 StackTrace = exception != null ? exception.StackTrace : null
             };

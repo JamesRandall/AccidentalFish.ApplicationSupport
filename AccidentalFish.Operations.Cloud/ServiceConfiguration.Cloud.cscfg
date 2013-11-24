@@ -4,10 +4,15 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
-      <Setting name="com.accidental-fish.application-support.storage-account-connection-string" value="DefaultEndpointsProtocol=https;AccountName=**accountname**;AccountKey=**accountkey**;" />
+      <Setting name="com.accidental-fish.application-support.storage-account-connection-string" value="UseDevelopmentStorage=true;" />
       <Setting name="com.accidental-fish.application-support.setting.logger-queue" value="logger" />
-      <Setting name="com.accidental-fish.application-support.setting.logger-table" value="logcomponentdesc" />
       <Setting name="com.accidental-fish.application-support.setting.realtime-settings-table" value="realtimesettings" />
+      <Setting name="com.accidentalfish.log-queue-processor.storage-account-connection-string" value="UseDevelopmentStorage=true;" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-queue" value="logger" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bydate-table" value="logbydatedesc" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-byseverity-table" value="logbyseverity" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bysource-table" value="logbysource" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.realtime-settings-table" value="realtimesettings" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

@@ -3,11 +3,13 @@ using AccidentalFish.ApplicationSupport.Azure.Blobs;
 using AccidentalFish.ApplicationSupport.Azure.NoSql;
 using AccidentalFish.ApplicationSupport.Azure.Policies;
 using AccidentalFish.ApplicationSupport.Azure.Queues;
+using AccidentalFish.ApplicationSupport.Azure.Runtime;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
+using AccidentalFish.ApplicationSupport.Core.Runtime;
 using Microsoft.Practices.Unity;
 
 namespace AccidentalFish.ApplicationSupport.Azure
@@ -26,6 +28,9 @@ namespace AccidentalFish.ApplicationSupport.Azure
 
             // policies            
             container.RegisterType<IRetryPolicy, ServiceBusRetryPolicy>(RetryPolicyType.Queue);
+
+            // runtime
+            container.RegisterType<IRuntimeEnvironment, RuntimeEnvironment>();
             
             // repositories and data storage
             container.RegisterType<IQueueFactory, QueueFactory>();

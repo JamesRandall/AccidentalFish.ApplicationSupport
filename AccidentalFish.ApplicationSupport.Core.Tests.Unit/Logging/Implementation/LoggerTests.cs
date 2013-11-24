@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Implementation;
+using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
+using AccidentalFish.ApplicationSupport.Core.Runtime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -17,12 +19,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
     {
         private Mock<IAsynchronousQueue<LogQueueItem>> _queue;
         private Mock<IFullyQualifiedName> _source;
+        private Mock<IRuntimeEnvironment> _runtimeEnvironment;
 
         [TestInitialize]
         public void Setup()
         {
             _queue = new Mock<IAsynchronousQueue<LogQueueItem>>();
             _source = new Mock<IFullyQualifiedName>();
+            _runtimeEnvironment = new Mock<IRuntimeEnvironment>();
             _source.SetupGet(x => x.FullyQualifiedName).Returns("a.name");
         }
 
@@ -30,7 +34,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
         public void DebugLogsWhenLogLevelAtDebug()
         {
             // Arrange
-            Logger logger = new Logger(_queue.Object, _source.Object, LogLevelEnum.Debug);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, LogLevelEnum.Debug);
 
             // Act
             logger.Debug("a message");
@@ -43,7 +47,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
         public void DebugDoesNotLogWhenLogLevelAtInformation()
         {
             // Arrange
-            Logger logger = new Logger(_queue.Object, _source.Object, LogLevelEnum.Information);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, LogLevelEnum.Information);
 
             // Act
             logger.Debug("a message");
@@ -56,7 +60,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
         public void InformationLogsWhenLogLevelAtInformation()
         {
             // Arrange
-            Logger logger = new Logger(_queue.Object, _source.Object, LogLevelEnum.Information);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, LogLevelEnum.Information);
 
             // Act
             logger.Information("a message");
@@ -69,7 +73,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
         public void InformationDoesNotLogWhenLogLevelAtWarning()
         {
             // Arrange
-            Logger logger = new Logger(_queue.Object, _source.Object, LogLevelEnum.Warning);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, LogLevelEnum.Warning);
 
             // Act
             logger.Information("a message");
@@ -82,7 +86,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
         public void WarningLogsWhenLogLevelAtWarning()
         {
             // Arrange
-            Logger logger = new Logger(_queue.Object, _source.Object, LogLevelEnum.Warning);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, LogLevelEnum.Warning);
 
             // Act
             logger.Warning("a message");
@@ -95,7 +99,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
         public void WarningDoesNotLogWhenLogLevelAtError()
         {
             // Arrange
-            Logger logger = new Logger(_queue.Object, _source.Object, LogLevelEnum.Error);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, LogLevelEnum.Error);
 
             // Act
             logger.Warning("a message");
@@ -108,7 +112,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
         public void ErrorLogsWhenLogLevelAtError()
         {
             // Arrange
-            Logger logger = new Logger(_queue.Object, _source.Object, LogLevelEnum.Error);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, LogLevelEnum.Error);
 
             // Act
             logger.Error("a message");
@@ -123,7 +127,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
             // Arrange
             LogQueueItem result = null;
             _queue.Setup(x => x.EnqueueAsync(It.IsAny<LogQueueItem>())).Callback<LogQueueItem>(p => result = p);
-            Logger logger = new Logger(_queue.Object, _source.Object, LogLevelEnum.Debug);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, LogLevelEnum.Debug);
             DateTimeOffset baseline = DateTimeOffset.UtcNow;
 
             // Act
