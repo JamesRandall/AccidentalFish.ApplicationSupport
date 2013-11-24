@@ -110,3 +110,4 @@ UpgradeLog*.XML
 # Private files
 deploy-private.ps1
 settings-private.xml
+AccidentalFish.Operations.Web/App_Data
