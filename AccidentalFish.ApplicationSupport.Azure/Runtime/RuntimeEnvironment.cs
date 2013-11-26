@@ -14,7 +14,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Runtime
         {
             get
             {
-                return IsEmulated ? "local" : RoleEnvironment.CurrentRoleInstance.Role.Name;
+                try
+                {
+                    return RoleEnvironment.CurrentRoleInstance.Role.Name;
+                }
+                catch (Exception)
+                {
+                    return "local";
+                }
             }
         }
 
@@ -22,22 +29,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Runtime
         {
             get
             {
-                return IsEmulated ? "local" : RoleEnvironment.CurrentRoleInstance.Id;
-            }
-        }
-
-        private bool IsEmulated
-        {
-            get
-            {
                 try
                 {
-                    return RoleEnvironment.IsEmulated;
+                    return RoleEnvironment.CurrentRoleInstance.Id;
                 }
                 catch (Exception)
                 {
-                    // unit tests will raise an exception as there is no role environment at all
-                    return false;
+                    return "local";
                 }
             }
         }
