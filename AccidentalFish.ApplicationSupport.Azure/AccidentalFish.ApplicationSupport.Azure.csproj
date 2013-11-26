@@ -122,7 +122,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzureStorageAsyncExtensions.cs" />
     <Compile Include="Blobs\AsynchronousBlockBlobRepository.cs" />
     <Compile Include="Blobs\BlobRepositoryFactory.cs" />
     <Compile Include="Blobs\BlockBlob.cs" />

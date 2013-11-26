@@ -1,10 +1,9 @@
-﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Components;
+﻿using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Naming;
-using AccidentalFish.ApplicationSupport.Core.Private;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
+using AccidentalFish.ApplicationSupport.Private;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 {

@@ -1,4 +1,5 @@
-﻿namespace AccidentalFish.ApplicationSupport.Core.Private
+﻿// ReSharper disable once CheckNamespace
+namespace AccidentalFish.ApplicationSupport.Private
 {
     internal class Constants
     {

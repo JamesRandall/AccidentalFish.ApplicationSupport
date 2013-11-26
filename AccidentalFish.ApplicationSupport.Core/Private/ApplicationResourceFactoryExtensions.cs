@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.Logging;
+﻿using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 
-namespace AccidentalFish.ApplicationSupport.Core.Private
+// ReSharper disable once CheckNamespace
+namespace AccidentalFish.ApplicationSupport.Private
 {
     internal static class ApplicationResourceFactoryExtensions
     {

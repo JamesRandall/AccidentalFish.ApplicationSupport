@@ -189,6 +189,16 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.csproj">
+      <Project>{f4f8b4b5-4519-4669-8d30-cd7866cc6b33}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj">
+      <Project>{578e1681-f5f4-4cba-bec3-7f1d8a765254}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

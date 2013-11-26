@@ -122,17 +122,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundProcesses\HostableComponentNames.cs" />
-    <Compile Include="BackgroundProcesses\LogQueueProcessor.cs" />
     <Compile Include="Blobs\IAsynchronousBlockBlobRepository.cs" />
     <Compile Include="Blobs\IBlob.cs" />
     <Compile Include="Blobs\IBlobRepositoryFactory.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
-    <Compile Include="InternalMappers\IMapperFactory.cs" />
-    <Compile Include="InternalMappers\LogQueueItemLogTableItemMapper.cs" />
-    <Compile Include="InternalMappers\MapperFactory.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />
     <Compile Include="Runtime\IComponentHost.cs" />
     <Compile Include="Runtime\IComponentHostConfigurationProvider.cs" />

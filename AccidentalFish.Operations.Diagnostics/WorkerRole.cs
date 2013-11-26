@@ -28,7 +28,7 @@ namespace AccidentalFish.Operations.Diagnostics
                 new ComponentConfiguration
                 {
                     ComponentIdentity =
-                        new ComponentIdentity(ApplicationSupport.Core.BackgroundProcesses.HostableComponentNames.LogQueueProcessor),
+                        new ComponentIdentity(ApplicationSupport.Processes.HostableComponentNames.LogQueueProcessor),
                     Instances = 1,
                     RestartEvaluator = (ex, retryCount) => retryCount < 5
                 }
@@ -52,7 +52,7 @@ namespace AccidentalFish.Operations.Diagnostics
             _container = new UnityContainer();
             ApplicationSupport.Core.Bootstrapper.RegisterDependencies(_container);
             ApplicationSupport.Azure.Bootstrapper.RegisterDependencies(_container);
-            ApplicationSupport.Core.Bootstrapper.RegisterInfrastructure(_container);
+            ApplicationSupport.Processes.Bootstrapper.RegistgerDependencies(_container);
 
             return base.OnStart();
         }

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Core.Logging;
+﻿using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Mappers;
 
-namespace AccidentalFish.ApplicationSupport.Core.InternalMappers
+namespace AccidentalFish.ApplicationSupport.Processes.Mappers
 {
     internal class LogQueueItemLogTableItemMapper : AbstractMapper<LogQueueItem, LogTableItem>
     {

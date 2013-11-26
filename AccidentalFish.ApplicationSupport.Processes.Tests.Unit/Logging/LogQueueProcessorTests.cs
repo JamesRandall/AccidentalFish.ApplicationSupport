@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.InternalMappers;
-using AccidentalFish.ApplicationSupport.Core.Naming;
+﻿using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Policies;
+using AccidentalFish.ApplicationSupport.Processes.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.BackgroundProcesses
+namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
 {
     [TestClass]
     public class LogQueueProcessorTests

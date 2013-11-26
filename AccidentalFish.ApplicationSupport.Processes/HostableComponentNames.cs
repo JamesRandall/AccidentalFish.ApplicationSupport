@@ -1,4 +1,4 @@
-﻿namespace AccidentalFish.ApplicationSupport.Core.BackgroundProcesses
+﻿namespace AccidentalFish.ApplicationSupport.Processes
 {
     public static class HostableComponentNames
     {

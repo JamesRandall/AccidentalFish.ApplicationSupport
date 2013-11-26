@@ -1,10 +1,8 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Core.BackgroundProcesses;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Components.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.Core.Email.Providers;
-using AccidentalFish.ApplicationSupport.Core.InternalMappers;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Policies;
@@ -19,6 +17,11 @@ using Microsoft.Practices.Unity;
 
 namespace AccidentalFish.ApplicationSupport.Core
 {
+    /// <summary>
+    /// Registers infrastructure and dependencies with a unity container
+    /// Note that this generally is coupled with the bootstrapper found in the assembly
+    /// AccidentalFish.ApplicationSupport.Azure that provides Azure specific implementations.
+    /// </summary>
     public static class Bootstrapper
     {
         public static void RegisterDependencies(IUnityContainer container)
@@ -58,12 +61,6 @@ namespace AccidentalFish.ApplicationSupport.Core
             container.RegisterType<IComponentHost, ComponentHost>();
 
             container.RegisterInstance(container);
-        }
-
-        public static void RegisterInfrastructure(IUnityContainer container)
-        {
-            container.RegisterType<IMapperFactory, MapperFactory>();
-            container.RegisterType<IHostableComponent, LogQueueProcessor>(HostableComponentNames.LogQueueProcessor);
         }
     }
 }

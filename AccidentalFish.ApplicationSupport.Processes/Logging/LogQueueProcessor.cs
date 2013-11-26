@@ -3,15 +3,15 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.InternalMappers;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Mappers;
 using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.ApplicationSupport.Core.Policies;
-using AccidentalFish.ApplicationSupport.Core.Private;
 using AccidentalFish.ApplicationSupport.Core.Queues;
+using AccidentalFish.ApplicationSupport.Private;
+using AccidentalFish.ApplicationSupport.Processes.Mappers;
 
-namespace AccidentalFish.ApplicationSupport.Core.BackgroundProcesses
+namespace AccidentalFish.ApplicationSupport.Processes.Logging
 {
     [ComponentIdentity(HostableComponentNames.LogQueueProcessor)]
     internal class LogQueueProcessor : AbstractApplicationComponent, IHostableComponent

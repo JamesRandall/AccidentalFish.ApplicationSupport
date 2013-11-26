@@ -1,7 +1,7 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Mappers;
 
-namespace AccidentalFish.ApplicationSupport.Core.InternalMappers
+namespace AccidentalFish.ApplicationSupport.Processes.Mappers
 {
     internal class MapperFactory : IMapperFactory
     {

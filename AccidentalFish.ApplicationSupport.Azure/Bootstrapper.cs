@@ -14,6 +14,9 @@ using Microsoft.Practices.Unity;
 
 namespace AccidentalFish.ApplicationSupport.Azure
 {
+    /// <summary>
+    /// Registers Azure specific implementations of interfaces exposed by AccidentalFish.ApplicationSupport.Core
+    /// </summary>
     public static class Bootstrapper
     {
         public static void RegisterDependencies(IUnityContainer container)

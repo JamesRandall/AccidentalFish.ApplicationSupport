@@ -29,7 +29,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Providers
             Message message = new Message(subject, bodyContent);
             SendEmailRequest request = new SendEmailRequest(from, destination, message);
             SendEmailResponse response = client.SendEmail(request);
-            return response.SendEmailResult.MessageId;
+            return response.MessageId;
         }
     }
 }
