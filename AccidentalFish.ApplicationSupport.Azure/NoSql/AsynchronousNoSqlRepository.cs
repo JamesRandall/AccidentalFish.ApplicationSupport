@@ -70,7 +70,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 
         public Task<T> GetAsync(string partitionKey, string rowKey)
         {
-            return Task.Factory.StartNew(() =>
+            return Task.Run(() =>
             {
                 TableOperation operation = TableOperation.Retrieve<T>(partitionKey, rowKey);
                 TableResult result = _table.Execute(operation);
@@ -80,7 +80,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 
         public Task<IEnumerable<T>> GetAsync(string partitionKey)
         {
-            return Task.Factory.StartNew(() =>
+            return Task.Run(() =>
             {
                 TableQuery<T> query =
                     new TableQuery<T>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal,
@@ -91,7 +91,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 
         public Task<IEnumerable<T>> GetAsync(string partitionKey, int take)
         {
-            return Task.Factory.StartNew(() =>
+            return Task.Run(() =>
             {
                 TableQuery<T> query =
                     new TableQuery<T>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal,
@@ -147,7 +147,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             while (querySegment == null || querySegment.ContinuationToken != null)
             {
                 querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
-                action(querySegment.Results);
+                action(new List<T>(querySegment.Results));
             }
         }
 

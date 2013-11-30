@@ -25,15 +25,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
             client.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
             _container = client.GetContainerReference(containerName);
 
-            _endpoint = String.Format("{0}/{1}", client.BaseUri, containerName);
+            _endpoint = String.Format("{0}{1}", client.BaseUri, containerName);
         }
 
         public Task<IBlob> UploadAsync(string name, Stream stream)
         {
-            return Task.Factory.StartNew<IBlob>(() =>
+            return Task.Run<IBlob>(() =>
             {
                 CloudBlockBlob blob = _container.GetBlockBlobReference(name);
-                //blob.UploadFromStreamAsync(stream);
                 blob.UploadFromStream(stream);
                 return new BlockBlob(blob);
             });

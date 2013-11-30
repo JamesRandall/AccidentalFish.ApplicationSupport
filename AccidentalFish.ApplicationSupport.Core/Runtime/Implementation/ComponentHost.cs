@@ -22,18 +22,20 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
             _logger = loggerFactory.CreateLongLivedLogger(ComponentIdentity);
         }
 
-        public async void Start(IComponentHostConfigurationProvider configurationProvider, CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<Task>> Start(IComponentHostConfigurationProvider configurationProvider, CancellationTokenSource cancellationTokenSource)
         {
             IEnumerable<ComponentConfiguration> componentConfigurations = await configurationProvider.GetConfiguration();
             _cancellationTokenSource = cancellationTokenSource;
+            List<Task> tasks = new List<Task>();
             foreach (ComponentConfiguration componentConfiguration in componentConfigurations)
             {
                 _logger.Information(String.Format("Starting {0} instances of {1}", componentConfiguration.Instances, componentConfiguration.ComponentIdentity));
                 for (int instance = 0; instance < componentConfiguration.Instances; instance++)
                 {
-                    StartTask(componentConfiguration.ComponentIdentity, componentConfiguration.RestartEvaluator);
+                    tasks.Add(StartTask(componentConfiguration.ComponentIdentity, componentConfiguration.RestartEvaluator));
                 }
             }
+            return tasks;
         }
 
         public void Stop()
@@ -42,9 +44,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
         }
 
         // TODO: Needs attention as this isn't right yet - too tired!
-        private void StartTask(IComponentIdentity componentIdentity, Func<Exception, int, bool> restartEvaluator)
+        private Task StartTask(IComponentIdentity componentIdentity, Func<Exception, int, bool> restartEvaluator)
         {
-            Task.Factory.StartNew(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 int retryCount = 0;
                 bool shouldRetry = true;
@@ -52,12 +54,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                 {
                     try
                     {
-                        await Task.Factory.StartNew(async () =>
+                        Task.Factory.StartNew(() =>
                         {
                             IHostableComponent component = _unityContainer.Resolve<IHostableComponent>(componentIdentity.ToString());
-                            await component.Start(_cancellationTokenSource.Token);
+                            component.Start(_cancellationTokenSource.Token).Wait();
+                            shouldRetry = false; // normal exit
                             _logger.Information(String.Format("Component {0} is exiting", componentIdentity));
-                        }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+                        }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Wait();
                     }
                     catch (Exception ex)
                     {

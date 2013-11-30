@@ -1,11 +1,12 @@
 ﻿using System.Threading;
-using AccidentalFish.ApplicationSupport.Core.Components;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Runtime
 {
     public interface IComponentHost
     {
-        void Start(IComponentHostConfigurationProvider configurationProvider, CancellationTokenSource cancellationTokenSource);
+        Task<IEnumerable<Task>> Start(IComponentHostConfigurationProvider configurationProvider, CancellationTokenSource cancellationTokenSource);
 
         void Stop();
     }
