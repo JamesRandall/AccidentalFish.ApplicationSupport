@@ -129,5 +129,31 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             }
             return results;
         }
+
+        public async Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action)
+        {
+            TableQuery<T> query;
+            if (!String.IsNullOrWhiteSpace(column))
+            {
+                query = new TableQuery<T>().Where(TableQuery.GenerateFilterCondition(column, QueryComparisons.Equal, value));
+            }
+            else
+            {
+                query = new TableQuery<T>();
+            }
+            
+            TableQuerySegment<T> querySegment = null;
+
+            while (querySegment == null || querySegment.ContinuationToken != null)
+            {
+                querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
+                action(querySegment.Results);
+            }
+        }
+
+        public Task AllActionAsync(Action<IEnumerable<T>> action)
+        {
+            return QueryActionAsync(null, null, action);
+        }
     }
 }
