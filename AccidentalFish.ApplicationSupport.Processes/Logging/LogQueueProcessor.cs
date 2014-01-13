@@ -63,13 +63,15 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             }            
         }
 
-        private async Task<bool> ProcessItem(LogQueueItem item, Action<bool> backoffResultAction)
+        private async Task<bool> ProcessItem(IQueueItem<LogQueueItem> queueItem, Action<bool> backoffResultAction)
         {
-            if (item == null)
+            if (queueItem == null)
             {
                 backoffResultAction(false);
                 return await Task.FromResult(false);
             }
+
+            LogQueueItem item = queueItem.Item;
 
             IMapper<LogQueueItem, LogTableItem> mapper = _mapperFactory.GetLogQueueItemLogTableItemMapper();
 

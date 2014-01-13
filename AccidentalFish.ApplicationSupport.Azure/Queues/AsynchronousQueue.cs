@@ -46,13 +46,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             }
         }
 
-        public async Task DequeueAsync(Func<T, Task<bool>> processor)
+        public async Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor)
         {
             CloudQueueMessage message = await _queue.GetMessageAsync();
             if (message != null)
             {
                 T item = _serializer.Deserialize(message.AsString);
-                if (await processor(item))
+                if (await processor(new QueueItem<T>(item, message.DequeueCount)))
                 {
                     await _queue.DeleteMessageAsync(message);
                 }
@@ -63,12 +63,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             }
         }
 
-        public void Dequeue(Func<T, bool> success, Action<Exception> failure)
+        public void Dequeue(Func<IQueueItem<T>, bool> success, Action<Exception> failure)
         {
             Dequeue(success, null, failure);
         }
         
-        public async void Dequeue(Func<T, bool> success, Action noMessageAction, Action<Exception> failure)
+        public async void Dequeue(Func<IQueueItem<T>, bool> success, Action noMessageAction, Action<Exception> failure)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 if (message != null)
                 {
                     T item = _serializer.Deserialize(message.AsString);
-                    if (success(item))
+                    if (success(new QueueItem<T>(item, message.DequeueCount)))
                     {
                         await _queue.DeleteMessageAsync(message);
                     }

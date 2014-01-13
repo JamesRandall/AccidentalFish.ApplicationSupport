@@ -129,6 +129,7 @@
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />
+    <Compile Include="Queues\IQueueItem.cs" />
     <Compile Include="Runtime\IComponentHost.cs" />
     <Compile Include="Runtime\IComponentHostConfigurationProvider.cs" />
     <Compile Include="Components\IHostableComponent.cs" />

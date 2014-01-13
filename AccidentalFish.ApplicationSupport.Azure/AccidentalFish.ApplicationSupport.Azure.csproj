@@ -138,6 +138,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queues\AsynchronousQueue.cs" />
     <Compile Include="Queues\QueueFactory.cs" />
+    <Compile Include="Queues\QueueItem.cs" />
     <Compile Include="Queues\QueueSerializer.cs" />
     <Compile Include="Runtime\RuntimeEnvironment.cs" />
   </ItemGroup>
