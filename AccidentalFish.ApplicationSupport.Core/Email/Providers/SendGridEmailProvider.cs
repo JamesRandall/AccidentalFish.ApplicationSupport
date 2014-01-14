@@ -2,23 +2,25 @@
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using AccidentalFish.ApplicationSupport.Core.Configuration;
+using AccidentalFish.ApplicationSupport.Core.Components;
 using CuttingEdge.Conditions;
 using SendGrid;
 using SendGrid.Transport;
 
 namespace AccidentalFish.ApplicationSupport.Core.Email.Providers
 {
-    internal class SendGridEmailProvider : IEmailProvider
+    [ComponentIdentity(FullyQualifiedName)]
+    internal class SendGridEmailProvider : AbstractApplicationComponent, IEmailProvider
     {
+        public const string FullyQualifiedName = "com.accidentalfish.sendgrid";
         private readonly string _sendgridUsername;
         private readonly string _sendgridPassword;
 
-        public SendGridEmailProvider(IConfiguration configuration)
+        public SendGridEmailProvider(IApplicationResourceFactory applicationResourceFactory)
         {
-            Condition.Requires(configuration).IsNotNull();
-            _sendgridUsername = configuration["sendgrid-username"];
-            _sendgridPassword = configuration["sendgrid-password"];
+            Condition.Requires(applicationResourceFactory).IsNotNull();
+            _sendgridUsername = applicationResourceFactory.Setting(ComponentIdentity, "username");
+            _sendgridPassword = applicationResourceFactory.Setting(ComponentIdentity, "password");
         }
 
         public string Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string title, string body)

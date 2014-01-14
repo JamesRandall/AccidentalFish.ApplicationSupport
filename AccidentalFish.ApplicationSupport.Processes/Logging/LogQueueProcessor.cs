@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Components;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Mappers;
 using AccidentalFish.ApplicationSupport.Core.NoSql;
@@ -18,6 +20,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
     {
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
         private readonly IMapperFactory _mapperFactory;
+        private readonly IAlertSender _alertSender;
         private readonly IAsynchronousQueue<LogQueueItem> _queue;
         private readonly IAsynchronousNoSqlRepository<LogTableItem> _bySourceTable;
         private readonly IAsynchronousNoSqlRepository<LogTableItem> _bySeverityTable;
@@ -26,11 +29,13 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
         public LogQueueProcessor(
             IApplicationResourceFactory applicationResourceFactory,
             IAsynchronousBackoffPolicy backoffPolicy,
-            IMapperFactory mapperFactory)
+            IMapperFactory mapperFactory,
+            IAlertSender alertSender)
         {
             _queue = applicationResourceFactory.GetLoggerQueue();
             _backoffPolicy = backoffPolicy;
             _mapperFactory = mapperFactory;
+            _alertSender = alertSender;
 
             string byDateTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bydate-table");
             string bySeverityTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-byseverity-table");
@@ -72,6 +77,10 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             }
 
             LogQueueItem item = queueItem.Item;
+            if (item.Level == LogLevelEnum.Error)
+            {
+                _alertSender.Send(String.Format("SYSTEM ERROR: {0}", item.Source), item.Message);
+            }
 
             IMapper<LogQueueItem, LogTableItem> mapper = _mapperFactory.GetLogQueueItemLogTableItemMapper();
 

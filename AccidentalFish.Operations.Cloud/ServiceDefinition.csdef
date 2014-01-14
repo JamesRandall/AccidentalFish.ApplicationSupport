@@ -14,6 +14,11 @@
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-byseverity-table" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bysource-table" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.realtime-settings-table" />
+      <Setting name="com.accidentalfish.alert-sender.storage-account-connection-string" />
+      <Setting name="com.accidentalfish.alert-sender.default-table-name" />
+      <Setting name="com.accidentalfish.sendgrid.setting.username" />
+      <Setting name="com.accidentalfish.sendgrid.setting.password" />
+      <Setting name="com.accidentalfish.alert-sender.setting.alert-from" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

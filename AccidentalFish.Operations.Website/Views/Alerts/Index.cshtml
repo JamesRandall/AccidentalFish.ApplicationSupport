@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<h2>Alert Subscribers</h2>
+<div id="grid"></div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#grid").simplePagingGrid({
+                columnNames: ["", "Email", "Alert"],
+                columnKeys: [null, "email", "mobile"],
+                columnWidths: ["0%", "60%", "40%"],
+                cellTemplates: [
+                    '<span class="glyphicon glyphicon-trash"></span>',
+                    '<a href="#">{{email}}</a>',
+                    null
+                ],
+                data: [
+                    { "email": "Pineapple", "mobile": 1.50 },
+                    { "email": "Banana", "mobile": 0.30 }
+                ]
+            });
+        });
+    </script>   
+}

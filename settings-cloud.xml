@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
   <setting key="appsupport-storage-connection-string">DefaultEndpointsProtocol=https;AccountName=**accountname**;AccountKey=**accountkey**;</setting>
+  <setting key="sendgrid-username">username</setting>
+  <setting key="sendgrid-password">password</setting>
+  <setting key="alert-source-email-address">your@email.address</setting>
 </settings>

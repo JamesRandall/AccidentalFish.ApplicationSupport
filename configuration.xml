@@ -27,4 +27,17 @@
       <realtime-settings-table resource-type="table">realtimesettings</realtime-settings-table>
     </settings>
   </component>
+  <component fqn="com.accidentalfish.alert-sender">
+    <storage-account>com.accidental-fish.application-support.storage</storage-account>
+    <default-table-name>alertsubscribers</default-table-name>
+    <settings>
+      <alert-from>{{alert-source-email-address}}</alert-from>
+    </settings>
+  </component>
+  <component fqn="com.accidentalfish.sendgrid">
+    <settings>
+      <username>{{sendgrid-username}}</username>
+      <password>{{sendgrid-password}}</password>
+    </settings>
+  </component>
 </application-configuration>

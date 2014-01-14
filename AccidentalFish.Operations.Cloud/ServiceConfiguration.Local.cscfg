@@ -13,6 +13,11 @@
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-byseverity-table" value="logbyseverity" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bysource-table" value="logbysource" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.realtime-settings-table" value="realtimesettings" />
+      <Setting name="com.accidentalfish.alert-sender.storage-account-connection-string" value="DefaultEndpointsProtocol=https;AccountName=applicationsupport;AccountKey=WBl9a7vwjSz1uUeE0l2U/5/X2AMrmz+w3dNZCdoOMbb9AyfxtMLjL/6ru/yLQTM0d1uZldZ4TIkL7XGUSCePlQ==;" />
+      <Setting name="com.accidentalfish.alert-sender.default-table-name" value="alertsubscribers" />
+      <Setting name="com.accidentalfish.sendgrid.setting.username" value="capnkroaker" />
+      <Setting name="com.accidentalfish.sendgrid.setting.password" value="mV3gAxFrHbdWhnwP6Cse" />
+      <Setting name="com.accidentalfish.alert-sender.setting.alert-from" value="james@accidentalfish.com" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

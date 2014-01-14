@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
@@ -7,8 +8,10 @@ using CuttingEdge.Conditions;
 
 namespace AccidentalFish.ApplicationSupport.Core.Email.Providers
 {
-    class AmazonSimpleEmailProvider : IEmailProvider
+
+    class AmazonSimpleEmailProvider : AbstractApplicationComponent, IEmailProvider
     {
+        public const string FullyQualifiedName = "";
         private readonly string _accessKey;
         private readonly string _secretKey;
 

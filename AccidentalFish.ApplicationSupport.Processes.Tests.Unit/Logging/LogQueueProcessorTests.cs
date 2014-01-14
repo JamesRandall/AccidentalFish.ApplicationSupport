@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Policies;
@@ -16,22 +17,22 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
         private Mock<IApplicationResourceFactory> _applicationResourceFactory;
         private Mock<IAsynchronousBackoffPolicy> _asynchronousBackoffPolicy;
         private Mock<IMapperFactory> _mapperFactory;
+        private Mock<IAlertSender> _alertSender;
 
         [TestInitialize]
         public void Setup()
         {
             _applicationResourceFactory = new Mock<IApplicationResourceFactory>();
             _asynchronousBackoffPolicy = new Mock<IAsynchronousBackoffPolicy>();
+            _alertSender = new Mock<IAlertSender>();
             _mapperFactory = new Mock<IMapperFactory>();
-
-
         }
 
         [TestMethod]
         public void ConstructorSucceeds()
         {
             // Act
-            new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object);
+            new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object, _alertSender.Object);
         }
 
         [TestMethod]
@@ -39,7 +40,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
         {
             // Arrange
             CancellationTokenSource source = new CancellationTokenSource();
-            LogQueueProcessor processor = new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object);
+            LogQueueProcessor processor = new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object, _alertSender.Object);
 
             // Act
             processor.Start(source.Token);
@@ -58,7 +59,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
                     action()
                 });
             CancellationTokenSource source = new CancellationTokenSource();
-            LogQueueProcessor processor = new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object);
+            LogQueueProcessor processor = new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object, _alertSender.Object);
 
             // Act
             processor.Start(source.Token);
