@@ -1,6 +1,6 @@
 #.\build-tools.ps1
 
-$webconfig = $location.tostring() + "\AccidentalFish.Operations.Web\web.config"
+$webconfig = $location.tostring() + "\AccidentalFish.Operations.Website\web.config"
 $csdef = $location.tostring() + "\AccidentalFish.Operations.Cloud\ServiceDefinition.csdef"
 $cloudcscfg = $location.tostring() + "\AccidentalFish.Operations.Cloud\ServiceConfiguration.Cloud.cscfg"
 $localcscfg = $location.tostring() + "\AccidentalFish.Operations.Cloud\ServiceConfiguration.Local.cscfg"

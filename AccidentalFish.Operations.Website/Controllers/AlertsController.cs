@@ -14,5 +14,10 @@ namespace AccidentalFish.Operations.Website.Controllers
         {
             return View();
         }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
 	}
 }

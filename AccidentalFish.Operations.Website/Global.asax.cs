@@ -14,6 +14,7 @@ namespace AccidentalFish.Operations.Website
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            UnityConfig.RegisterComponents();
             IdentityConfig.ConfigureIdentity();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

@@ -1,7 +1,10 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
-<h2>Alert Subscribers</h2>
+<div>
+    <a href="@Url.Action("Create")" class="btn btn-default pull-right">Add Subscriber</a>
+    <h2>Alert Subscribers</h2>
+</div>
 <div id="grid"></div>
 @section scripts
 {

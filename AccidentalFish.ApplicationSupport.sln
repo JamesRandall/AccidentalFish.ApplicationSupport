@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.Operations.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.Operations.Website.Tests", "AccidentalFish.Operations.Website.Tests\AccidentalFish.Operations.Website.Tests.csproj", "{4FE7310D-A5E9-4897-9AFD-4E5BDA6C7852}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.Operations.Website.Domain", "AccidentalFish.Operations.Website.Domain\AccidentalFish.Operations.Website.Domain.csproj", "{7A1E0FFA-D645-47D6-803E-CDFD39B3DCFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,12 @@ Global
 		{4FE7310D-A5E9-4897-9AFD-4E5BDA6C7852}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FE7310D-A5E9-4897-9AFD-4E5BDA6C7852}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FE7310D-A5E9-4897-9AFD-4E5BDA6C7852}.Release|x64.ActiveCfg = Release|Any CPU
+		{7A1E0FFA-D645-47D6-803E-CDFD39B3DCFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A1E0FFA-D645-47D6-803E-CDFD39B3DCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A1E0FFA-D645-47D6-803E-CDFD39B3DCFF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7A1E0FFA-D645-47D6-803E-CDFD39B3DCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A1E0FFA-D645-47D6-803E-CDFD39B3DCFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A1E0FFA-D645-47D6-803E-CDFD39B3DCFF}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,5 +153,6 @@ Global
 		{1DE725EA-7B9E-418B-90A2-5F22A358721E} = {F70B2FDC-5E10-4EDF-A9FB-863DDD61DE0E}
 		{B1792655-86D2-4A33-903E-475ACC03D112} = {F70B2FDC-5E10-4EDF-A9FB-863DDD61DE0E}
 		{3D3FBC7F-5284-4B1F-B812-86D83CBFBEBC} = {F70B2FDC-5E10-4EDF-A9FB-863DDD61DE0E}
+		{7A1E0FFA-D645-47D6-803E-CDFD39B3DCFF} = {F70B2FDC-5E10-4EDF-A9FB-863DDD61DE0E}
 	EndGlobalSection
 EndGlobal
