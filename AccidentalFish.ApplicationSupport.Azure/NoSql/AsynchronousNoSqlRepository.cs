@@ -26,7 +26,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             _table = tableClient.GetTableReference(tableName);            
         }
 
-        public Task InsertAsync(T item)
+        public async Task InsertAsync(T item)
         {
 // This is disabled to allow someone outside the solution to derive from NoSqlEntity and add a ITableEntity to improve performance
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -41,7 +41,18 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
                 tableEntity = new AzureNoSqlEntityWrapper<T>(item);
             }
             TableOperation operation = TableOperation.Insert(tableEntity);
-            return _table.ExecuteAsync(operation);
+            try
+            {
+                await _table.ExecuteAsync(operation);
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode == 409)
+                {
+                    throw new UniqueKeyViolation(item.PartitionKey, item.RowKey, ex);
+                }
+            }
+            
         }
 
         public Task InsertBatchAsync(IEnumerable<T> items)
@@ -102,7 +113,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 
         public Task InsertOrUpdateAsync(T item)
         {
-            throw new NotImplementedException();
+            TableOperation operation = TableOperation.InsertOrMerge(item);
+            return _table.ExecuteAsync(operation);
         }
 
         public Task DeleteAsync(T item)
