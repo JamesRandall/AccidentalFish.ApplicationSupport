@@ -1,4 +1,6 @@
 ﻿using System;
+using AccidentalFish.ApplicationSupport.Core.Alerts;
+using AccidentalFish.ApplicationSupport.Core.Alerts.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Components.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Email;
@@ -59,6 +61,7 @@ namespace AccidentalFish.ApplicationSupport.Core
             container.RegisterType<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>();
             container.RegisterType<ILoggerFactory, LoggerFactory>();
             container.RegisterType<IComponentHost, ComponentHost>();
+            container.RegisterType<IAlertSender, AlertSender>();
 
             container.RegisterInstance(container);
         }

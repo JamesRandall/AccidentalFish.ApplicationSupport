@@ -137,6 +137,7 @@
     <Compile Include="Components\ComponentConfiguration.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />
     <Compile Include="NoSql\UniqueKeyViolation.cs" />
+    <Compile Include="Policies\IResourceCreator.cs" />
     <Compile Include="Queues\IQueueItem.cs" />
     <Compile Include="Runtime\IComponentHost.cs" />
     <Compile Include="Runtime\IComponentHostConfigurationProvider.cs" />

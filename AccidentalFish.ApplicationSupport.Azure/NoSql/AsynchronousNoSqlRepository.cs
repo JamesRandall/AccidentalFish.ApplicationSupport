@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.NoSql;
+using AccidentalFish.ApplicationSupport.Core.Policies;
 using CuttingEdge.Conditions;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
@@ -166,6 +166,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         public Task AllActionAsync(Action<IEnumerable<T>> action)
         {
             return QueryActionAsync(null, null, action);
+        }
+
+        public IResourceCreator GetResourceCreator()
+        {
+            return new AzureTableCreator(_table);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Policies;
 
 namespace AccidentalFish.ApplicationSupport.Core.NoSql
 {
@@ -43,5 +44,7 @@ namespace AccidentalFish.ApplicationSupport.Core.NoSql
         Task<IEnumerable<T>> QueryAsync(string columnName, string value);
         Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action);
         Task AllActionAsync(Action<IEnumerable<T>> action);
+
+        IResourceCreator GetResourceCreator();
     }
 }

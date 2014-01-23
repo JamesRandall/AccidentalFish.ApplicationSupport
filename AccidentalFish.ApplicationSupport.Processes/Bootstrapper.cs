@@ -7,7 +7,7 @@ namespace AccidentalFish.ApplicationSupport.Processes
 {
     public static class Bootstrapper
     {
-        public static void RegistgerDependencies(IUnityContainer container)
+        public static void RegisterDependencies(IUnityContainer container)
         {
             container.RegisterType<IMapperFactory, MapperFactory>();
             container.RegisterType<IHostableComponent, LogQueueProcessor>(HostableComponentNames.LogQueueProcessor);
