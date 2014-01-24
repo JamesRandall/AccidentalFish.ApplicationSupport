@@ -10,6 +10,7 @@ using AccidentalFish.ApplicationSupport.Core.NoSql;
 
 namespace AccidentalFish.ApplicationSupport.Core.Alerts.Implementation
 {
+    [ComponentIdentity(FullyQualifiedName)]
     internal class AlertSender : AbstractApplicationComponent, IAlertSender
     {
         private readonly IEmailProvider _emailProvider;

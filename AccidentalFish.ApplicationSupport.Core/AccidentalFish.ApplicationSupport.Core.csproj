@@ -135,7 +135,9 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
+    <Compile Include="Components\MissingComponentIdentityException.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />
+    <Compile Include="Naming\FullyQualifiedName.cs" />
     <Compile Include="NoSql\UniqueKeyViolation.cs" />
     <Compile Include="Policies\IResourceCreator.cs" />
     <Compile Include="Queues\IQueueItem.cs" />

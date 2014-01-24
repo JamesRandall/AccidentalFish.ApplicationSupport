@@ -79,6 +79,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             return _table.ExecuteBatchAsync(operation);
         }
 
+        public Task InsertOrReplaceBatchAsync(IEnumerable<T> items)
+        {
+            TableBatchOperation operation = new TableBatchOperation();
+            foreach (T item in items)
+            {
+                operation.InsertOrReplace(item);
+            }
+            return _table.ExecuteBatchAsync(operation);
+        }
+
         public Task<T> GetAsync(string partitionKey, string rowKey)
         {
             return Task.Run(() =>
@@ -114,6 +124,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         public Task InsertOrUpdateAsync(T item)
         {
             TableOperation operation = TableOperation.InsertOrMerge(item);
+            return _table.ExecuteAsync(operation);
+        }
+
+        public Task InsertOrReplaceAsync(T item)
+        {
+            TableOperation operation = TableOperation.InsertOrReplace(item);
             return _table.ExecuteAsync(operation);
         }
 
@@ -160,6 +176,28 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             {
                 querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
                 action(new List<T>(querySegment.Results));
+            }
+        }
+
+        public async Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, bool> func)
+        {
+            TableQuery<T> query;
+            if (!String.IsNullOrWhiteSpace(column))
+            {
+                query = new TableQuery<T>().Where(TableQuery.GenerateFilterCondition(column, QueryComparisons.Equal, value));
+            }
+            else
+            {
+                query = new TableQuery<T>();
+            }
+
+            TableQuerySegment<T> querySegment = null;
+            bool doContinue = true;
+
+            while ((querySegment == null || querySegment.ContinuationToken != null) && doContinue)
+            {
+                querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
+                doContinue = func(new List<T>(querySegment.Results));
             }
         }
 

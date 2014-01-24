@@ -12,7 +12,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
 
         protected AbstractApplicationComponent()
         {
-            _componentIdentity = new ComponentIdentity(GetType());
+            try
+            {
+                _componentIdentity = new ComponentIdentity(GetType());
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new MissingComponentIdentityException();
+            }
+            
         }
 
         public IComponentIdentity ComponentIdentity { get { return _componentIdentity; }}
