@@ -28,12 +28,13 @@ namespace AccidentalFish.ApplicationSupport.Core
     {
         public static void RegisterDependencies(IUnityContainer container)
         {
-            RegisterDependencies(container, EmailProviderEnum.SendGrid);
+            RegisterDependencies(container, EmailProviderEnum.SendGrid, null);
         }
 
         public static void RegisterDependencies(
             IUnityContainer container,
-            EmailProviderEnum emailProvider)
+            EmailProviderEnum emailProvider,
+            Type loggerExtension)
         {
             if (emailProvider == EmailProviderEnum.AmazonSimpleEmailService)
             {
@@ -62,6 +63,15 @@ namespace AccidentalFish.ApplicationSupport.Core
             container.RegisterType<ILoggerFactory, LoggerFactory>();
             container.RegisterType<IComponentHost, ComponentHost>();
             container.RegisterType<IAlertSender, AlertSender>();
+
+            if (loggerExtension == null)
+            {
+                container.RegisterType<ILoggerExtension, NullLoggerExtension>();
+            }
+            else
+            {
+                container.RegisterType(typeof (ILoggerExtension), loggerExtension);
+            }
 
             container.RegisterInstance(container);
         }

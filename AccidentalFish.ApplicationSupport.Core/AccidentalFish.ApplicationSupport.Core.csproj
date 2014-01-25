@@ -136,6 +136,8 @@
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
     <Compile Include="Components\MissingComponentIdentityException.cs" />
+    <Compile Include="Logging\ILoggerExtension.cs" />
+    <Compile Include="Logging\Implementation\NullLoggerExtension.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />
     <Compile Include="Naming\FullyQualifiedName.cs" />
     <Compile Include="NoSql\UniqueKeyViolation.cs" />

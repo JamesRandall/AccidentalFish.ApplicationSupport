@@ -14,12 +14,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         private readonly IRuntimeEnvironment _runtimeEnvironment;
         private readonly IAsynchronousQueue<LogQueueItem> _queue;
         private readonly IFullyQualifiedName _source;
+        private readonly ILoggerExtension _loggerExtension;
         private readonly LogLevelEnum _minimumLoggingLevel;
 
         public Logger(
             IRuntimeEnvironment runtimeEnvironment,
             IAsynchronousQueue<LogQueueItem> queue,
             IFullyQualifiedName source,
+            ILoggerExtension loggerExtension,
             LogLevelEnum minimumLoggingLevel)
         {
             Condition.Requires(queue).IsNotNull();
@@ -27,6 +29,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
             _runtimeEnvironment = runtimeEnvironment;
             _queue = queue;
             _source = source;
+            _loggerExtension = loggerExtension;
             _minimumLoggingLevel = minimumLoggingLevel;
         }
 
@@ -77,11 +80,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 
         public async void Log(LogLevelEnum level, string message, Exception exception)
         {
+            LogQueueItem item = CreateLogQueueItem(level, message, exception);
+            _loggerExtension.Logger(item, level >= _minimumLoggingLevel);
             if (level >= _minimumLoggingLevel)
             {
                 try
                 {
-                    await _queue.EnqueueAsync(CreateLogQueueItem(level, message, exception));
+                    await _queue.EnqueueAsync(item);
                 }
                 catch (Exception)
                 {

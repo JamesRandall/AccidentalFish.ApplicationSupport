@@ -11,21 +11,23 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
     {
         private readonly IRuntimeEnvironment _runtimeEnvironment;
         private readonly IApplicationResourceFactory _applicationResourceFactory;
+        private readonly ILoggerExtension _loggerExtension;
 
-        public LoggerFactory(IRuntimeEnvironment runtimeEnvironment, IApplicationResourceFactory applicationResourceFactory)
+        public LoggerFactory(IRuntimeEnvironment runtimeEnvironment, IApplicationResourceFactory applicationResourceFactory, ILoggerExtension loggerExtension)
         {
             _runtimeEnvironment = runtimeEnvironment;
             _applicationResourceFactory = applicationResourceFactory;
+            _loggerExtension = loggerExtension;
         }
 
         public ILogger CreateShortLivedLogger(IFullyQualifiedName source)
         {
-            return new Logger(_runtimeEnvironment, _applicationResourceFactory.GetLoggerQueue(), source, GetMinimumLogLevel(source));
+            return new Logger(_runtimeEnvironment, _applicationResourceFactory.GetLoggerQueue(), source, _loggerExtension, GetMinimumLogLevel(source));
         }
 
         public ILogger CreateShortLivedLogger(IAsynchronousQueue<LogQueueItem> queue, IFullyQualifiedName source, LogLevelEnum minimumLogLevel)
         {
-            return new Logger(_runtimeEnvironment, queue, source, GetMinimumLogLevel(source));
+            return new Logger(_runtimeEnvironment, queue, source, _loggerExtension, GetMinimumLogLevel(source));
         }
 
         public ILogger CreateLongLivedLogger(IFullyQualifiedName source)
