@@ -46,7 +46,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Alerts.Implementation
 
             if (!subscribers.Any())
             {
-                _logger.Warning("No alert subscribers are configured");
+                _logger.Information("No alert subscribers are configured");
                 return;
             }
 

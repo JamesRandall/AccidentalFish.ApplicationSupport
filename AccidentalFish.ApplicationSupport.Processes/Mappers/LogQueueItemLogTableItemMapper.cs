@@ -17,6 +17,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Mappers
                 Message = @from.Message,
                 RoleIdentifier = @from.RoleIdentifier,
                 RoleName = @from.RoleName,
+                StackTrace = @from.StackTrace,
                 Source = @from.Source
             };
         }
@@ -32,6 +33,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Mappers
                 Message = @from.Message,
                 RoleIdentifier = @from.RoleIdentifier,
                 RoleName = @from.RoleName,
+                StackTrace = @from.StackTrace,
                 Source = @from.Source
             };
         }

@@ -45,7 +45,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         private LogLevelEnum GetMinimumLogLevel(IFullyQualifiedName source)
         {
             // TODO: Pick this up from the realtime settings
-            return LogLevelEnum.Debug;
+            return LogLevelEnum.Warning;
         }
     }
 }
