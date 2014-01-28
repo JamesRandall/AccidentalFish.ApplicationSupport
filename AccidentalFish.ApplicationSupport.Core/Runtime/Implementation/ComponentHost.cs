@@ -56,10 +56,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                     {
                         Task.Factory.StartNew(() =>
                         {
+                            _logger.Information(String.Format("Hostable component {0} is starting", componentIdentity));
                             IHostableComponent component = _unityContainer.Resolve<IHostableComponent>(componentIdentity.ToString());
                             component.Start(_cancellationTokenSource.Token).Wait();
                             shouldRetry = false; // normal exit
-                            _logger.Information(String.Format("Component {0} is exiting", componentIdentity));
+                            _logger.Information(String.Format("Hostable component {0} is exiting", componentIdentity));
                         }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Wait();
                     }
                     catch (Exception ex)
