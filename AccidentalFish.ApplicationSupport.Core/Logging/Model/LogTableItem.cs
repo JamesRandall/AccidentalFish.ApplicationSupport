@@ -9,21 +9,21 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Model
         public void SetPartitionAndRowKeyForLogByDate()
         {
             PartitionKey = String.Format("{0:D4}{1:D2}{2:D2}", LoggedAt.Year, LoggedAt.Month, LoggedAt.Day);
-            RowKey = String.Format("{0:D19}", DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks);
+            RowKey = String.Format("{0:D19}{1}", DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks, Guid.NewGuid());
         }
 
         public void SetPartitionAndRowKeyForLogBySeverity()
         {
             PartitionKey = Level.ToString("D2");
-            RowKey = String.Format("{0:D19}", DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks);
+            RowKey = String.Format("{0:D19}{1}", DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks, Guid.NewGuid());
         }
 
         public void SetPartitionAndRowKeyForLogBySource()
         {
             PartitionKey = Source;
-            RowKey = String.Format("{0}_{1:D19}",
+            RowKey = String.Format("{0}_{1:D19}{2}",
                 Enum.GetValues(typeof(LogLevelEnum)).Cast<LogLevelEnum>().Max() - Level,
-                DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks);
+                DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks, Guid.NewGuid());
         }
 
         public string Source { get; set; }

@@ -60,6 +60,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, tablename);
         }
 
+        public IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity, bool lazyCreateTable) where T : NoSqlEntity, new()
+        {
+            Condition.Requires(componentIdentity).IsNotNull();
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, tablename, lazyCreateTable);
+        }
+
         public IAsynchronousQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             Condition.Requires(componentIdentity).IsNotNull();

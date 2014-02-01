@@ -16,7 +16,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Runtime
             {
                 try
                 {
-                    return RoleEnvironment.CurrentRoleInstance.Role.Name;
+                    if (RoleEnvironment.IsAvailable)
+                    {
+                        return RoleEnvironment.CurrentRoleInstance.Role.Name;
+                    }
+                    return "local";
                 }
                 catch (Exception)
                 {
@@ -31,7 +35,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Runtime
             {
                 try
                 {
-                    return RoleEnvironment.CurrentRoleInstance.Id;
+                    if (RoleEnvironment.IsAvailable)
+                    {
+                        return RoleEnvironment.CurrentRoleInstance.Id;
+                    }
+                    return "local";
                 }
                 catch (Exception)
                 {

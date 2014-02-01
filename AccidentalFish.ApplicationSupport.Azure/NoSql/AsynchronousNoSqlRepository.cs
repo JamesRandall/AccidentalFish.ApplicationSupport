@@ -51,6 +51,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
                 {
                     throw new UniqueKeyViolation(item.PartitionKey, item.RowKey, ex);
                 }
+                throw;
             }
             
         }

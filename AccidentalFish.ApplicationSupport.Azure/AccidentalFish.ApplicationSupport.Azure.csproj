@@ -137,6 +137,7 @@
     <Compile Include="NoSql\AsynchronousNoSqlRepository.cs" />
     <Compile Include="NoSql\AzureNoSqlEntityWrapper.cs" />
     <Compile Include="NoSql\AzureTableCreator.cs" />
+    <Compile Include="NoSql\LazyTableCreateAsynchronousNoSqlRepository.cs" />
     <Compile Include="NoSql\NoSqlConcurrencyManager.cs" />
     <Compile Include="NoSql\NoSqlRepositoryFactory.cs" />
     <Compile Include="Policies\NullDatabaseConfiguration.cs" />
