@@ -32,6 +32,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             return _queue.AddMessageAsync(message);
         }
 
+        public Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay)
+        {
+            CloudQueueMessage message = new CloudQueueMessage(_serializer.Serialize(item));
+            return _queue.AddMessageAsync(message, null, initialVisibilityDelay, null, null);
+        }
+
         public async void Enqueue(T item, Action<T> success, Action<T, Exception> failure)
         {
             try

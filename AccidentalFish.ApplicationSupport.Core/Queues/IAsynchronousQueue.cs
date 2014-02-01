@@ -6,6 +6,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues
     public interface IAsynchronousQueue<T> where T : class
     {
         Task EnqueueAsync(T item);
+        Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay);
         void Enqueue(T item, Action<T> success, Action<T, Exception> failure);
         Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor);
         void Dequeue(Func<IQueueItem<T>, bool> success, Action<Exception> failure);
