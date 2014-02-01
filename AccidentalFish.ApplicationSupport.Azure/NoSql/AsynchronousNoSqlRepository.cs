@@ -138,7 +138,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         {
             TableOperation operation = TableOperation.Delete(item);
             TableResult result = await _table.ExecuteAsync(operation);
-            return result.HttpStatusCode == 200;
+            return result.HttpStatusCode == 204;
         }
 
         public Task UpdateAsync(T item)

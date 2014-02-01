@@ -5,7 +5,7 @@ namespace AccidentalFish.ApplicationSupport.Core.NoSql
 {
     public interface ILeaseManager<in T>
     {
-        Task CreateLeaseObject(T key);
+        Task<bool> CreateLeaseObjectIfNotExist(T key);
         Task<string> Lease(T key);
         Task<string> Lease(T key, TimeSpan leaseTime);
         Task Release(T key, string leaseId);

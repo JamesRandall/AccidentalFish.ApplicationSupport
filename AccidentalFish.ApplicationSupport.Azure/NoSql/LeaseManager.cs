@@ -19,11 +19,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             _container = client.GetContainerReference(leaseBlockName);
         }
 
-        public async Task CreateLeaseObject(T key)
+        public async Task<bool> CreateLeaseObjectIfNotExist(T key)
         {
             string leaseName = GetLeaseName(key);
             CloudBlockBlob blob = _container.GetBlockBlobReference(leaseName);
-            await blob.UploadTextAsync("");
+            if (!(await blob.ExistsAsync()))
+            {
+                await blob.UploadTextAsync("");
+                return true;
+            }
+            return false;
         }
 
         public async Task<string> Lease(T key)
@@ -35,8 +40,20 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         {
             string leaseName = GetLeaseName(key);
             CloudBlockBlob blob = _container.GetBlockBlobReference(leaseName);
-            string leaseId = await blob.AcquireLeaseAsync(leaseTime, leaseName);
-            return leaseId;
+            try
+            {
+                string leaseId = await blob.AcquireLeaseAsync(leaseTime, Guid.NewGuid().ToString());
+                return leaseId;
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode == 400)
+                {
+                    throw new UnableToAcquireLease("Unable to acquire lease", ex);
+                }
+                throw;
+            }
+            
         }
 
         public async Task Release(T key, string leaseId)
