@@ -14,5 +14,7 @@
 
         string DefaultBlobContainerName(IComponentIdentity componentIdentity);
 
+        string DefaultLeaseBlockName(IComponentIdentity componentIdentity);
+
     }
 }

@@ -79,6 +79,11 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
                         string key = _nameProvider.DefaultTableName(componentIdentity);
                         ApplyConfigSetting(configurationSettings, key, component.DefaultTableName);
                     }
+                    if (!string.IsNullOrWhiteSpace(component.DefaultLeaseBlockName))
+                    {
+                        string key = _nameProvider.DefaultLeaseBlockName(componentIdentity);
+                        ApplyConfigSetting(configurationSettings, key, component.DefaultLeaseBlockName);
+                    }
 
                     foreach (ApplicationComponentSetting setting in component.Settings)
                     {

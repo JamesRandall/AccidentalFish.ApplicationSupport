@@ -44,5 +44,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         {
             return _configuration[_nameProvider.DefaultBlobContainerName(componentIdentity)];
         }
+
+        public string DefaultLeaseBlockName(IComponentIdentity componentIdentity)
+        {
+            return _configuration[_nameProvider.DefaultLeaseBlockName(componentIdentity)];
+        }
     }
 }

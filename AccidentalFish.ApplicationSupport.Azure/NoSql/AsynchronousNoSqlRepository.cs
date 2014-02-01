@@ -134,9 +134,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             return _table.ExecuteAsync(operation);
         }
 
-        public Task DeleteAsync(T item)
+        public async Task<bool> DeleteAsync(T item)
         {
-            throw new NotImplementedException();
+            TableOperation operation = TableOperation.Delete(item);
+            TableResult result = await _table.ExecuteAsync(operation);
+            return result.HttpStatusCode == 200;
         }
 
         public Task UpdateAsync(T item)

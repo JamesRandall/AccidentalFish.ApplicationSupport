@@ -27,6 +27,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
 
         public string DefaultTableName { get; set; }
 
+        public string DefaultLeaseBlockName { get; set; }
+
         public List<ApplicationComponentSetting> Settings { get; set; }
 
         public bool UsesAzureStorage

@@ -42,5 +42,10 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
                 return new AsynchronousNoSqlRepository<T>(storageAccountConnectionString, tableName);
             }
         }
+
+        public ILeaseManager<T> CreateLeaseManager<T>(string storageAccountConnectionString, string leaseBlockName)
+        {
+            return new LeaseManager<T>(storageAccountConnectionString, leaseBlockName);
+        }
     }
 }

@@ -70,12 +70,18 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
                     string key = _nameProvider.DefaultTableName(componentIdentity);
                     ApplyAppSetting(appSettings, key, component.DefaultTableName);
                 }
+                if (!string.IsNullOrWhiteSpace(component.DefaultLeaseBlockName))
+                {
+                    string key = _nameProvider.DefaultLeaseBlockName(componentIdentity);
+                    ApplyAppSetting(appSettings, key, component.DefaultLeaseBlockName);
+                }
 
                 foreach (ApplicationComponentSetting setting in component.Settings)
                 {
                     string key = _nameProvider.SettingName(componentIdentity, setting.Key);
                     ApplyAppSetting(appSettings, key, setting.Value);
                 }
+
             }
 
             using (FileStream outputStream = new FileStream(targetFile, FileMode.Create))

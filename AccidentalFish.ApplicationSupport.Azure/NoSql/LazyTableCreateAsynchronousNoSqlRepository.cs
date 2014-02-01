@@ -114,12 +114,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             await _repository.InsertOrReplaceAsync(item);
         }
 
-        public async Task DeleteAsync(T item)
+        public async Task<bool> DeleteAsync(T item)
         {
             try
             {
-                await _repository.DeleteAsync(item);
-                return;
+                return await _repository.DeleteAsync(item);
             }
             catch (StorageException ex)
             {
@@ -129,7 +128,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
                 }
             }
             await Create();
-            await _repository.DeleteAsync(item);
+            return await _repository.DeleteAsync(item);
         }
 
         public async Task UpdateAsync(T item)

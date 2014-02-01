@@ -38,5 +38,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         {
             return String.Format("{0}.setting.{1}", componentIdentity.FullyQualifiedName, setting);
         }
+
+        public string DefaultLeaseBlockName(IComponentIdentity componentIdentity)
+        {
+            return String.Format("{0}.default-lease-block-name", componentIdentity.FullyQualifiedName);
+        }
     }
 }

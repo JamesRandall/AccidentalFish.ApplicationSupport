@@ -67,6 +67,21 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, tablename, lazyCreateTable);
         }
 
+        public ILeaseManager<T> GetLeaseManager<T>(IComponentIdentity componentIdentity)
+        {
+            Condition.Requires(componentIdentity).IsNotNull();
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            string defaultLeaseBlockName = _applicationResourceSettingProvider.DefaultLeaseBlockName(componentIdentity);
+            return _noSqlRepositoryFactory.CreateLeaseManager<T>(storageAccountConnectionString, defaultLeaseBlockName);
+        }
+
+        public ILeaseManager<T> GetLeaseManager<T>(string leaseBlockName, IComponentIdentity componentIdentity)
+        {
+            Condition.Requires(componentIdentity).IsNotNull();
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            return _noSqlRepositoryFactory.CreateLeaseManager<T>(storageAccountConnectionString, leaseBlockName);
+        }
+
         public IAsynchronousQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             Condition.Requires(componentIdentity).IsNotNull();

@@ -42,6 +42,15 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                         WriteVerbose(String.Format("Creating blob container {0} in {1}", component.DefaultBlobContainerName, storageAccount.BlobEndpoint));
                     }
 
+                    if (!string.IsNullOrWhiteSpace(component.DefaultLeaseBlockName))
+                    {
+                        CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                        CloudBlobContainer blobContainer = blobClient.GetContainerReference(component.DefaultLeaseBlockName);
+                        blobContainer.CreateIfNotExists(component.DefaultBlobContainerAccessType);
+
+                        WriteVerbose(String.Format("Creating lease block container {0} in {1}", component.DefaultLeaseBlockName, storageAccount.BlobEndpoint));
+                    }
+
                     if (!string.IsNullOrWhiteSpace(component.DefaultQueueName))
                     {
                         CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();

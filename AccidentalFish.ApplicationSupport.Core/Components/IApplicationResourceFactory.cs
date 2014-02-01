@@ -12,6 +12,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(IComponentIdentity componentIdentity) where T : NoSqlEntity, new();
         IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity) where T : NoSqlEntity, new();
         IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity, bool lazyCreateTable) where T : NoSqlEntity, new();
+        ILeaseManager<T> GetLeaseManager<T>(IComponentIdentity componentIdentity);
+        ILeaseManager<T> GetLeaseManager<T>(string leaseBlockName, IComponentIdentity componentIdentity);
 
         IAsynchronousQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class;
         IAsynchronousQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;

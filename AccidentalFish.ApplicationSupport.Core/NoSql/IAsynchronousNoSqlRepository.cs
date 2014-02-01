@@ -43,7 +43,7 @@ namespace AccidentalFish.ApplicationSupport.Core.NoSql
         /// Delete the entity from the store
         /// </summary>
         /// <param name="item">Item to delete</param>
-        Task DeleteAsync(T item);
+        Task<bool> DeleteAsync(T item);
         /// <summary>
         /// Update an entity in the store
         /// </summary>
