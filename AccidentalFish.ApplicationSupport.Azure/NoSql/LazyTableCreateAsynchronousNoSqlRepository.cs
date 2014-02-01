@@ -222,6 +222,24 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             return await _repository.QueryAsync(columnName, value);
         }
 
+        public async Task<IEnumerable<T>> QueryAsync(Dictionary<string, object> columnValues)
+        {
+            try
+            {
+                IEnumerable<T> items = await _repository.QueryAsync(columnValues);
+                return items;
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode != HttpNotFound)
+                {
+                    throw;
+                }
+            }
+            await Create();
+            return await _repository.QueryAsync(columnValues);
+        }
+
         public async Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, bool> func)
         {
             try

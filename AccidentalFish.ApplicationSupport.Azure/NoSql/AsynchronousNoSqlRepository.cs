@@ -159,6 +159,41 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             return results;
         }
 
+        public async Task<IEnumerable<T>> QueryAsync(Dictionary<string, object> columnValues)
+        {   
+            List<T> results = new List<T>();
+
+            List<string> tableQueries = new List<string>();
+            foreach (KeyValuePair<string, object> kvp in columnValues)
+            {
+                if (kvp.Value is string)
+                {
+                    tableQueries.Add(TableQuery.GenerateFilterCondition(kvp.Key, QueryComparisons.Equal, (string)kvp.Value));
+                }
+                else if (kvp.Value is Guid)
+                {
+                    tableQueries.Add(TableQuery.GenerateFilterConditionForGuid(kvp.Key, QueryComparisons.Equal, (Guid)kvp.Value));
+                }
+                
+            }
+            string queryString = tableQueries[0];
+            for (int index = 1; index < tableQueries.Count; index++)
+            {
+                string subQueryString = tableQueries[index];
+                queryString = TableQuery.CombineFilters(queryString, TableOperators.And, subQueryString);
+            }
+
+            TableQuery<T> query = new TableQuery<T>().Where(queryString);
+            TableQuerySegment<T> querySegment = null;
+
+            while (querySegment == null || querySegment.ContinuationToken != null)
+            {
+                querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
+                results.AddRange(querySegment.Results);
+            }
+            return results;
+        }
+
         public async Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action)
         {
             TableQuery<T> query;

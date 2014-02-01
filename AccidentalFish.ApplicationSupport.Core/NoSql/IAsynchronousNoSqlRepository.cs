@@ -54,6 +54,7 @@ namespace AccidentalFish.ApplicationSupport.Core.NoSql
         Task<IEnumerable<T>> GetAsync(string partitionKey);
         Task<IEnumerable<T>> GetAsync(string partitionKey, int take);
         Task<IEnumerable<T>> QueryAsync(string columnName, string value);
+        Task<IEnumerable<T>> QueryAsync(Dictionary<string, object> columnValues);
         Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, bool> func);
         Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action);
         Task AllActionAsync(Action<IEnumerable<T>> action);
