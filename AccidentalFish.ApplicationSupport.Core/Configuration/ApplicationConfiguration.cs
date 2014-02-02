@@ -61,6 +61,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 XElement defaultBlobContainerNameElement = element.Element("default-blob-container-name");
                 XElement defaultQueueNameElement = element.Element("default-queue-name");
                 XElement defaultTableNameElement = element.Element("default-table-name");
+                XElement defaultTableData = element.Element("table-data");
                 XElement defaultLeaseBlockNameElement = element.Element("default-lease-block-name");
                 XElement settingsElement = element.Element("settings");
                 XAttribute defaultBlobContainerAccessAttribute = defaultBlobContainerNameElement == null ? null : defaultBlobContainerNameElement.Attribute("public-permission");
@@ -95,6 +96,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 component.DefaultTableName = defaultTableNameElement == null ? null : defaultTableNameElement.Value;
                 component.DefaultBlobContainerAccessType = BlobContainerPublicAccessType.Off;
                 component.DefaultLeaseBlockName = defaultLeaseBlockNameElement == null ? null : defaultLeaseBlockNameElement.Value;
+                component.TableData = defaultTableData == null ? null : defaultTableData.Value;
                 if (defaultBlobContainerAccessAttribute != null)
                 {
                     string accessAttribtueValue = defaultBlobContainerAccessAttribute.Value.ToLower();
