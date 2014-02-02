@@ -140,9 +140,12 @@
     <Compile Include="Logging\Implementation\NullLoggerExtension.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />
     <Compile Include="Naming\FullyQualifiedName.cs" />
-    <Compile Include="NoSql\ILeaseManager.cs" />
+    <Compile Include="Policies\ILeasedRetry.cs" />
+    <Compile Include="Policies\ILeaseManager.cs" />
     <Compile Include="NoSql\UnableToAcquireLease.cs" />
     <Compile Include="NoSql\UniqueKeyViolation.cs" />
+    <Compile Include="Policies\ILeaseManagerFactory.cs" />
+    <Compile Include="Policies\Implementation\LeasedRetry.cs" />
     <Compile Include="Policies\IResourceCreator.cs" />
     <Compile Include="Queues\IQueueItem.cs" />
     <Compile Include="Runtime\IComponentHost.cs" />

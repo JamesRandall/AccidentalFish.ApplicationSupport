@@ -66,6 +66,15 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             });
         }
 
+        public async Task Renew(T key, string leaseId)
+        {
+            CloudBlockBlob blob = _container.GetBlockBlobReference(GetLeaseName(key));
+            await blob.RenewLeaseAsync(new AccessCondition
+            {
+                LeaseId = leaseId
+            });
+        }
+
         private static string GetLeaseName(T key)
         {
             string leaseName = String.Format("{0}.lck", key);

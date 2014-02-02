@@ -138,9 +138,10 @@
     <Compile Include="NoSql\AzureNoSqlEntityWrapper.cs" />
     <Compile Include="NoSql\AzureTableCreator.cs" />
     <Compile Include="NoSql\LazyTableCreateAsynchronousNoSqlRepository.cs" />
-    <Compile Include="NoSql\LeaseManager.cs" />
+    <Compile Include="Policies\LeaseManager.cs" />
     <Compile Include="NoSql\NoSqlConcurrencyManager.cs" />
     <Compile Include="NoSql\NoSqlRepositoryFactory.cs" />
+    <Compile Include="Policies\LeaseManagerFactory.cs" />
     <Compile Include="Policies\NullDatabaseConfiguration.cs" />
     <Compile Include="Policies\ServiceBusRetryPolicy.cs" />
     <Compile Include="Policies\SqlAzureRetryPolicy.cs" />

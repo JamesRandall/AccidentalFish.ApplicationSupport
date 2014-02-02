@@ -55,6 +55,7 @@ namespace AccidentalFish.ApplicationSupport.Core
             }
             container.RegisterType<IUnitOfWorkFactory, EntityFrameworkUnitOfWorkFactory>();
             container.RegisterType<IBackoffPolicy, BackoffPolicy>();
+            container.RegisterType<ILeasedRetry, LeasedRetry>();
             container.RegisterType<IAsynchronousBackoffPolicy, AsynchronousBackoffPolicy>();
             container.RegisterType<IWaitHandle, ManualResetEventWaitHandle>();
             container.RegisterType<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>();

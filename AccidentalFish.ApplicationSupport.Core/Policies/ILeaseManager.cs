@@ -9,5 +9,6 @@ namespace AccidentalFish.ApplicationSupport.Core.NoSql
         Task<string> Lease(T key);
         Task<string> Lease(T key, TimeSpan leaseTime);
         Task Release(T key, string leaseId);
+        Task Renew(T key, string leaseId);
     }
 }

@@ -31,6 +31,7 @@ namespace AccidentalFish.ApplicationSupport.Azure
 
             // policies            
             container.RegisterType<IRetryPolicy, ServiceBusRetryPolicy>(RetryPolicyType.Queue);
+            container.RegisterType<ILeaseManagerFactory, LeaseManagerFactory>();
 
             // runtime
             container.RegisterType<IRuntimeEnvironment, RuntimeEnvironment>();

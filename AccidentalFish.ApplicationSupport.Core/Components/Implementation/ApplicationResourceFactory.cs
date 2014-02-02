@@ -18,6 +18,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         private readonly IBlobRepositoryFactory _blobRepositoryFactory;
         private readonly IDbConfiguration _dbConfiguration;
         private readonly IConfiguration _configuration;
+        private readonly ILeaseManagerFactory _leaseManagerFactory;
 
         public ApplicationResourceFactory(
             IApplicationResourceSettingProvider applicationResourceSettingProvider,
@@ -26,7 +27,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             IQueueFactory queueFactory,
             IBlobRepositoryFactory blobRepositoryFactory,
             IDbConfiguration dbConfiguration,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ILeaseManagerFactory leaseManagerFactory)
         {
             _applicationResourceSettingProvider = applicationResourceSettingProvider;
             _nameProvider = nameProvider;
@@ -35,6 +37,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             _blobRepositoryFactory = blobRepositoryFactory;
             _dbConfiguration = dbConfiguration;
             _configuration = configuration;
+            _leaseManagerFactory = leaseManagerFactory;
         }
 
         public IUnitOfWorkFactory GetUnitOfWorkFactory(IComponentIdentity componentIdentity)
@@ -72,14 +75,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             Condition.Requires(componentIdentity).IsNotNull();
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string defaultLeaseBlockName = _applicationResourceSettingProvider.DefaultLeaseBlockName(componentIdentity);
-            return _noSqlRepositoryFactory.CreateLeaseManager<T>(storageAccountConnectionString, defaultLeaseBlockName);
+            return _leaseManagerFactory.CreateLeaseManager<T>(storageAccountConnectionString, defaultLeaseBlockName);
         }
 
         public ILeaseManager<T> GetLeaseManager<T>(string leaseBlockName, IComponentIdentity componentIdentity)
         {
             Condition.Requires(componentIdentity).IsNotNull();
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
-            return _noSqlRepositoryFactory.CreateLeaseManager<T>(storageAccountConnectionString, leaseBlockName);
+            return _leaseManagerFactory.CreateLeaseManager<T>(storageAccountConnectionString, leaseBlockName);
         }
 
         public IAsynchronousQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
