@@ -52,7 +52,7 @@ namespace AccidentalFish.Operations.Diagnostics
             _container = new UnityContainer();
             ApplicationSupport.Core.Bootstrapper.RegisterDependencies(_container);
             ApplicationSupport.Azure.Bootstrapper.RegisterDependencies(_container);
-            ApplicationSupport.Processes.Bootstrapper.RegistgerDependencies(_container);
+            ApplicationSupport.Processes.Bootstrapper.RegisterDependencies(_container);
 
             return base.OnStart();
         }

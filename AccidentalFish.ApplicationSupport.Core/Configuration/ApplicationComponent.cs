@@ -9,6 +9,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         public ApplicationComponent()
         {
             Settings = new List<ApplicationComponentSetting>();
+            Uploads = new List<string>();
         }
 
         public string Fqn { get; set; }
@@ -32,6 +33,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         public string TableData { get; set; }
 
         public List<ApplicationComponentSetting> Settings { get; set; }
+
+        public List<string> Uploads { get; set; } 
 
         public bool UsesAzureStorage
         {

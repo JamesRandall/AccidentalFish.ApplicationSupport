@@ -17,6 +17,14 @@
       <realtime-settings-table resource-type="table">realtimesettings</realtime-settings-table>
     </settings>
   </component>
+  <component fqn="com.accidental-fish.email">
+    <storage-account>com.accidental-fish.application-support.storage</storage-account>
+    <default-queue-name>email</default-queue-name>
+    <default-blob-container-name>emailtemplates</default-blob-container-name>
+    <settings>
+      <email-poison-queue resource-type="queue">poisonemail</email-poison-queue>
+    </settings>
+  </component>
   <component fqn="com.accidentalfish.log-queue-processor">
     <storage-account>com.accidental-fish.application-support.storage</storage-account>
     <settings>

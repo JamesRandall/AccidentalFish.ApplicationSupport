@@ -44,6 +44,17 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                         blobContainer.CreateIfNotExists(component.DefaultBlobContainerAccessType);
 
                         WriteVerbose(String.Format("Creating blob container {0} in {1}", component.DefaultBlobContainerName, storageAccount.BlobEndpoint));
+
+                        if (component.Uploads != null)
+                        {
+                            foreach (string uploadFilename in component.Uploads)
+                            {
+                                string fullUploadFilename = Path.Combine(Path.GetDirectoryName(Configuration), uploadFilename);
+                                CloudBlockBlob blob = blobContainer.GetBlockBlobReference(Path.GetFileName(uploadFilename));
+                                blob.UploadFromFile(fullUploadFilename, FileMode.Open);
+                                WriteVerbose(String.Format("Uploading file {0} to blob container {1}", uploadFilename, component.DefaultBlobContainerName));
+                            }
+                        }
                     }
 
                     if (!string.IsNullOrWhiteSpace(component.DefaultLeaseBlockName))

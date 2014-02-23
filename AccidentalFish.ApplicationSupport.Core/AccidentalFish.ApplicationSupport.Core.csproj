@@ -136,6 +136,9 @@
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
     <Compile Include="Components\MissingComponentIdentityException.cs" />
+    <Compile Include="Email\EmailQueueItem.cs" />
+    <Compile Include="Email\IEmailManager.cs" />
+    <Compile Include="Email\Implementation\EmailManager.cs" />
     <Compile Include="Logging\ILoggerExtension.cs" />
     <Compile Include="Logging\Implementation\NullLoggerExtension.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />

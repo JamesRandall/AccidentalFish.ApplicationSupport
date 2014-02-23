@@ -97,6 +97,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 component.DefaultBlobContainerAccessType = BlobContainerPublicAccessType.Off;
                 component.DefaultLeaseBlockName = defaultLeaseBlockNameElement == null ? null : defaultLeaseBlockNameElement.Value;
                 component.TableData = defaultTableData == null ? null : defaultTableData.Value;
+                component.Uploads = element.Elements("upload").Select(x => x.Value).ToList();
                 if (defaultBlobContainerAccessAttribute != null)
                 {
                     string accessAttribtueValue = defaultBlobContainerAccessAttribute.Value.ToLower();
