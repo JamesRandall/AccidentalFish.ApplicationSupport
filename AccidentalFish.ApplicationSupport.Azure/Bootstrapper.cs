@@ -26,6 +26,10 @@ namespace AccidentalFish.ApplicationSupport.Azure
 
         public static void RegisterDependencies(IUnityContainer container, bool forceAppConfig, bool useSqlDatabaseConfiguration)
         {
+            // internal
+            container.RegisterType<ITableStorageQueryBuilder, TableStorageQueryBuilder>();
+            container.RegisterType<ITableContinuationTokenSerializer, TableContinuationTokenSerializer>();
+
             // configuration
             container.RegisterType<IConfiguration, Configuration.Configuration>(new InjectionConstructor(forceAppConfig));
 

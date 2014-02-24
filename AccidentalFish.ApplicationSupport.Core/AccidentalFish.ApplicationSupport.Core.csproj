@@ -143,6 +143,7 @@
     <Compile Include="Logging\Implementation\NullLoggerExtension.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />
     <Compile Include="Naming\FullyQualifiedName.cs" />
+    <Compile Include="NoSql\PagedResultSegment.cs" />
     <Compile Include="Policies\ILeasedRetry.cs" />
     <Compile Include="Policies\ILeaseManager.cs" />
     <Compile Include="NoSql\UnableToAcquireLease.cs" />

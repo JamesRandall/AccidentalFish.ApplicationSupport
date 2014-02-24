@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using CuttingEdge.Conditions;
@@ -13,10 +15,18 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 {
     internal class AsynchronousNoSqlRepository<T> : IAsynchronousNoSqlRepository<T> where T : NoSqlEntity, new()
     {
+        private readonly ITableStorageQueryBuilder _tableStorageQueryBuilder;
+        private readonly ITableContinuationTokenSerializer _tableContinuationTokenSerializer;
         private readonly CloudTable _table;
 
-        public AsynchronousNoSqlRepository(string connectionString, string tableName)
+        public AsynchronousNoSqlRepository(
+            string connectionString,
+            string tableName,
+            ITableStorageQueryBuilder tableStorageQueryBuilder,
+            ITableContinuationTokenSerializer tableContinuationTokenSerializer)
         {
+            _tableStorageQueryBuilder = tableStorageQueryBuilder;
+            _tableContinuationTokenSerializer = tableContinuationTokenSerializer;
             Condition.Requires(tableName).IsNotNullOrWhiteSpace();
             Condition.Requires(connectionString).IsNotNullOrWhiteSpace();
 
@@ -147,6 +157,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             return _table.ExecuteAsync(operation);
         }
 
+        #region Querying
+
         public async Task<IEnumerable<T>> QueryAsync(string column, string value)
         {
             List<T> results = new List<T>();
@@ -165,27 +177,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         {   
             List<T> results = new List<T>();
 
-            List<string> tableQueries = new List<string>();
-            foreach (KeyValuePair<string, object> kvp in columnValues)
-            {
-                if (kvp.Value is string)
-                {
-                    tableQueries.Add(TableQuery.GenerateFilterCondition(kvp.Key, QueryComparisons.Equal, (string)kvp.Value));
-                }
-                else if (kvp.Value is Guid)
-                {
-                    tableQueries.Add(TableQuery.GenerateFilterConditionForGuid(kvp.Key, QueryComparisons.Equal, (Guid)kvp.Value));
-                }
-                
-            }
-            string queryString = tableQueries[0];
-            for (int index = 1; index < tableQueries.Count; index++)
-            {
-                string subQueryString = tableQueries[index];
-                queryString = TableQuery.CombineFilters(queryString, TableOperators.And, subQueryString);
-            }
-
-            TableQuery<T> query = new TableQuery<T>().Where(queryString);
+            TableQuery<T> query = _tableStorageQueryBuilder.TableQuery<T>(columnValues);
             TableQuerySegment<T> querySegment = null;
 
             while (querySegment == null || querySegment.ContinuationToken != null)
@@ -243,6 +235,33 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         {
             return QueryActionAsync(null, null, action);
         }
+
+        #endregion
+
+        #region Paged queries
+
+        public Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues)
+        {
+            return PagedQueryAsync(columnValues, null);
+        }
+
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, string serializedContinuationToken)
+        {
+            TableQuery<T> query = _tableStorageQueryBuilder.TableQuery<T>(columnValues);
+
+            TableQuerySegment<T> querySegment = null;
+            TableContinuationToken continuationToken = _tableContinuationTokenSerializer.Deserialize(serializedContinuationToken);
+
+            querySegment = await _table.ExecuteQuerySegmentedAsync(query, continuationToken);
+
+            return new PagedResultSegment<T>
+            {
+                ContinuationToken = _tableContinuationTokenSerializer.Serialize(querySegment.ContinuationToken),
+                Page = new List<T>(querySegment.Results)
+            };
+        }
+
+        #endregion
 
         public IResourceCreator GetResourceCreator()
         {
