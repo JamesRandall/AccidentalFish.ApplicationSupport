@@ -59,8 +59,8 @@ namespace AccidentalFish.ApplicationSupport.Core.NoSql
         Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action);
         Task AllActionAsync(Action<IEnumerable<T>> action);
 
-        Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues);
-        Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, string serializedContinuationToken);
+        Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize);
+        Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize, string serializedContinuationToken);
 
         IResourceCreator GetResourceCreator();
     }

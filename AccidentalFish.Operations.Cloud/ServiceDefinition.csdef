@@ -19,6 +19,10 @@
       <Setting name="com.accidentalfish.sendgrid.setting.username" />
       <Setting name="com.accidentalfish.sendgrid.setting.password" />
       <Setting name="com.accidentalfish.alert-sender.setting.alert-from" />
+      <Setting name="com.accidental-fish.email.storage-account-connection-string" />
+      <Setting name="com.accidental-fish.email.default-queue-name" />
+      <Setting name="com.accidental-fish.email.default-blob-container-name" />
+      <Setting name="com.accidental-fish.email.setting.email-poison-queue" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

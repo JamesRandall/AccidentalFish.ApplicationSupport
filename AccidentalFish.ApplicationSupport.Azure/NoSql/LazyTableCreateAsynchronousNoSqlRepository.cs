@@ -290,11 +290,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             await _repository.AllActionAsync(action);
         }
 
-        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues)
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize)
         {
             try
             {
-                return await _repository.PagedQueryAsync(columnValues);
+                return await _repository.PagedQueryAsync(columnValues, pageSize);
             }
             catch (StorageException ex)
             {
@@ -304,14 +304,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
                 }
             }
             await Create();
-            return await _repository.PagedQueryAsync(columnValues);
+            return await _repository.PagedQueryAsync(columnValues, pageSize);
         }
 
-        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, string serializedContinuationToken)
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize, string serializedContinuationToken)
         {
             try
             {
-                return await _repository.PagedQueryAsync(columnValues, serializedContinuationToken);
+                return await _repository.PagedQueryAsync(columnValues, pageSize, serializedContinuationToken);
             }
             catch (StorageException ex)
             {
@@ -321,7 +321,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
                 }
             }
             await Create();
-            return await _repository.PagedQueryAsync(columnValues, serializedContinuationToken);
+            return await _repository.PagedQueryAsync(columnValues, pageSize, serializedContinuationToken);
         }
 
         public IResourceCreator GetResourceCreator()

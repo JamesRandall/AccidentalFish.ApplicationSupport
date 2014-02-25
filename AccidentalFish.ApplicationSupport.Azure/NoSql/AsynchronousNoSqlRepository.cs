@@ -240,14 +240,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 
         #region Paged queries
 
-        public Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues)
+        public Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize)
         {
-            return PagedQueryAsync(columnValues, null);
+            return PagedQueryAsync(columnValues, pageSize, null);
         }
 
-        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, string serializedContinuationToken)
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize, string serializedContinuationToken)
         {
-            TableQuery<T> query = _tableStorageQueryBuilder.TableQuery<T>(columnValues);
+            TableQuery<T> query = _tableStorageQueryBuilder.TableQuery<T>(columnValues).Take(pageSize);
 
             TableQuerySegment<T> querySegment = null;
             TableContinuationToken continuationToken = _tableContinuationTokenSerializer.Deserialize(serializedContinuationToken);

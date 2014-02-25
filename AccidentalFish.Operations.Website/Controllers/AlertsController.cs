@@ -10,7 +10,7 @@ using AccidentalFish.Operations.Website.Domain.ViewModel;
 
 namespace AccidentalFish.Operations.Website.Controllers
 {
-    public class AlertsController : Controller
+    public partial class AlertsController : Controller
     {
         private readonly IAlertSubscriberService _alertSubscriberService;
 
@@ -21,18 +21,18 @@ namespace AccidentalFish.Operations.Website.Controllers
 
         //
         // GET: /Alerts/
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult Create()
+        public virtual ActionResult Create()
         {
             return View(new AlertSubscriber());
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(AlertSubscriber model)
+        public virtual async Task<ActionResult> Create(AlertSubscriber model)
         {
             if (ModelState.IsValid)
             {

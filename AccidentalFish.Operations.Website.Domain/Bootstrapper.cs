@@ -12,6 +12,7 @@ namespace AccidentalFish.Operations.Website.Domain
         {
             container.RegisterType<IMapperFactory, MapperFactory>();
             container.RegisterType<IAlertSubscriberService, AlertSubscriberService>();
+            container.RegisterType<ILogViewerService, LogViewerService>();
         }
     }
 }

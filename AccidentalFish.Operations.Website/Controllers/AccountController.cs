@@ -13,9 +13,9 @@ using AccidentalFish.Operations.Website.Models;
 
 namespace AccidentalFish.Operations.Website.Controllers
 {
-    public class AccountController : Controller
+    public partial class AccountController : Controller
     {
-        public ActionResult SignOut()
+        public virtual ActionResult SignOut()
         {
             WsFederationConfiguration config = FederatedAuthentication.FederationConfiguration.WsFederationConfiguration;
 
@@ -28,7 +28,7 @@ namespace AccidentalFish.Operations.Website.Controllers
             return new RedirectResult(signoutMessage.WriteQueryString());
         }
 
-        public ActionResult SignOutCallback()
+        public virtual ActionResult SignOutCallback()
         {
             if (Request.IsAuthenticated)
             {

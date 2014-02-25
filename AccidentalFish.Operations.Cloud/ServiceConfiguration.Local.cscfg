@@ -4,20 +4,24 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
-      <Setting name="com.accidental-fish.application-support.storage-account-connection-string" value="DefaultEndpointsProtocol=https;AccountName=applicationsupport;AccountKey=/VxOZ9YSgtWlzbyvIelMH4QBaMdFc58DE0pgk/N1g7yoAMvyZy6lFfO5c7/AMcyTRU2SE4PNnVNUGoWWe1Zn8g==;" />
+      <Setting name="com.accidental-fish.application-support.storage-account-connection-string" value="UseDevelopmentStorage=true;" />
       <Setting name="com.accidental-fish.application-support.setting.logger-queue" value="logger" />
       <Setting name="com.accidental-fish.application-support.setting.realtime-settings-table" value="realtimesettings" />
-      <Setting name="com.accidentalfish.log-queue-processor.storage-account-connection-string" value="DefaultEndpointsProtocol=https;AccountName=applicationsupport;AccountKey=/VxOZ9YSgtWlzbyvIelMH4QBaMdFc58DE0pgk/N1g7yoAMvyZy6lFfO5c7/AMcyTRU2SE4PNnVNUGoWWe1Zn8g==;" />
+      <Setting name="com.accidentalfish.log-queue-processor.storage-account-connection-string" value="UseDevelopmentStorage=true;" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-queue" value="logger" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bydate-table" value="logbydatedesc" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-byseverity-table" value="logbyseverity" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bysource-table" value="logbysource" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.realtime-settings-table" value="realtimesettings" />
-      <Setting name="com.accidentalfish.alert-sender.storage-account-connection-string" value="DefaultEndpointsProtocol=https;AccountName=applicationsupport;AccountKey=/VxOZ9YSgtWlzbyvIelMH4QBaMdFc58DE0pgk/N1g7yoAMvyZy6lFfO5c7/AMcyTRU2SE4PNnVNUGoWWe1Zn8g==;" />
+      <Setting name="com.accidentalfish.alert-sender.storage-account-connection-string" value="UseDevelopmentStorage=true;" />
       <Setting name="com.accidentalfish.alert-sender.default-table-name" value="alertsubscribers" />
-      <Setting name="com.accidentalfish.sendgrid.setting.username" value="capnkroaker" />
-      <Setting name="com.accidentalfish.sendgrid.setting.password" value="TUGnHp4YQrENoLeCeBR9" />
-      <Setting name="com.accidentalfish.alert-sender.setting.alert-from" value="james@accidentalfish.com" />
+      <Setting name="com.accidentalfish.sendgrid.setting.username" value="username" />
+      <Setting name="com.accidentalfish.sendgrid.setting.password" value="password" />
+      <Setting name="com.accidentalfish.alert-sender.setting.alert-from" value="your@email.address" />
+      <Setting name="com.accidental-fish.email.storage-account-connection-string" value="UseDevelopmentStorage=true;" />
+      <Setting name="com.accidental-fish.email.default-queue-name" value="email" />
+      <Setting name="com.accidental-fish.email.default-blob-container-name" value="emailtemplates" />
+      <Setting name="com.accidental-fish.email.setting.email-poison-queue" value="poisonemail" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

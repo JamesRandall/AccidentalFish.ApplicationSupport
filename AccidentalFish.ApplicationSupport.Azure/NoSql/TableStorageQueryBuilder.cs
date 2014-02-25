@@ -9,26 +9,30 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
     {
         public TableQuery<T> TableQuery<T>(Dictionary<string, object> columnValues) where T : NoSqlEntity
         {
-            List<string> tableQueries = new List<string>();
-            foreach (KeyValuePair<string, object> kvp in columnValues)
+            TableQuery<T> query = new TableQuery<T>();
+            if (columnValues != null)
             {
-                if (kvp.Value is string)
+                List<string> tableQueries = new List<string>();
+                foreach (KeyValuePair<string, object> kvp in columnValues)
                 {
-                    tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterCondition(kvp.Key, QueryComparisons.Equal, (string)kvp.Value));
+                    if (kvp.Value is string)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterCondition(kvp.Key, QueryComparisons.Equal, (string)kvp.Value));
+                    }
+                    else if (kvp.Value is Guid)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForGuid(kvp.Key, QueryComparisons.Equal, (Guid)kvp.Value));
+                    }
                 }
-                else if (kvp.Value is Guid)
+                string queryString = tableQueries[0];
+                for (int index = 1; index < tableQueries.Count; index++)
                 {
-                    tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForGuid(kvp.Key, QueryComparisons.Equal, (Guid)kvp.Value));
+                    string subQueryString = tableQueries[index];
+                    queryString = Microsoft.WindowsAzure.Storage.Table.TableQuery.CombineFilters(queryString, TableOperators.And, subQueryString);
                 }
+                query = query.Where(queryString);
             }
-            string queryString = tableQueries[0];
-            for (int index = 1; index < tableQueries.Count; index++)
-            {
-                string subQueryString = tableQueries[index];
-                queryString = Microsoft.WindowsAzure.Storage.Table.TableQuery.CombineFilters(queryString, TableOperators.And, subQueryString);
-            }
-
-            TableQuery<T> query = new TableQuery<T>().Where(queryString);
+            
             return query;
         }
     }
