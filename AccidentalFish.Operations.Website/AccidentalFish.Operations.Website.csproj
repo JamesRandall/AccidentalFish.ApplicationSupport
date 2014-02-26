@@ -187,6 +187,7 @@
     <Compile Include="LogController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ContinuationTokenViewModel.cs" />
     <Compile Include="Models\TenantDbContext.cs" />
     <Compile Include="Models\TenantRegistrationModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -216,6 +217,7 @@
     <Content Include="Scripts\handlebars.js" />
     <Content Include="Scripts\handlebars.min.js" />
     <Content Include="Scripts\handlebars.runtime.js" />
+    <Content Include="Scripts\handlebarsHelpers.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.Operations.Website.Domain.Services;
+using AccidentalFish.Operations.Website.Models;
 
 namespace AccidentalFish.Operations.Website.Controllers
 {
@@ -36,8 +37,8 @@ namespace AccidentalFish.Operations.Website.Controllers
             return View();
         }
 
-
-        public virtual async Task<JsonResult> GetByDateDescending(string continuationToken=null)
+        [ValidateInput(false)]
+        public virtual async Task<JsonResult> GetByDateDescending(string continuationToken = null)
         {
             PagedResultSegment<LogTableItem> results = await _logViewerService.GetByDateDescending(continuationToken);
             return Json(new {
@@ -46,6 +47,7 @@ namespace AccidentalFish.Operations.Website.Controllers
                 }, JsonRequestBehavior.AllowGet);
         }
 
+        [ValidateInput(false)]
         public virtual async Task<JsonResult> GetBySeverity(string continuationToken = null)
         {
             PagedResultSegment<LogTableItem> results = await _logViewerService.GetBySeverity(continuationToken);
@@ -56,6 +58,7 @@ namespace AccidentalFish.Operations.Website.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [ValidateInput(false)]
         public virtual async Task<JsonResult> GetBySource(string continuationToken = null)
         {
             PagedResultSegment<LogTableItem> results = await _logViewerService.GetBySource(continuationToken);

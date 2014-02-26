@@ -13,18 +13,15 @@
 @section scripts
 {
     <script type="text/javascript">
-        Handlebars.registerHelper('jsonDate', function(jsonDate) {
-            return moment(jsonDate).format('L');
-        });
-
         $(document).ready(function() {
             $("#grid").simplePagingGrid({
-                cellTemplates: ['{{jsonDate LoggedAt}}', null, null, null],
+                cellTemplates: ['{{jsonDate LoggedAt}} {{jsonTime LoggedAt}}', null, null, null],
                 columnNames: ["Logged At", "Level", "Source", "Message"],
                 columnKeys: ["LoggedAt", "Level", "Source", "Message"],
                 columnWidths: ["20%", "20%", "30%", "30%"],
                 dataUrl: '@Url.Action("GetBySource")',
-                showLoadingOverlay: false
+                showLoadingOverlay: false,
+                useContinuationTokens: true
             });
         });
     </script>

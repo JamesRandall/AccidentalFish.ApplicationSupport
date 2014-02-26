@@ -23,6 +23,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 
         public string Serialize(TableContinuationToken continuationToken)
         {
+            if (continuationToken == null) return null;
+
             using (StringWriter stringWriter = new StringWriter())
             {
                 using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter))

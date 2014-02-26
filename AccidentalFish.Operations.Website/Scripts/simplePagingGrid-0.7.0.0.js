@@ -69,13 +69,17 @@
         _firstRefresh: true,
         _showingEmptyTemplate: false,
         _compiledCellTemplates: null,
-
+        _continuationTokens: [null],
         _originalSortOrder: null,
         _originalSortColumn: null,
 
         init: function() {
             var that = this;
             that._currentPage = that._settings.pageNumber;
+            if (that._settings.useContinuationTokens) {
+                that._settings.showGotoPage = false;
+                that._settings.showPageNumbers = false;
+            }
 
             that.$element.empty();
 
@@ -303,6 +307,9 @@
                 event.preventDefault();
                 if (!paginationModel.isFirstPage) {
                     that._currentPage--;
+                    if (that._settings.useContinuationTokens) {
+                        that._continuationTokens.pop();
+                    }
                     that._refreshData();
                 }
             });
@@ -415,10 +422,11 @@
                 this._pageData = sourceData;
                 this._numberOfRows = null;
             } else if ($.isPlainObject(sourceData)) {
-                if ('continuationToken' in sourceData) {
-                    this._settings.showGotoPage = false;
-                    this._settings.showPageNumbers = false;
+                if (this._settings.useContinuationTokens) {
                     this._pageData = sourceData.page;
+                    if (sourceData.continuationToken !== null) {
+                        this._continuationTokens.push(sourceData.continuationToken);
+                    }
                 } else {
                     this._pageData = sourceData.currentPage;
                     this._numberOfRows = sourceData.totalRows;
@@ -540,16 +548,28 @@
                         }
                     });
                 } else {
-                    $.ajax({
-                        url: that._settings.dataUrl,
-                        cache: false,
-                        dataType: 'json',
-                        data: {
+                    var payload;
+                    if (that._settings.useContinuationTokens) {
+                        var token = that._continuationTokens[that._currentPage];
+                        if (token !== null) {
+                            payload = {
+                                continuationToken: that._continuationTokens[that._currentPage]
+                            };
+                        }
+                    } else {
+                        payload = {
                             page: that._currentPage,
                             pageSize: that._settings.pageSize,
                             sortColumn: that._sortedColumn,
                             sortOrder: that._sortOrder
-                        },
+                        };
+                    }
+
+                    $.ajax({
+                        url: that._settings.dataUrl,
+                        cache: false,
+                        dataType: 'json',
+                        data: payload,
                         success: function(jsonData) {
                             that._fetchedData = true;
                             that._parseSourceData(jsonData);
@@ -824,6 +844,7 @@
             urlWriter: defaultUrlWriter,
             urlReader: defaultUrlReader,
             urlUpdatingEnabled: true,
+            useContinuationTokens: false,
             
             // Event Handlers
             emptyTemplateCreated: null,

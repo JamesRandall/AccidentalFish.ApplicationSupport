@@ -20,6 +20,7 @@ namespace AccidentalFish.Operations.Website
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
                       "~/Scripts/handlebars.js",
+                      "~/Scripts/handlebarsHelpers.js",
                       "~/Scripts/simplePagingGrid-0.7.0.0.js",
                       "~/Scripts/moment.js"));
 
