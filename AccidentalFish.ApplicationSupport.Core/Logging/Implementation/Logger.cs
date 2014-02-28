@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
@@ -33,52 +34,52 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
             _minimumLoggingLevel = minimumLoggingLevel;
         }
 
-        public void Debug(string message)
+        public async Task Debug(string message)
         {
-            Log(LogLevelEnum.Debug, message);
+            await Log(LogLevelEnum.Debug, message);
         }
 
-        public void Debug(string message, Exception exception)
+        public async Task Debug(string message, Exception exception)
         {
-            Log(LogLevelEnum.Debug, message, exception);
+            await Log(LogLevelEnum.Debug, message, exception);
         }
 
-        public void Information(string message)
+        public async Task Information(string message)
         {
-            Log(LogLevelEnum.Information, message);
+            await Log(LogLevelEnum.Information, message);
         }
 
-        public void Information(string message, Exception exception)
+        public async Task Information(string message, Exception exception)
         {
-            Log(LogLevelEnum.Information, message, exception);
+            await Log(LogLevelEnum.Information, message, exception);
         }
 
-        public void Warning(string message)
+        public async Task Warning(string message)
         {
-            Log(LogLevelEnum.Warning, message);
+            await Log(LogLevelEnum.Warning, message);
         }
 
-        public void Warning(string message, Exception exception)
+        public async Task Warning(string message, Exception exception)
         {
-            Log(LogLevelEnum.Warning, message, exception);
+            await Log(LogLevelEnum.Warning, message, exception);
         }
 
-        public void Error(string message)
+        public async Task Error(string message)
         {
-            Log(LogLevelEnum.Error, message);
+            await Log(LogLevelEnum.Error, message);
         }
 
-        public void Error(string message, Exception exception)
+        public async Task Error(string message, Exception exception)
         {
-            Log(LogLevelEnum.Error, message, exception);
+            await Log(LogLevelEnum.Error, message, exception);
         }
 
-        public void Log(LogLevelEnum level, string message)
+        public async Task Log(LogLevelEnum level, string message)
         {
-            Log(level, message, null);
+            await Log(level, message, null);
         }
 
-        public async void Log(LogLevelEnum level, string message, Exception exception)
+        public async Task Log(LogLevelEnum level, string message, Exception exception)
         {
             LogQueueItem item = CreateLogQueueItem(level, message, exception);
             _loggerExtension.Logger(item, level >= _minimumLoggingLevel);

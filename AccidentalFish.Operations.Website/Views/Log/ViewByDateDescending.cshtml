@@ -16,7 +16,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $("#grid").simplePagingGrid({
-                cellTemplates: ['{{jsonDate LoggedAt}} {{jsonTime LoggedAt}}', null, null, null],
+                cellTemplates: ['{{jsonDate LoggedAt}} {{jsonTime LoggedAt}}', '{{logLevel Level}}', null, null],
                 columnNames: ["Logged At", "Level", "Source", "Message"],
                 columnKeys: ["LoggedAt", "Level", "Source", "Message"],
                 columnWidths: ["20%", "20%", "30%", "30%"],

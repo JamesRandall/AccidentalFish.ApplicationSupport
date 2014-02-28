@@ -14,7 +14,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Model
 
         public void SetPartitionAndRowKeyForLogBySeverity()
         {
-            PartitionKey = Level.ToString("D2");
+            PartitionKey = ((int)(Enum.GetValues(typeof(LogLevelEnum)).Cast<LogLevelEnum>().Max() - Level)).ToString("D2");
             RowKey = String.Format("{0:D19}{1}", DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks, Guid.NewGuid());
         }
 

@@ -10,6 +10,9 @@ using AccidentalFish.Operations.Website.Domain.ViewModel;
 
 namespace AccidentalFish.Operations.Website.Controllers
 {
+#if !OFFLINE
+    [Authorize]
+#endif
     public partial class AlertsController : Controller
     {
         private readonly IAlertSubscriberService _alertSubscriberService;

@@ -6,7 +6,9 @@ using System.Web.Mvc;
 
 namespace AccidentalFish.Operations.Website.Controllers
 {
+#if !OFFLINE
     [Authorize]
+#endif
     public partial class HomeController : Controller
     {
         public virtual ActionResult Index()

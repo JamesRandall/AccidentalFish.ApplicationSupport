@@ -15,7 +15,9 @@ namespace AccidentalFish.Operations.Website
         {
             AreaRegistration.RegisterAllAreas();
             UnityConfig.RegisterComponents();
+#if !OFFLINE
             IdentityConfig.ConfigureIdentity();
+#endif
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

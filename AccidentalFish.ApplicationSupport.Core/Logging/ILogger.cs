@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging
 {
@@ -12,19 +13,19 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging
 
     public interface ILogger
     {
-        void Debug(string message);
-        void Debug(string message, Exception exception);
+        Task Debug(string message);
+        Task Debug(string message, Exception exception);
 
-        void Information(string message);
-        void Information(string message, Exception exception);
+        Task Information(string message);
+        Task Information(string message, Exception exception);
 
-        void Warning(string message);
-        void Warning(string message, Exception exception);
+        Task Warning(string message);
+        Task Warning(string message, Exception exception);
 
-        void Error(string message);
-        void Error(string message, Exception exception);
+        Task Error(string message);
+        Task Error(string message, Exception exception);
 
-        void Log(LogLevelEnum level, string message);
-        void Log(LogLevelEnum level, string message, Exception exception);
+        Task Log(LogLevelEnum level, string message);
+        Task Log(LogLevelEnum level, string message, Exception exception);
     }
 }

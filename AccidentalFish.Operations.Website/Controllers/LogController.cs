@@ -11,7 +11,9 @@ using AccidentalFish.Operations.Website.Models;
 
 namespace AccidentalFish.Operations.Website.Controllers
 {
+#if !OFFLINE
     [Authorize]
+#endif
     public partial class LogController : Controller
     {
         private readonly ILogViewerService _logViewerService;
