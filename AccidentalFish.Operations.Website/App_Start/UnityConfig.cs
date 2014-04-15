@@ -9,9 +9,11 @@ namespace AccidentalFish.Operations.Website
         public static void RegisterComponents()
         {
 			var container = new UnityContainer();
-            ApplicationSupport.Core.Bootstrapper.RegisterDependencies(container);
-            ApplicationSupport.Azure.Bootstrapper.RegisterDependencies(container);
-            Domain.Bootstrapper.RegisterDependencies(container);
+            
+            // register all your components with the container here
+            // it is NOT necessary to register your controllers
+            
+            // e.g. container.RegisterType<ITestService, TestService>();
             
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
