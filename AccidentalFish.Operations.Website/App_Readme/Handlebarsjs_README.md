@@ -18,26 +18,48 @@ Please read details how to precompile your Handlebars templates at http://handle
 
 ## Original Documentation text from https://raw.github.com/wycats/handlebars.js/master/README.markdown
 
+[![Build Status](https://travis-ci.org/wycats/handlebars.js.png?branch=master)](https://travis-ci.org/wycats/handlebars.js)
+
 Handlebars.js
 =============
 
-Handlebars.js is an extension to the [Mustache templating language](http://mustache.github.com/) created by Chris Wanstrath. Handlebars.js and Mustache are both logicless templating languages that keep the view and the code separated like we all know they should be.
+Handlebars.js is an extension to the [Mustache templating
+language](http://mustache.github.com/) created by Chris Wanstrath.
+Handlebars.js and Mustache are both logicless templating languages that
+keep the view and the code separated like we all know they should be.
 
-Checkout the official Handlebars docs site at [http://www.handlebarsjs.com](http://www.handlebarsjs.com).
-
+Checkout the official Handlebars docs site at
+[http://www.handlebarsjs.com](http://www.handlebarsjs.com).
 
 Installing
 ----------
-Installing Handlebars is easy. Simply [download the package from GitHub](https://github.com/wycats/handlebars.js/archives/master) and add it to your web pages (you should usually use the most recent version).
+Installing Handlebars is easy. Simply download the package [from the
+official site](http://handlebarsjs.com/) and add it to your web pages
+(you should usually use the most recent version).
+
+Alternatively, if you prefer having the latest version of handlebars from
+the 'master' branch, passing builds of the 'master' branch are automatically
+published to S3. You may download the latest passing master build by grabbing
+a `handlebars-latest.js` file from the [builds page][builds-page]. When the
+build is published, it is also available as a `handlebars-gitSHA.js` file on
+the builds page if you need a version to refer to others.
+`handlebars-runtime.js` builds are also available.
+
+**Note**: The S3 builds page is provided as a convenience for the community,
+but you should not use it for hosting Handlebars in production.
 
 Usage
 -----
-In general, the syntax of Handlebars.js templates is a superset of Mustache templates. For basic syntax, check out the [Mustache manpage](http://mustache.github.com/mustache.5.html).
+In general, the syntax of Handlebars.js templates is a superset
+of Mustache templates. For basic syntax, check out the [Mustache
+manpage](http://mustache.github.com/mustache.5.html).
 
-Once you have a template, use the Handlebars.compile method to compile the template into a function. The generated function takes a context argument, which will be used to render the template.
+Once you have a template, use the `Handlebars.compile` method to compile
+the template into a function. The generated function takes a context
+argument, which will be used to render the template.
 
 ```js
-var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " + 
+var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " +
              "{{kids.length}} kids:</p>" +
              "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
 var template = Handlebars.compile(source);
@@ -63,12 +85,12 @@ template. Here's an example, which assumes that your objects have a URL
 embedded in them, as well as the text for a link:
 
 ```js
-Handlebars.registerHelper('link_to', function(context) {
-  return "<a href='" + context.url + "'>" + context.body + "</a>";
+Handlebars.registerHelper('link_to', function() {
+  return "<a href='" + this.url + "'>" + this.body + "</a>";
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-var source = "<ul>{{#posts}}<li>{{{link_to this}}}</li>{{/posts}}</ul>"
+var source = "<ul>{{#posts}}<li>{{{link_to}}}</li>{{/posts}}</ul>"
 
 var template = Handlebars.compile(source);
 template(context);
@@ -78,6 +100,14 @@ template(context);
 // <ul>
 //   <li><a href='/hello-world'>Hello World!</a></li>
 // </ul>
+```
+
+Helpers take precedence over fields defined on the context. To access a field
+that is masked by a helper, a path reference may be used. In the example above
+a field named `link_to` on the `context` object would be referenced using:
+
+```
+{{./link_to}}
 ```
 
 Escaping
@@ -93,25 +123,34 @@ To explicitly *not* escape the contents, use the triple-mustache
 
 Differences Between Handlebars.js and Mustache
 ----------------------------------------------
-Handlebars.js adds a couple of additional features to make writing templates easier and also changes a tiny detail of how partials work.
+Handlebars.js adds a couple of additional features to make writing
+templates easier and also changes a tiny detail of how partials work.
 
 ### Paths
 
-Handlebars.js supports an extended expression syntax that we call paths. Paths are made up of typical expressions and . characters. Expressions allow you to not only display data from the current context, but to display data from contexts that are descendents and ancestors of the current context.
+Handlebars.js supports an extended expression syntax that we call paths.
+Paths are made up of typical expressions and . characters. Expressions
+allow you to not only display data from the current context, but to
+display data from contexts that are descendants and ancestors of the
+current context.
 
-To display data from descendent contexts, use the `.` character. So, for example, if your data were structured like:
+To display data from descendant contexts, use the `.` character. So, for
+example, if your data were structured like:
 
 ```js
-var data = {"person": { "name": "Alan" }, company: {"name": "Rad, Inc." } };
+var data = {"person": { "name": "Alan" }, "company": {"name": "Rad, Inc." } };
 ```
 
-you could display the person's name from the top-level context with the following expression:
+You could display the person's name from the top-level context with the
+following expression:
 
 ```
 {{person.name}}
 ```
 
-You can backtrack using `../`. For example, if you've already traversed into the person object you could still display the company's name with an expression like `{{../company.name}}`, so:
+You can backtrack using `../`. For example, if you've already traversed
+into the person object you could still display the company's name with
+an expression like `{{../company.name}}`, so:
 
 ```
 {{#person}}{{name}} - {{../company.name}}{{/person}}
@@ -129,12 +168,12 @@ When calling a helper, you can pass paths or Strings as parameters. For
 instance:
 
 ```js
-Handlebars.registerHelper('link_to', function(title, context) {
-  return "<a href='/posts" + context.id + "'>" + title + "</a>"
+Handlebars.registerHelper('link_to', function(title, options) {
+  return "<a href='/posts" + this.url + "'>" + title + "!</a>"
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-var source = '<ul>{{#posts}}<li>{{{link_to "Post" this}}}</li>{{/posts}}</ul>'
+var source = '<ul>{{#posts}}<li>{{{link_to "Post"}}}</li>{{/posts}}</ul>'
 
 var template = Handlebars.compile(source);
 template(context);
@@ -142,7 +181,7 @@ template(context);
 // Would render:
 //
 // <ul>
-//   <li><a href='/hello-world'>Post!</a></li>
+//   <li><a href='/posts/hello-world'>Post!</a></li>
 // </ul>
 ```
 
@@ -152,12 +191,14 @@ gets passed to the helper function.
 
 ### Block Helpers
 
-Handlebars.js also adds the ability to define block helpers. Block helpers are functions that can be called from anywhere in the template. Here's an example:
+Handlebars.js also adds the ability to define block helpers. Block
+helpers are functions that can be called from anywhere in the template.
+Here's an example:
 
 ```js
-var source = "<ul>{{#people}}<li>{{{#link}}}{{name}}{{/link}}</li>{{/people}}</ul>";
-Handlebars.registerHelper('link', function(context, fn) {
-  return '<a href="/people/' + this.__get__("id") + '">' + fn(this) + '</a>';
+var source = "<ul>{{#people}}<li>{{#link}}{{name}}{{/link}}</li>{{/people}}</ul>";
+Handlebars.registerHelper('link', function(options) {
+  return '<a href="/people/' + this.id + '">' + options.fn(this) + '</a>';
 });
 var template = Handlebars.compile(source);
 
@@ -174,7 +215,18 @@ template(data);
 // </ul>
 ```
 
-Whenever the block helper is called it is given two parameters, the argument that is passed to the helper, or the current context if no argument is passed and the compiled contents of the block. Inside of the block helper the value of `this` is the current context, wrapped to include a method named `__get__` that helps translate paths into values within the helpers.
+Whenever the block helper is called it is given one or more parameters,
+any arguments that are passed in the helper in the call and an `options`
+object containing the `fn` function which executes the block's child.
+The block's current context may be accessed through `this`.
+
+Block helpers have the same syntax as mustache sections but should not be
+confused with one another. Sections are akin to an implicit `each` or
+`with` statement depending on the input data and helpers are explicit
+pieces of code that are free to implement whatever behavior they like.
+The [mustache spec](http://mustache.github.io/mustache.5.html)
+defines the exact behavior of sections. In the case of name conflicts,
+helpers are given priority.
 
 ### Partials
 
@@ -238,21 +290,31 @@ Precompile handlebar templates.
 Usage: handlebars template...
 
 Options:
-  -f, --output     Output File                                                           [string]
-  -k, --known      Known helpers                                                         [string]
-  -o, --knownOnly  Known helpers only                                                    [boolean]
-  -m, --min        Minimize output                                                       [boolean]
-  -s, --simple     Output template function only.                                        [boolean]
-  -r, --root       Template root. Base value that will be stripped from template names.  [string]
+  -a, --amd            Create an AMD format function (allows loading with RequireJS)          [boolean]
+  -f, --output         Output File                                                            [string]
+  -k, --known          Known helpers                                                          [string]
+  -o, --knownOnly      Known helpers only                                                     [boolean]
+  -m, --min            Minimize output                                                        [boolean]
+  -s, --simple         Output template function only.                                         [boolean]
+  -r, --root           Template root. Base value that will be stripped from template names.   [string]
+  -c, --commonjs       Exports CommonJS style, path to Handlebars module                      [string]
+  -h, --handlebarPath  Path to handlebar.js (only valid for amd-style)                        [string]
+  -n, --namespace      Template namespace                                                     [string]
+  -p, --partial        Compiling a partial template                                           [boolean]
+  -d, --data           Include data when compiling                                            [boolean]
+  -e, --extension      Template extension.                                                    [string]
+  -b, --bom            Removes the BOM (Byte Order Mark) from the beginning of the templates. [boolean]
 </pre>
 
-If using the precompiler's normal mode, the resulting templates will be stored
-to the `Handlebars.templates` object using the relative template name sans the
-extension. These templates may be executed in the same manner as templates.
+If using the precompiler's normal mode, the resulting templates will be
+stored to the `Handlebars.templates` object using the relative template
+name sans the extension. These templates may be executed in the same
+manner as templates.
 
-If using the simple mode the precompiler will generate a single javascript method.
-To execute this method it must be passed to the using the `Handlebars.template`
-method and the resulting object may be as normal.
+If using the simple mode the precompiler will generate a single
+javascript method. To execute this method it must be passed to the using
+the `Handlebars.template` method and the resulting object may be as
+normal.
 
 ### Optimizations
 
@@ -264,39 +326,48 @@ method and the resulting object may be as normal.
   helpers for size and speed.
 - When all helpers are known in advance the `--knownOnly` argument may be used
   to optimize all block helper references.
+- Implementations that do not use `@data` variables can improve performance of
+  iteration centric templates by specifying `{data: false}` in the compiler options.
 
+Supported Environments
+----------------------
+
+Handlebars has been designed to work in any ECMAScript 3 environment. This includes
+
+- Node.js
+- Chrome
+- Firefox
+- Safari 5+
+- Opera 11+
+- IE 6+
+
+Older versions and other runtimes are likely to work but have not been formally
+tested.
 
 Performance
 -----------
 
-In a rough performance test, precompiled Handlebars.js templates (in the original version of Handlebars.js) rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages. Justin Marney, a.k.a. [gotascii](http://github.com/gotascii), confirmed that with an [independent test](http://sorescode.com/2010/09/12/benchmarks.html). The rewritten Handlebars (current version) is faster than the old version, and we will have some benchmarks in the near future.
+In a rough performance test, precompiled Handlebars.js templates (in
+the original version of Handlebars.js) rendered in about half the
+time of Mustache templates. It would be a shame if it were any other
+way, since they were precompiled, but the difference in architecture
+does have some big performance advantages. Justin Marney, a.k.a.
+[gotascii](http://github.com/gotascii), confirmed that with an
+[independent test](http://sorescode.com/2010/09/12/benchmarks.html). The
+rewritten Handlebars (current version) is faster than the old version,
+and we will have some benchmarks in the near future.
 
 
 Building
 --------
 
-To build handlebars, just run `rake release`, and you will get two files
-in the `dist` directory.
+To build handlebars, just run `grunt build`, and the build will output to the `dist` directory.
 
 
 Upgrading
 ---------
 
-When upgrading from the Handlebars 0.9 series, be aware that the
-signature for passing custom helpers or partials to templates has
-changed.
-
-Instead of:
-
-```js
-template(context, helpers, partials, [data])
-```
-
-Use:
-
-```js
-template(context, {helpers: helpers, partials: partials, data: data})
-```
+See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/release-notes.md) for upgrade notes.
 
 Known Issues
 ------------
@@ -304,31 +375,80 @@ Known Issues
 * Using a variable, helper, or partial named `class` causes errors in IE browsers. (Instead, use `className`)
 
 Handlebars in the Wild
------------------
-* [jblotus](http://github.com/jblotus) created [http://tryhandlebarsjs.com](http://tryhandlebarsjs.com) for anyone who would
-like to try out Handlebars.js in their browser.
-* Don Park wrote an Express.js view engine adapter for Handlebars.js called [hbs](http://github.com/donpark/hbs).
-* [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey, supports Handlebars.js as one of its template plugins.
-* [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main templating engine, extending it with automatic data binding support.
-* [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to structure your views, also with automatic data binding support.
-* Les Hill (@leshill) wrote a Rails Asset Pipeline gem named [handlebars_assets](http://github.com/leshill/handlebars_assets).
+----------------------
+
+* [Assemble](http://assemble.io), by [@jonschlinkert](https://github.com/jonschlinkert)
+  and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js
+  as its template engine.
+* [CoSchedule](http://coschedule.com) An editorial calendar for WordPress that uses Handlebars.js
+* [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
+  structure your views, also with automatic data binding support.
+* [handlebars_assets](http://github.com/leshill/handlebars_assets): A Rails Asset Pipeline gem
+  from Les Hill (@leshill).
+* [handlebars-helpers](https://github.com/assemble/handlebars-helpers) is an extensive library
+  with 100+ handlebars helpers.
+* [hbs](http://github.com/donpark/hbs): An Express.js view engine adapter for Handlebars.js,
+  from Don Park.
+* [jblotus](http://github.com/jblotus) created [http://tryhandlebarsjs.com](http://tryhandlebarsjs.com)
+  for anyone who would like to try out Handlebars.js in their browser.
+* [jQuery plugin](http://71104.github.io/jquery-handlebars/): allows you to use
+  Handlebars.js with [jQuery](http://jquery.com/).
+* [Lumbar](http://walmartlabs.github.io/lumbar) provides easy module-based template management for
+  handlebars projects.
+* [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey,
+  supports Handlebars.js as one of its template plugins.
+* [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main
+  templating engine, extending it with automatic data binding support.
+* [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
+* [Swag](https://github.com/elving/swag) by [@elving](https://github.com/elving) is a growing collection of helpers for handlebars.js. Give your handlebars.js templates some swag son!
+
+External Resources
+------------------
+
+* [Gist about Synchronous and asynchronous loading of external handlebars templates](https://gist.github.com/2287070)
+
+Have a project using Handlebars? Send us a [pull request](https://github.com/wycats/handlebars.js/pull/new/master)!
 
 Helping Out
 -----------
+
 To build Handlebars.js you'll need a few things installed.
 
 * Node.js
-* Jison, for building the compiler - `npm install jison`
-* Ruby
-* therubyracer, for running tests - `gem install therubyracer`
-* rspec, for running tests - `gem install rspec`
+* [Grunt](http://gruntjs.com/getting-started)
 
-There's a Gemfile in the repo, so you can run `bundle` to install rspec and therubyracer if you've got bundler installed.
+Project dependencies may be installed via `npm install`.
 
-To build Handlebars.js from scratch, you'll want to run `rake compile` in the root of the project. That will build Handlebars and output the results to the dist/ folder. To run tests, run `rake spec`. You can also run our set of benchmarks with `rake bench`.
+To build Handlebars.js from scratch, you'll want to run `grunt`
+in the root of the project. That will build Handlebars and output the
+results to the dist/ folder. To re-run tests, run `grunt test` or `npm test`.
+You can also run our set of benchmarks with `grunt bench`.
 
-If you notice any problems, please report them to the GitHub issue tracker at [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues). Feel free to contact commondream or wycats through GitHub with any other questions or feature requests. To submit changes fork the project and send a pull request.
+If you notice any problems, please report them to the GitHub issue tracker at
+[http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
+Feel free to contact commondream or wycats through GitHub with any other
+questions or feature requests. To submit changes fork the project and
+send a pull request.
+
+### Releasing
+
+Handlebars utilizes the [release yeoman generator][generator-release] to perform most release tasks.
+
+A full release may be completed with the following:
+
+```
+yo release:notes patch
+yo release:release patch
+npm publish
+yo release:publish cdnjs handlebars.js dist/cdnjs/
+yo release:publish components handlebars.js dist/components/
+```
+
+After this point the handlebars site needs to be updated to point to the new version numbers.
 
 License
 -------
 Handlebars.js is released under the MIT license.
+
+[builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/index.html
+[generator-release]: https://github.com/walmartlabs/generator-release
