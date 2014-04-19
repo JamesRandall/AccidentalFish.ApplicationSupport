@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Blobs
@@ -11,5 +12,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Blobs
         void Upload(string name, Stream stream, Action<string> success, Action<string, Exception> failure);
         IBlob Get(string name);
         string Endpoint { get; }
+        MultipartStreamProvider GetMultipartStreamProvider();
     }
 }

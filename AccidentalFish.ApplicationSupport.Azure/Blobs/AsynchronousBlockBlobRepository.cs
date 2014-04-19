@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using CuttingEdge.Conditions;
@@ -66,6 +67,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
         public string Endpoint
         {
             get { return _endpoint; }
+        }
+
+        public MultipartStreamProvider GetMultipartStreamProvider()
+        {
+            return new BlobMultipartStreamProvider(_container);
         }
     }
 }
