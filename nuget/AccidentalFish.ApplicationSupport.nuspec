@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>accidentalfish.applicationsupport</id>
+    <version>0.1.0.0</version>
+    <title>Azure PaaS Application Framework</title>
+    <authors>James Randall</authors>
+    <owners>James Randall</owners>
+    <licenseUrl>https://raw.githubusercontent.com/JamesRandall/AccidentalFish.ApplicationSupport/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/JamesRandall/AccidentalFish.ApplicationSupport</projectUrl>
+    <iconUrl>http://www.accidentalfish.com/nugetidentity.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A dependency injectable application framework for building, configuring, deploying and managing applications on Azure PaaS</description>
+    <summary></summary>
+    <releaseNotes>Early release</releaseNotes>
+    <copyright>Copyright 2013 Accidental Fish Ltd.</copyright>
+    <tags>azure paas application framework table sql queue deployment configuration</tags>
+    <dependencies>
+      <dependency id="AWSSDK" version="2.0.13.2" />
+      <dependency id="CuttingEdge.Conditions" version="1.2.0.0" />
+      <dependency id="EnterpriseLibrary.Common" version="6.0.1304.0" />
+      <dependency id="EnterpriseLibrary.WindowsAzure.TransientFaultHandling" />
+      <dependency id="EntityFramework" version="6.1.0" />
+      <dependency id="Microsoft.Bcl" version="1.1.8" />
+      <dependency id="Microsoft.Bcl.Build" version="1.0.14" />
+      <dependency id="Microsoft.Data.Edm" version="5.6.1" />
+      <dependency id="Microsoft.Data.OData" version="5.6.1" />
+      <dependency id="Microsoft.Data.Services.Client" version="5.6.1" />
+      <dependency id="Microsoft.Net.Http" version="2.2.20" />
+      <dependency id="Microsoft.WindowsAzure.ConfigurationManager" version="2.0.3" />
+      <dependency id="Newtonsoft.Json" version="6.0.2" />
+      <dependency id="RazorEngine" version="3.4.1"  />
+      <dependency id="System.Spatial" version="5.6.1" />
+      <dependency id="TransientFaultHandling.Core" version="5.1.1209.1" />
+      <dependency id="Unity" version="3.0.1304.1" />
+      <dependency id="WindowsAzure.Storage" version="3.1.0.1" />
+    </dependencies>
+  </metadata>
+</package>

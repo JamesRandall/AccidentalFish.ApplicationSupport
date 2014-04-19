@@ -37,6 +37,10 @@ x64/
 *.vssscc
 .builds
 
+# Nuget Lib
+nuget/[Ll]ib/[Nn]et45/*.dll
+nuget/[Tt]ools/
+
 # Visual C++ cache files
 ipch/
 *.aps
