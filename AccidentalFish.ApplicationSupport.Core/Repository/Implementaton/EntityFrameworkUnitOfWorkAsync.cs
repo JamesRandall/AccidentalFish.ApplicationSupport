@@ -70,5 +70,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository.Implementaton
             get { return _dbConfiguration.SuspendExecutionStrategy; }
             set { _dbConfiguration.SuspendExecutionStrategy = value; }
         }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
     }
 }
