@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>accidentalfish.applicationsupport</id>
-    <version>0.1.0.1</version>
+    <version>0.1.0.2</version>
     <title>Azure PaaS Application Framework</title>
     <authors>James Randall</authors>
     <owners>James Randall</owners>

@@ -48,5 +48,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository.Implementaton
                 new EntityFrameworkUnitOfWork(_configuration, _contextFactory, _dbConfiguration) :
                 new EntityFrameworkUnitOfWork(_contextType, _connectionString, _dbConfiguration);
         }
+
+        public IUnitOfWorkAsync CreateAsync()
+        {
+            return _contextType == null ?
+                new EntityFrameworkUnitOfWorkAsync(_configuration, _contextFactory, _dbConfiguration) :
+                new EntityFrameworkUnitOfWorkAsync(_contextType, _connectionString, _dbConfiguration);
+        }
     }
 }

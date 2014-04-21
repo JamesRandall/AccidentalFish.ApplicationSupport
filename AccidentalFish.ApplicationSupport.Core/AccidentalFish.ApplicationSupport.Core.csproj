@@ -163,6 +163,10 @@
     <Compile Include="Policies\Implementation\LeasedRetry.cs" />
     <Compile Include="Policies\IResourceCreator.cs" />
     <Compile Include="Queues\IQueueItem.cs" />
+    <Compile Include="Repository\Implementaton\EntityFrameworkRepositoryAsync.cs" />
+    <Compile Include="Repository\Implementaton\EntityFrameworkUnitOfWorkAsync.cs" />
+    <Compile Include="Repository\IRepositoryAsync.cs" />
+    <Compile Include="Repository\IUnitOfWorkAsync.cs" />
     <Compile Include="Runtime\IComponentHost.cs" />
     <Compile Include="Runtime\IComponentHostConfigurationProvider.cs" />
     <Compile Include="Components\IHostableComponent.cs" />

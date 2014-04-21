@@ -3,5 +3,6 @@
     public interface IUnitOfWorkFactory
     {
         IUnitOfWork Create();
+        IUnitOfWorkAsync CreateAsync();
     }
 }
