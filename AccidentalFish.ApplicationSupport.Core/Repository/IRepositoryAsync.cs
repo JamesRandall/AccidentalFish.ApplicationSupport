@@ -13,8 +13,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository
         IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties);
         Task<T> FindAsync(int id);
         void InsertOrUpdate(T entity, Func<T, int> idFunc);
-        void InsertAsync(T entity);
-        void UpdateAsync(T entity);
+        void Insert(T entity);
+        void Update(T entity);
         Task DeleteAsync(int id);
     }
 }

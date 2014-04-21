@@ -48,12 +48,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository.Implementaton
             
         }
 
-        public void InsertAsync(T entity)
+        public void Insert(T entity)
         {
             _context.Set<T>().Add(entity);
         }
 
-        public void UpdateAsync(T entity)
+        public void Update(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
         }
