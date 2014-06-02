@@ -5,6 +5,11 @@ using AccidentalFish.ApplicationSupport.Core.Policies;
 
 namespace AccidentalFish.ApplicationSupport.Core.NoSql
 {
+    public enum NoSqlQueryOperator
+    {
+        And,
+        Or
+    }
     /// <summary>
     /// Asynchronous access to a NoSql type data store
     /// </summary>
@@ -56,11 +61,14 @@ namespace AccidentalFish.ApplicationSupport.Core.NoSql
         Task<IEnumerable<T>> QueryAsync(string columnName, string value);
         Task<IEnumerable<T>> QueryAsync(Dictionary<string, object> columnValues);
         Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, bool> func);
+        Task QueryFuncAsync(Dictionary<string, object> conditions, NoSqlQueryOperator op, Func<IEnumerable<T>, bool> func);
         Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action);
         Task AllActionAsync(Action<IEnumerable<T>> action);
 
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize);
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize, string serializedContinuationToken);
+        Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, NoSqlQueryOperator op, int pageSize);
+        Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, NoSqlQueryOperator op, int pageSize, string serializedContinuationToken);
 
         IResourceCreator GetResourceCreator();
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
@@ -65,6 +66,33 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository.Implementaton
             return _dbConfiguration.ExecutionStrategy.ExecuteAsync(func, token);
         }
 
+        public Task<bool> OptimisticRepositoryWinsUpdate(Action update)
+        {
+            return OptimisticRepositoryWinsUpdate(update, int.MaxValue);
+        }
+
+        public async Task<bool> OptimisticRepositoryWinsUpdate(Action update, int maxRetries)
+        {
+            bool saveFailed;
+            int retries = 0;
+            do
+            {
+                saveFailed = false;
+                try
+                {
+                    update();
+                    await SaveAsync();
+                }
+                catch (DbUpdateConcurrencyException concurrencyException)
+                {
+                    retries++;
+                    foreach(DbEntityEntry entity in concurrencyException.Entries) entity.Reload();
+                    saveFailed = true;
+                }
+            } while (saveFailed && retries < maxRetries);
+            return !saveFailed;
+        }
+
         public bool SuspendExecutionPolicy
         {
             get { return _dbConfiguration.SuspendExecutionStrategy; }
@@ -75,5 +103,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository.Implementaton
         {
             _context.Dispose();
         }
+
+        
     }
 }

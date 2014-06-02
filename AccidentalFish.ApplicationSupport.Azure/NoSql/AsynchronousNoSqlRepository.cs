@@ -177,7 +177,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         {   
             List<T> results = new List<T>();
 
-            TableQuery<T> query = _tableStorageQueryBuilder.TableQuery<T>(columnValues);
+            TableQuery<T> query = _tableStorageQueryBuilder.TableQuery<T>(columnValues, NoSqlQueryOperator.And);
             TableQuerySegment<T> querySegment = null;
 
             while (querySegment == null || querySegment.ContinuationToken != null)
@@ -231,23 +231,55 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             }
         }
 
+        public async Task QueryFuncAsync(Dictionary<string, object> conditions, NoSqlQueryOperator op, Func<IEnumerable<T>, bool> func)
+        {
+            TableQuery<T> query;
+            if (conditions != null)
+            {
+                query = _tableStorageQueryBuilder.TableQuery<T>(conditions, op);
+            }
+            else
+            {
+                query = new TableQuery<T>();
+            }
+
+            TableQuerySegment<T> querySegment = null;
+            bool doContinue = true;
+
+            while ((querySegment == null || querySegment.ContinuationToken != null) && doContinue)
+            {
+                querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
+                doContinue = func(new List<T>(querySegment.Results));
+            }
+        }
+
         public Task AllActionAsync(Action<IEnumerable<T>> action)
         {
             return QueryActionAsync(null, null, action);
+        }
+
+        public Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize)
+        {
+            return PagedQueryAsync(columnValues, NoSqlQueryOperator.And, pageSize);
+        }
+
+        public Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize, string serializedContinuationToken)
+        {
+            return PagedQueryAsync(columnValues, NoSqlQueryOperator.And, pageSize, serializedContinuationToken);
         }
 
         #endregion
 
         #region Paged queries
 
-        public Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize)
+        public Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, NoSqlQueryOperator op, int pageSize)
         {
             return PagedQueryAsync(columnValues, pageSize, null);
         }
 
-        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize, string serializedContinuationToken)
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, NoSqlQueryOperator op, int pageSize, string serializedContinuationToken)
         {
-            TableQuery<T> query = _tableStorageQueryBuilder.TableQuery<T>(columnValues).Take(pageSize);
+            TableQuery<T> query = _tableStorageQueryBuilder.TableQuery<T>(columnValues, op).Take(pageSize);
 
             TableQuerySegment<T> querySegment = null;
             TableContinuationToken continuationToken = _tableContinuationTokenSerializer.Deserialize(serializedContinuationToken);

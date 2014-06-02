@@ -6,6 +6,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 {
     interface ITableStorageQueryBuilder
     {
-        TableQuery<T> TableQuery<T>(Dictionary<string, object> columnValues) where T : NoSqlEntity;
+        TableQuery<T> TableQuery<T>(Dictionary<string, object> columnValues, NoSqlQueryOperator op) where T : NoSqlEntity;
     }
 }

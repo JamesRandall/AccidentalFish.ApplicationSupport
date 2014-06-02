@@ -15,6 +15,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository
         Task ExecuteAsync(Func<Task> func, CancellationToken token);
         Task<T2> ExecuteAsync<T2>(Func<Task<T2>> func);
         Task<T2> ExecuteAsync<T2>(Func<Task<T2>> func, CancellationToken token);
+
+        Task<bool> OptimisticRepositoryWinsUpdate(Action update);
+        Task<bool> OptimisticRepositoryWinsUpdate(Action update, int maxRetries);
+
         bool SuspendExecutionPolicy { get; set; }
     }
 }

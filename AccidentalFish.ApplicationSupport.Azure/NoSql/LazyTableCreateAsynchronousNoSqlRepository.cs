@@ -256,6 +256,23 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             await _repository.QueryFuncAsync(column, value, func);
         }
 
+        public async Task QueryFuncAsync(Dictionary<string, object> conditions, NoSqlQueryOperator op, Func<IEnumerable<T>, bool> func)
+        {
+            try
+            {
+                await _repository.QueryFuncAsync(conditions, op, func);
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode != HttpNotFound)
+                {
+                    throw;
+                }
+            }
+            await Create();
+            await _repository.QueryFuncAsync(conditions, op, func);
+        }
+
         public async Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action)
         {
             try
@@ -322,6 +339,40 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             }
             await Create();
             return await _repository.PagedQueryAsync(columnValues, pageSize, serializedContinuationToken);
+        }
+
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, NoSqlQueryOperator op, int pageSize)
+        {
+            try
+            {
+                return await _repository.PagedQueryAsync(columnValues, op, pageSize);
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode != HttpNotFound)
+                {
+                    throw;
+                }
+            }
+            await Create();
+            return await _repository.PagedQueryAsync(columnValues, op, pageSize);
+        }
+
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, NoSqlQueryOperator op, int pageSize, string serializedContinuationToken)
+        {
+            try
+            {
+                return await _repository.PagedQueryAsync(columnValues, op, pageSize, serializedContinuationToken);
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode != HttpNotFound)
+                {
+                    throw;
+                }
+            }
+            await Create();
+            return await _repository.PagedQueryAsync(columnValues, op, pageSize, serializedContinuationToken);
         }
 
         public IResourceCreator GetResourceCreator()

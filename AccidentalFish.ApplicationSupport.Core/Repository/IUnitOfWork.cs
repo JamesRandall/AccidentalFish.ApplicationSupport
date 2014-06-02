@@ -10,5 +10,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository
         void Execute(Action action);
         T2 Execute<T2>(Func<T2> action);
         bool SuspendExecutionPolicy { get; set; }
+
     }
 }
