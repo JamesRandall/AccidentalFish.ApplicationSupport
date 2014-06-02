@@ -37,5 +37,35 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             
             return query;
         }
+
+        public TableQuery<T> TableQuery<T>(string column, IEnumerable<object> values, NoSqlQueryOperator op) where T : NoSqlEntity
+        {
+            TableQuery<T> query = new TableQuery<T>();
+            if (column != null && values.Any())
+            {
+                List<string> tableQueries = new List<string>();
+                foreach (object value in values)
+                {
+                    if (value is string)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterCondition(column, QueryComparisons.Equal, (string)value));
+                    }
+                    else if (value is Guid)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForGuid(column, QueryComparisons.Equal, (Guid)value));
+                    }
+                }
+                string queryString = tableQueries[0];
+                string tableOp = op == NoSqlQueryOperator.And ? TableOperators.And : TableOperators.Or;
+                for (int index = 1; index < tableQueries.Count; index++)
+                {
+                    string subQueryString = tableQueries[index];
+                    queryString = Microsoft.WindowsAzure.Storage.Table.TableQuery.CombineFilters(queryString, tableOp, subQueryString);
+                }
+                query = query.Where(queryString);
+            }
+
+            return query;
+        }
     }
 }

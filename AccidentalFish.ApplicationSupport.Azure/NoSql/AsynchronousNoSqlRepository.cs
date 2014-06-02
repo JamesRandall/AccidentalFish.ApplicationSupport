@@ -231,6 +231,29 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             }
         }
 
+        public async Task QueryFuncAsync(string column, IEnumerable<object> values, NoSqlQueryOperator op,
+            Func<IEnumerable<T>, bool> func)
+        {
+            TableQuery<T> query;
+            if (!String.IsNullOrWhiteSpace(column) && values != null && values.Any())
+            {
+                query = _tableStorageQueryBuilder.TableQuery<T>(column, values, op);
+            }
+            else
+            {
+                query = new TableQuery<T>();
+            }
+
+            TableQuerySegment<T> querySegment = null;
+            bool doContinue = true;
+
+            while ((querySegment == null || querySegment.ContinuationToken != null) && doContinue)
+            {
+                querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
+                doContinue = func(new List<T>(querySegment.Results));
+            }
+        }
+
         public async Task QueryFuncAsync(Dictionary<string, object> conditions, NoSqlQueryOperator op, Func<IEnumerable<T>, bool> func)
         {
             TableQuery<T> query;
