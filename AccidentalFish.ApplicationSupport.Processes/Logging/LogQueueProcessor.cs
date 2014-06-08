@@ -24,6 +24,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
         private readonly IAsynchronousQueue<LogQueueItem> _queue;
         private readonly IAsynchronousNoSqlRepository<LogTableItem> _bySourceTable;
         private readonly IAsynchronousNoSqlRepository<LogTableItem> _bySeverityTable;
+        private readonly IAsynchronousNoSqlRepository<LogTableItem> _byDateDescTable;
         private readonly IAsynchronousNoSqlRepository<LogTableItem> _byDateTable;
 
         public LogQueueProcessor(
@@ -38,12 +39,14 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             _alertSender = alertSender;
 
             string byDateTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bydate-table");
+            string byDateDescTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bydate-desc-table");
             string bySeverityTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-byseverity-table");
             string bySourceTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bysource-table");
 
             _bySourceTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySourceTableName, ComponentIdentity);
             _bySeverityTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySeverityTableName, ComponentIdentity);
             _byDateTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateTableName, ComponentIdentity);
+            _byDateDescTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateDescTableName, ComponentIdentity);
         }
 
         // TODO: This is a bleed through of the component host not being correct
@@ -86,18 +89,21 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
 
             LogTableItem bySource = mapper.Map(item);
             LogTableItem bySeverity = mapper.Map(item);
+            LogTableItem byDateDesc = mapper.Map(item);
             LogTableItem byDate = mapper.Map(item);
             bySource.SetPartitionAndRowKeyForLogBySource();
             bySeverity.SetPartitionAndRowKeyForLogBySeverity();
+            byDateDesc.SetPartitionAndRowKeyForLogByDateDesc();
             byDate.SetPartitionAndRowKeyForLogByDate();
 
-            Task[] tasks = new Task[3];
+            Task[] tasks = new Task[4];
             bool success = false;
             try
             {
                 tasks[0] = _bySourceTable.InsertAsync(bySource);
                 tasks[1] = _bySeverityTable.InsertAsync(bySeverity);
-                tasks[2] = _byDateTable.InsertAsync(byDate);
+                tasks[2] = _byDateDescTable.InsertAsync(byDateDesc);
+                tasks[3] = _byDateTable.InsertAsync(byDate);
 
                 await Task.WhenAll(tasks);
                 success = true;
