@@ -17,5 +17,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Email
         public Dictionary<string, string> MergeData { get; set; }
 
         public string EmailTemplateId { get; set; }
+
+        public string Subject { get; set; }
+
+        public string Body { get; set; }
     }
 }

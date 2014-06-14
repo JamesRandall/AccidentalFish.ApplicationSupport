@@ -37,5 +37,24 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 
             await _queue.EnqueueAsync(item);
         }
+
+        public Task Send(string to, string cc, string @from, string subject, string body)
+        {
+            return Send(new[] { to }, new[] { cc }, @from, subject, body);
+        }
+
+        public async Task Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string subject, string body)
+        {
+            EmailQueueItem item = new EmailQueueItem
+            {
+                Cc = new List<string>(cc),
+                From = from,
+                To = new List<string>(to),
+                Subject = subject,
+                Body = body
+            };
+
+            await _queue.EnqueueAsync(item);
+        }
     }
 }

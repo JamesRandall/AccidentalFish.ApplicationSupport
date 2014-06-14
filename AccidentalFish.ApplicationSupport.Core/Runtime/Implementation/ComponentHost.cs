@@ -22,6 +22,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
             _logger = loggerFactory.CreateLongLivedLogger(ComponentIdentity);
         }
 
+        public Action<Exception, int> CustomErrorHandler { get; set; }
+
         public async Task<IEnumerable<Task>> Start(IComponentHostConfigurationProvider configurationProvider, CancellationTokenSource cancellationTokenSource)
         {
             IEnumerable<ComponentConfiguration> componentConfigurations = await configurationProvider.GetConfiguration();
@@ -65,15 +67,38 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                     }
                     catch (Exception ex)
                     {
+
+                        if (CustomErrorHandler != null)
+                        {
+                            CustomErrorHandler(ex, retryCount);
+                        }
+
                         retryCount++;
                         shouldRetry = restartEvaluator != null && restartEvaluator(ex, retryCount);
                         if (shouldRetry)
                         {
-                            _logger.Information(String.Format("Restarting {0} for component {1}", retryCount, componentIdentity));
+                            _logger.Information(String.Format("Restarting {0} for component {1}", retryCount, componentIdentity), ex);
+                            if (ex is AggregateException)
+                            {
+                                foreach (Exception innerException in ((AggregateException)ex).InnerExceptions)
+                                {
+                                    _logger.Error(String.Format("Aggregate error for component start", retryCount, componentIdentity), ex);
+                                }
+                            }
                         }
                         else
                         {
-                            _logger.Error(String.Format("Component failure {0} for component {1}", retryCount, componentIdentity));
+                            if (ex is AggregateException)
+                            {
+                                foreach (Exception innerException in ((AggregateException) ex).InnerExceptions)
+                                {
+                                    _logger.Error(String.Format("Component failure {0} for component {1}", retryCount, componentIdentity), ex);
+                                }
+                            }
+                            else
+                            {
+                                _logger.Error(String.Format("Component failure {0} for component {1}", retryCount, componentIdentity), ex);
+                            }
                         }
                     }
                 }

@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NewApplicationResources.cs" />
+    <Compile Include="RemoveApplicationResources.cs" />
     <Compile Include="SetApplicationConfiguration.cs" />
     <Compile Include="ConfigAppliers\CscfgConfigurationApplier.cs" />
     <Compile Include="ConfigAppliers\CsdefConfigurationApplier.cs" />

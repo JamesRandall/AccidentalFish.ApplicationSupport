@@ -84,9 +84,17 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             bool success;
             try
             {
-                XDocument template = await GetTemplate(item.EmailTemplateId);
-                EmailContent content = ProcessTemplate(template, item.MergeData);
-                _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.Body);
+                if (!String.IsNullOrWhiteSpace(item.EmailTemplateId))
+                {
+                    XDocument template = await GetTemplate(item.EmailTemplateId);
+                    EmailContent content = ProcessTemplate(template, item.MergeData);
+                    _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.Body);
+                }
+                else
+                {
+                    _emailProvider.Send(item.To, item.Cc, item.From, item.Subject, item.Body);
+                }
+                
                 success = true;
             }
             catch (Exception ex)
