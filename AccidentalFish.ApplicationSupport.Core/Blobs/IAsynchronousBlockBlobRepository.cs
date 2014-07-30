@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Blobs
@@ -13,5 +14,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Blobs
         IBlob Get(string name);
         string Endpoint { get; }
         MultipartStreamProvider GetMultipartStreamProvider();
+        MultipartStreamProvider GetMultipartStreamProvider(Func<ContentDispositionHeaderValue, string> getblobName);
     }
 }

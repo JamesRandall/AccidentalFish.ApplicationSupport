@@ -40,13 +40,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Alerts.Implementation
             }
             catch (Exception ex)
             {
-                _logger.Warning("Unable to retrieve alert subscribers", ex);
+                _logger.Warning("Unable to retrieve alert subscribers", ex).Wait();
                 return;
             }
 
             if (!subscribers.Any())
             {
-                _logger.Information("No alert subscribers are configured");
+                _logger.Information("No alert subscribers are configured").Wait();
                 return;
             }
 
@@ -59,7 +59,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Alerts.Implementation
             {
                 // send a warning and not an error as a warning will just cause another alert to be sent, then another etc.
                 // and if alerts can't be received...
-                _logger.Warning("Unable to send email alert");
+                _logger.Warning("Unable to send email alert").Wait();
             }
             
         }

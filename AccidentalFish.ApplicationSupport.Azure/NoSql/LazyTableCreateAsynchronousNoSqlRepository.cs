@@ -392,6 +392,23 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             return await _repository.PagedQueryAsync(columnValues, op, pageSize, serializedContinuationToken);
         }
 
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(string filter, int pageSize, string serializedContinuationToken)
+        {
+            try
+            {
+                return await _repository.PagedQueryAsync(filter, pageSize, serializedContinuationToken);
+            }
+            catch (StorageException ex)
+            {
+                if (ex.RequestInformation.HttpStatusCode != HttpNotFound)
+                {
+                    throw;
+                }
+            }
+            await Create();
+            return await _repository.PagedQueryAsync(filter, pageSize, serializedContinuationToken);
+        }
+
         public IResourceCreator GetResourceCreator()
         {
             return _repository.GetResourceCreator();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -8,6 +9,7 @@ using AccidentalFish.ApplicationSupport.Core.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AccidentalFish.ApplicationSupport.Powershell
@@ -31,6 +33,8 @@ namespace AccidentalFish.ApplicationSupport.Powershell
 
             ApplicationConfigurationSettings settings = String.IsNullOrWhiteSpace(Settings) ? null : ApplicationConfigurationSettings.FromFile(Settings);
             ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings);
+
+            ApplyCorsRules(configuration);
 
             foreach (ApplicationComponent component in configuration.ApplicationComponents)
             {
@@ -139,6 +143,107 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                     }
                 }
             }
+        }
+
+        private void ApplyCorsRules(ApplicationConfiguration configuration)
+        {
+            foreach (ApplicationStorageAccount storageAccount in configuration.StorageAccounts.Values)
+            {
+                CloudStorageAccount cloudStorageAccount = null;
+                CloudTableClient tableClient = null;
+                ServiceProperties tableProperties = null;
+                CloudBlobClient blobClient = null;
+                ServiceProperties blobProperties = null;
+                CloudQueueClient queueClient = null;
+                ServiceProperties queueProperties = null;
+                foreach (ApplicationCorsRule rule in storageAccount.CorsRules)
+                {
+                    if (cloudStorageAccount == null)
+                    {
+                        cloudStorageAccount = CloudStorageAccount.Parse(storageAccount.ConnectionString);
+                    }
+
+                    if (rule.ApplyToTables)
+                    {
+                        if (tableClient == null)
+                        {
+                            tableClient = cloudStorageAccount.CreateCloudTableClient();
+                            tableProperties = tableClient.GetServiceProperties();
+                        }
+                        
+                        tableProperties.Cors.CorsRules.Add(CreateCorsRule(rule));
+                    }
+
+                    if (rule.ApplyToQueues)
+                    {
+                        if (queueClient == null)
+                        {
+                            queueClient = cloudStorageAccount.CreateCloudQueueClient();
+                            queueProperties = queueClient.GetServiceProperties();
+                        }
+                        queueProperties.Cors.CorsRules.Add(CreateCorsRule(rule));
+                    }
+
+                    if (rule.ApplyToBlobs)
+                    {
+                        if (blobClient == null)
+                        {
+                            blobClient = cloudStorageAccount.CreateCloudBlobClient();
+                            blobProperties = blobClient.GetServiceProperties();
+                        }
+                        blobProperties.Cors.CorsRules.Add(CreateCorsRule(rule));
+                    }
+                }
+
+                if (tableClient != null && tableProperties != null)
+                {
+                    tableClient.SetServiceProperties(tableProperties);
+                }
+                if (blobClient != null && blobProperties != null)
+                {
+                    blobClient.SetServiceProperties(blobProperties);
+                }
+                if (queueClient != null && queueProperties != null)
+                {
+                    queueClient.SetServiceProperties(queueProperties);
+                }
+            }
+        }
+
+        private static CorsRule CreateCorsRule(ApplicationCorsRule rule)
+        {
+            return new CorsRule
+            {
+                AllowedHeaders = new List<string>(rule.AllowedHeaders.Split(',')),
+                AllowedMethods = GetCorsMethods(rule.AllowedVerbs),
+                AllowedOrigins = new List<string>(rule.AllowedOrigins.Split(',')),
+                ExposedHeaders = new List<string>(rule.ExposedHeaders.Split(',')),
+                MaxAgeInSeconds = rule.MaxAgeSeconds
+            };
+        }
+
+        private static CorsHttpMethods GetCorsMethods(string verbString)
+        {
+            Dictionary<string, CorsHttpMethods> lookup = new Dictionary<string, CorsHttpMethods>
+            {
+                {"PUT", CorsHttpMethods.Put},
+                {"POST", CorsHttpMethods.Post},
+                {"GET", CorsHttpMethods.Get},
+                {"DELETE", CorsHttpMethods.Delete},
+                {"HEAD", CorsHttpMethods.Head},
+                {"OPTIONS", CorsHttpMethods.Options},
+                {"TRACE", CorsHttpMethods.Trace},
+                {"MERGE", CorsHttpMethods.Merge},
+                {"CONNECT", CorsHttpMethods.Connect}
+            };
+
+            CorsHttpMethods result = CorsHttpMethods.None;
+            string[] verbs = verbString.Split(',');
+            foreach (string verb in verbs)
+            {
+                result |= lookup[verb];
+            }
+            return result;
         }
 
         private void UploadTableData(CloudTable table, XDocument document)

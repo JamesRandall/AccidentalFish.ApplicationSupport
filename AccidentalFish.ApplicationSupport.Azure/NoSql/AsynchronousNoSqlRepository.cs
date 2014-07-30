@@ -316,6 +316,24 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             };
         }
 
+        public async Task<PagedResultSegment<T>> PagedQueryAsync(string filter, int pageSize,
+            string serializedContinuationToken)
+        {
+            TableQuery<T> tableQuery = new TableQuery<T>();
+            tableQuery.Where(filter);
+
+            TableQuerySegment<T> querySegment = null;
+            TableContinuationToken continuationToken = _tableContinuationTokenSerializer.Deserialize(serializedContinuationToken);
+
+            querySegment = await _table.ExecuteQuerySegmentedAsync(tableQuery, continuationToken);
+
+            return new PagedResultSegment<T>
+            {
+                ContinuationToken = _tableContinuationTokenSerializer.Serialize(querySegment.ContinuationToken),
+                Page = new List<T>(querySegment.Results)
+            };
+        }
+
         #endregion
 
         public IResourceCreator GetResourceCreator()

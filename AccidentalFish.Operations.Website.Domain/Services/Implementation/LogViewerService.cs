@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.NoSql;
@@ -25,17 +26,17 @@ namespace AccidentalFish.Operations.Website.Domain.Services.Implementation
 
         public async Task<PagedResultSegment<LogTableItem>> GetByDateDescending(string continuationToken)
         {
-            return await _byDateDescendingTable.PagedQueryAsync(null, 10, continuationToken);
+            return await _byDateDescendingTable.PagedQueryAsync((Dictionary<string, object>)null, 10, continuationToken);
         }
 
         public async Task<PagedResultSegment<LogTableItem>> GetBySeverity(string continuationToken)
         {
-            return await _bySeverityTable.PagedQueryAsync(null, 10, continuationToken);
+            return await _bySeverityTable.PagedQueryAsync((Dictionary<string, object>)null, 10, continuationToken);
         }
 
         public async Task<PagedResultSegment<LogTableItem>> GetBySource(string continuationToken)
         {
-            return await _bySourceTable.PagedQueryAsync(null, 10, continuationToken);
+            return await _bySourceTable.PagedQueryAsync((Dictionary<string, object>)null, 10, continuationToken);
         }
     }
 }

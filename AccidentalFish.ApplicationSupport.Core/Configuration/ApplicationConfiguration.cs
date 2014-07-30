@@ -13,13 +13,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         protected ApplicationConfiguration()
         {
             SqlServerConnectionStrings = new Dictionary<string, string>();
-            StorageAccountConnectionStrings = new Dictionary<string, string>();
+            StorageAccounts = new Dictionary<string, ApplicationStorageAccount>();
             ApplicationComponents = new List<ApplicationComponent>();
         }
 
         public Dictionary<string, string> SqlServerConnectionStrings { get; set; }
 
-        public Dictionary<string, string> StorageAccountConnectionStrings { get; set; }
+        public Dictionary<string, ApplicationStorageAccount> StorageAccounts { get; set; }
 
         public List<ApplicationComponent> ApplicationComponents { get; set; }
 
@@ -46,7 +46,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             });
             document.Root.XPathSelectElements("infrastructure/storage-account").ToList().ForEach(element =>
             {
-                configuration.StorageAccountConnectionStrings.Add(element.Element("fqn").Value, element.Element("connection-string").Value);
+                ApplicationStorageAccount storageAccount = new ApplicationStorageAccount(element);
+                configuration.StorageAccounts.Add(storageAccount.Fqn, storageAccount);
             });
 
             document.Root.Elements("component").ToList().ForEach(element =>
@@ -82,7 +83,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 {
                     try
                     {
-                        component.StorageAccountConnectionString = configuration.StorageAccountConnectionStrings[storageElement.Value];
+                        component.StorageAccountConnectionString = configuration.StorageAccounts[storageElement.Value].ConnectionString;
                     }
                     catch (Exception)
                     {

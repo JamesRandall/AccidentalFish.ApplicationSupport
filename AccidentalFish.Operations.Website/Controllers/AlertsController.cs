@@ -47,7 +47,6 @@ namespace AccidentalFish.Operations.Website.Controllers
 
         public async Task<JsonResult> Get(int page, int pageSize)
         {
-            int totalRows;
             PageResult<AlertSubscriber> subscribers = await _alertSubscriberService.GetSubscribers(page, pageSize);
             return Json(new
             {

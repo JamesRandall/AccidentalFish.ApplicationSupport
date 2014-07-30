@@ -99,7 +99,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             }
             catch (Exception ex)
             {
-                _logger.Error("Error sending email", ex);
+                _logger.Error("Error sending email", ex).Wait();
                 success = false;
             }
 

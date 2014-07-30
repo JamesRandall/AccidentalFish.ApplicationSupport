@@ -8,11 +8,19 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
 {
     internal class BlobMultipartStreamProvider : MultipartStreamProvider
     {
+        private readonly Func<ContentDispositionHeaderValue, string> _getBlobName;
         private readonly CloudBlobContainer _blobContainer;
 
         public BlobMultipartStreamProvider(CloudBlobContainer blobContainer)
         {
+            _getBlobName = null;
             _blobContainer = blobContainer;
+        }
+
+        public BlobMultipartStreamProvider(CloudBlobContainer blobContainer,
+            Func<ContentDispositionHeaderValue, string> getBlobName) : this(blobContainer)
+        {
+            _getBlobName = getBlobName;
         }
 
         public override Stream GetStream(HttpContent parent, HttpContentHeaders headers)
@@ -21,9 +29,19 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
             ContentDispositionHeaderValue contentDisposition = headers.ContentDisposition;
             if (contentDisposition != null)
             {
-                if (!String.IsNullOrWhiteSpace(contentDisposition.FileName))
+                string blobFilename = null;
+                if (_getBlobName != null)
                 {
-                    CloudBlockBlob blob = _blobContainer.GetBlockBlobReference(contentDisposition.FileName);
+                    blobFilename = _getBlobName(contentDisposition);
+                }
+                else if (!String.IsNullOrWhiteSpace(contentDisposition.FileName))
+                {
+                    blobFilename = contentDisposition.FileName;
+                }
+
+                if (!String.IsNullOrWhiteSpace(blobFilename))
+                {
+                    CloudBlockBlob blob = _blobContainer.GetBlockBlobReference(blobFilename);
                     stream = blob.OpenWrite();
                 }
             }

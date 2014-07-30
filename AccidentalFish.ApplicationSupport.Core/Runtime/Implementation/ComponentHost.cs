@@ -31,7 +31,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
             List<Task> tasks = new List<Task>();
             foreach (ComponentConfiguration componentConfiguration in componentConfigurations)
             {
-                _logger.Information(String.Format("Starting {0} instances of {1}", componentConfiguration.Instances, componentConfiguration.ComponentIdentity));
+                await _logger.Information(String.Format("Starting {0} instances of {1}", componentConfiguration.Instances, componentConfiguration.ComponentIdentity));
                 for (int instance = 0; instance < componentConfiguration.Instances; instance++)
                 {
                     tasks.Add(StartTask(componentConfiguration.ComponentIdentity, componentConfiguration.RestartEvaluator));

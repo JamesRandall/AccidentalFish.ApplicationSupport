@@ -70,6 +70,7 @@ namespace AccidentalFish.ApplicationSupport.Core.NoSql
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize, string serializedContinuationToken);
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, NoSqlQueryOperator op, int pageSize);
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, NoSqlQueryOperator op, int pageSize, string serializedContinuationToken);
+        Task<PagedResultSegment<T>> PagedQueryAsync(string filter, int pageSize, string serializedContinuationToken);
 
         IResourceCreator GetResourceCreator();
     }
