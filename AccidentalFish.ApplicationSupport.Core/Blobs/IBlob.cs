@@ -25,6 +25,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Blobs
         string DownloadString();
         string DownloadString(Encoding encoding);
 
+        Task DeleteAsync();
+
         Uri Url { get; }
     }
 }

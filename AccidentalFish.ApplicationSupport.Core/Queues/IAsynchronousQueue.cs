@@ -9,7 +9,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues
         Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay);
         void Enqueue(T item, Action<T> success, Action<T, Exception> failure);
         Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor);
+        Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor, TimeSpan? visibilityTimeout);
         void Dequeue(Func<IQueueItem<T>, bool> success, Action<Exception> failure);
         void Dequeue(Func<IQueueItem<T>, bool> success, Action noMessageAction, Action<Exception> failure);
+        Task ExtendLeaseAsync(IQueueItem<T> queueItem, TimeSpan visibilityTimeout);
     }
 }

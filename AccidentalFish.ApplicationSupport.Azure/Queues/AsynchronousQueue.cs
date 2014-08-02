@@ -52,13 +52,18 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             }
         }
 
-        public async Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor)
+        public Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor)
         {
-            CloudQueueMessage message = await _queue.GetMessageAsync();
+            return DequeueAsync(processor, null);
+        }
+
+        public async Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor, TimeSpan? visibilityTimeout)
+        {
+            CloudQueueMessage message = await _queue.GetMessageAsync(visibilityTimeout, null, null);
             if (message != null)
             {
                 T item = _serializer.Deserialize(message.AsString);
-                if (await processor(new QueueItem<T>(item, message.DequeueCount)))
+                if (await processor(new CloudQueueItem<T>(message, item, message.DequeueCount, message.PopReceipt)))
                 {
                     await _queue.DeleteMessageAsync(message);
                 }
@@ -67,6 +72,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             {
                 await processor(null);
             }
+        }
+
+        public async Task ExtendLeaseAsync(IQueueItem<T> queueItem, TimeSpan visibilityTimeout)
+        {
+            CloudQueueItem<T> queueItemImpl = queueItem as CloudQueueItem<T>;
+            if (queueItemImpl == null)
+            {
+                throw new InvalidOperationException("Cannot mix Azure and non-Azure queue items when extending a lease");
+            }
+            await _queue.UpdateMessageAsync(queueItemImpl.CloudQueueMessage, visibilityTimeout, MessageUpdateFields.Visibility);
         }
 
         public void Dequeue(Func<IQueueItem<T>, bool> success, Action<Exception> failure)
@@ -82,7 +97,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 if (message != null)
                 {
                     T item = _serializer.Deserialize(message.AsString);
-                    if (success(new QueueItem<T>(item, message.DequeueCount)))
+                    if (success(new CloudQueueItem<T>(message, item, message.DequeueCount, message.PopReceipt)))
                     {
                         await _queue.DeleteMessageAsync(message);
                     }

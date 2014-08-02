@@ -103,6 +103,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
                 await _blockBlob.UploadFromStreamAsync(ms);
             }
         }
+
+        public async Task DeleteAsync()
+        {
+            await _blockBlob.DeleteIfExistsAsync();
+        }
         
         public Uri Url { get { return _blockBlob.Uri; }}
     }
