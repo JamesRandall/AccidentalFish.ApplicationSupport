@@ -58,6 +58,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository.Implementaton
             _context.Entry(entity).State = EntityState.Modified;
         }
 
+        public void Delete(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+        }
+
         public async Task DeleteAsync(int id)
         {
             T entity = await FindAsync(id);

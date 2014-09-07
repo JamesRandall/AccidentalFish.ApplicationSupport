@@ -15,6 +15,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository
         void InsertOrUpdate(T entity, Func<T, int> idFunc);
         void Insert(T entity);
         void Update(T entity);
+        void Delete(T entity);
         Task DeleteAsync(int id);
     }
 }
