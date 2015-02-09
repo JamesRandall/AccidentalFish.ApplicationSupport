@@ -21,7 +21,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-            queueClient.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
+            queueClient.DefaultRequestOptions.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
             _queue = queueClient.GetQueueReference(queueName);
             _serializer = queueSerializer;
         }

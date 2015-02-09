@@ -23,8 +23,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
             CloudBlobClient client = storageAccount.CreateCloudBlobClient();
-            
-            client.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
+            client.DefaultRequestOptions.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
             _container = client.GetContainerReference(containerName);
 
             _endpoint = String.Format("{0}{1}", client.BaseUri, containerName);

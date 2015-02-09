@@ -32,7 +32,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-            tableClient.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
+            tableClient.DefaultRequestOptions.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
             _table = tableClient.GetTableReference(tableName);            
         }
 
