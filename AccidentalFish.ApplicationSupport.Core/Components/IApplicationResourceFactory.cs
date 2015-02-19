@@ -22,6 +22,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         IAsynchronousBlockBlobRepository GetBlockBlobRepository(string containerName, IComponentIdentity componentIdentity);
 
         string StorageAccountConnectionString(IComponentIdentity componentIdentity);
+        string SqlConnectionString(IComponentIdentity componentIdentity);
         string Setting(IComponentIdentity componentIdentity, string settingName);
     }
 }

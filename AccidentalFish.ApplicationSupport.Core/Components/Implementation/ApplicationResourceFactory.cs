@@ -126,5 +126,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         {
             return _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
         }
+
+        public string SqlConnectionString(IComponentIdentity componentIdentity)
+        {
+            return _applicationResourceSettingProvider.SqlConnectionString(componentIdentity);
+        }
     }
 }
