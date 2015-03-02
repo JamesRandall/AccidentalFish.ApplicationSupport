@@ -50,6 +50,11 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
                     string key = _nameProvider.StorageAccountConnectionString(componentIdentity);
                     ApplyAppSetting(appSettings, key, component.StorageAccountConnectionString);
                 }
+                if (!string.IsNullOrWhiteSpace(component.ServiceBusConnectionString))
+                {
+                    string key = _nameProvider.ServiceBusConnectionString(componentIdentity);
+                    ApplyAppSetting(appSettings, key, component.ServiceBusConnectionString);
+                }
                 if (!string.IsNullOrWhiteSpace(component.DbContextType))
                 {
                     string key = _nameProvider.SqlContextType(componentIdentity);
@@ -74,6 +79,16 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
                 {
                     string key = _nameProvider.DefaultLeaseBlockName(componentIdentity);
                     ApplyAppSetting(appSettings, key, component.DefaultLeaseBlockName);
+                }
+                if (!string.IsNullOrWhiteSpace(component.DefaultSubscriptionName))
+                {
+                    string key = _nameProvider.DefaultSubscriptionName(componentIdentity);
+                    ApplyAppSetting(appSettings, key, component.DefaultSubscriptionName);
+                }
+                if (!string.IsNullOrWhiteSpace(component.DefaultTopicName))
+                {
+                    string key = _nameProvider.DefaultTopicName(componentIdentity);
+                    ApplyAppSetting(appSettings, key, component.DefaultTopicName);
                 }
 
                 foreach (ApplicationComponentSetting setting in component.Settings)

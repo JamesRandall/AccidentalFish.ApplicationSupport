@@ -16,5 +16,10 @@
 
         string DefaultLeaseBlockName(IComponentIdentity componentIdentity);
 
+        string DefaultTopicName(IComponentIdentity componentIdentity);
+
+        string ServiceBusConnectionString(IComponentIdentity componentIdentity);
+        
+        string DefaultSubscriptionName(IComponentIdentity componentIdentity);
     }
 }

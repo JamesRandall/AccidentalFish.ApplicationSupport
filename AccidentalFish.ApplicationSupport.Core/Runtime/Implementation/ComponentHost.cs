@@ -11,14 +11,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
     [ComponentIdentity(FullyQualifiedName)]
     internal class ComponentHost : AbstractApplicationComponent, IComponentHost
     {
+        private readonly IComponentFactory _componentFactory;
         public const string FullyQualifiedName = "com.accidentalfish.application-support.component-host";
-        private readonly IUnityContainer _unityContainer;
         private CancellationTokenSource _cancellationTokenSource;
         private readonly ILogger _logger;
 
-        public ComponentHost(IUnityContainer unityContainer, ILoggerFactory loggerFactory)
+        public ComponentHost(IComponentFactory componentFactory, ILoggerFactory loggerFactory)
         {
-            _unityContainer = unityContainer;
+            _componentFactory = componentFactory;
             _logger = loggerFactory.CreateLongLivedLogger(ComponentIdentity);
         }
 
@@ -59,7 +59,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                         Task.Factory.StartNew(() =>
                         {
                             _logger.Information(String.Format("Hostable component {0} is starting", componentIdentity));
-                            IHostableComponent component = _unityContainer.Resolve<IHostableComponent>(componentIdentity.ToString());
+                            IHostableComponent component = _componentFactory.Create(componentIdentity);
                             component.Start(_cancellationTokenSource.Token).Wait();
                             shouldRetry = false; // normal exit
                             _logger.Information(String.Format("Hostable component {0} is exiting", componentIdentity));

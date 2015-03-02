@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+  <setting key="service-bus-connection-string">Endpoint=sb://accidentalfishsamples.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SXt36vKDaOPWDgPoFii5xebDPEbPD2v6R6aix+yVPjY=</setting>
+</settings>

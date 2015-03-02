@@ -18,6 +18,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         IAsynchronousQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class;
         IAsynchronousQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
 
+        IAsynchronousTopic<T> GetTopic<T>(IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousTopic<T> GetTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousSubscription<T> GetSubscription<T>(IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousSubscription<T> GetSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class;
+        
         IAsynchronousBlockBlobRepository GetBlockBlobRepository(IComponentIdentity componentIdentity);
         IAsynchronousBlockBlobRepository GetBlockBlobRepository(string containerName, IComponentIdentity componentIdentity);
 

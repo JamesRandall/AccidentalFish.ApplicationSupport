@@ -14,12 +14,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         {
             SqlServerConnectionStrings = new Dictionary<string, string>();
             StorageAccounts = new Dictionary<string, ApplicationStorageAccount>();
+            ServiceBusConnectionStrings = new Dictionary<string, string>();
             ApplicationComponents = new List<ApplicationComponent>();
         }
 
         public Dictionary<string, string> SqlServerConnectionStrings { get; set; }
 
         public Dictionary<string, ApplicationStorageAccount> StorageAccounts { get; set; }
+
+        public Dictionary<string, string> ServiceBusConnectionStrings { get; set; } 
 
         public List<ApplicationComponent> ApplicationComponents { get; set; }
 
@@ -49,6 +52,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 ApplicationStorageAccount storageAccount = new ApplicationStorageAccount(element);
                 configuration.StorageAccounts.Add(storageAccount.Fqn, storageAccount);
             });
+            document.Root.XPathSelectElements("infrastructure/service-bus").ToList().ForEach(element =>
+            {
+                configuration.ServiceBusConnectionStrings.Add(element.Element("fqn").Value, element.Element("connection-string").Value);
+            });
 
             document.Root.Elements("component").ToList().ForEach(element =>
             {
@@ -58,12 +65,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 };
                 XElement sqlServerElement = element.Element("sql-server");
                 XElement storageElement = element.Element("storage-account");
+                XElement serviceBusElement = element.Element("service-bus");
                 XElement dbContextTypeElement = element.Element("db-context-type");
                 XElement defaultBlobContainerNameElement = element.Element("default-blob-container-name");
                 XElement defaultQueueNameElement = element.Element("default-queue-name");
                 XElement defaultTableNameElement = element.Element("default-table-name");
                 XElement defaultTableData = element.Element("table-data");
                 XElement defaultLeaseBlockNameElement = element.Element("default-lease-block-name");
+                XElement defaultSubscriptionNameElement = element.Element("default-subscription-name");
+                XElement defaultTopicNameElement = element.Element("default-topic-name");
                 XElement settingsElement = element.Element("settings");
                 XAttribute defaultBlobContainerAccessAttribute = defaultBlobContainerNameElement == null ? null : defaultBlobContainerNameElement.Attribute("public-permission");
 
@@ -89,14 +99,27 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     {
                         throw new InvalidDataException(String.Format("Storage account with fqn of {0} is missing from configuration file.", storageElement.Value));
                     }
-                    
                 }
+                if (serviceBusElement != null)
+                {
+                    try
+                    {
+                        component.ServiceBusConnectionString = configuration.ServiceBusConnectionStrings[serviceBusElement.Value];
+                    }
+                    catch (Exception)
+                    {
+                        throw new InvalidDataException(String.Format("Service bus account with fqn of {0} is missing from configuration file.", storageElement.Value));
+                    }
+                }
+
                 component.DbContextType = dbContextTypeElement == null ? null : dbContextTypeElement.Value;
                 component.DefaultBlobContainerName = defaultBlobContainerNameElement == null ? null : defaultBlobContainerNameElement.Value;
                 component.DefaultQueueName = defaultQueueNameElement == null ? null : defaultQueueNameElement.Value;
                 component.DefaultTableName = defaultTableNameElement == null ? null : defaultTableNameElement.Value;
                 component.DefaultBlobContainerAccessType = BlobContainerPublicAccessType.Off;
                 component.DefaultLeaseBlockName = defaultLeaseBlockNameElement == null ? null : defaultLeaseBlockNameElement.Value;
+                component.DefaultTopicName = defaultTopicNameElement == null ? null : defaultTopicNameElement.Value;
+                component.DefaultSubscriptionName = defaultSubscriptionNameElement == null ? null : defaultSubscriptionNameElement.Value;
                 component.TableData = defaultTableData == null ? null : defaultTableData.Value;
                 component.Uploads = element.Elements("upload").Select(x => x.Value).ToList();
                 if (defaultBlobContainerAccessAttribute != null)
@@ -122,11 +145,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                         {
                             resourceType = resourceTypeAttr.Value;
                         }
+                        Dictionary<string, string> attributeDictionary = x.Attributes().ToDictionary(attribute => attribute.Name.LocalName, attribute => attribute.Value);
                         component.Settings.Add(new ApplicationComponentSetting
                         {
                             Key = x.Name.LocalName,
                             ResourceType = resourceType,
-                            Value = x.Value
+                            Value = x.Value,
+                            Attributes = attributeDictionary
                         });                        
                     });
                 }

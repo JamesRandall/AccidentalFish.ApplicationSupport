@@ -49,5 +49,20 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         {
             return _configuration[_nameProvider.DefaultLeaseBlockName(componentIdentity)];
         }
+
+        public string DefaultTopicName(IComponentIdentity componentIdentity)
+        {
+            return _configuration[_nameProvider.DefaultTopicName(componentIdentity)];
+        }
+
+        public string ServiceBusConnectionString(IComponentIdentity componentIdentity)
+        {
+            return _configuration[_nameProvider.ServiceBusConnectionString(componentIdentity)];
+        }
+
+        public string DefaultSubscriptionName(IComponentIdentity componentIdentity)
+        {
+            return _configuration[_nameProvider.DefaultSubscriptionName(componentIdentity)];
+        }
     }
 }
