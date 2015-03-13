@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>accidentalfish.applicationsupport</id>
-    <version>0.2.0.0</version>
+    <version>0.2.0.1</version>
     <title>Azure PaaS Application Framework</title>
     <authors>James Randall</authors>
     <owners>James Randall</owners>
@@ -36,6 +36,7 @@
       <dependency id="TransientFaultHandling.Core" version="5.1.1209.1" />
       <dependency id="Unity" version="3.5.1404.0" />
       <dependency id="WindowsAzure.Storage" version="4.3.0" />
+      <dependency id="WindowsAzure.ServiceBus" version="2.6.1" />
     </dependencies>
   </metadata>
 </package>

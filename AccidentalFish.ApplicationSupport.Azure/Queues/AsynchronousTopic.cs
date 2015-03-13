@@ -16,6 +16,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             _client = TopicClient.CreateFromConnectionString(connectionString, topicName);
         }
 
+        public void Send(T payload)
+        {
+            string value = _queueSerializer.Serialize(payload);
+            BrokeredMessage message = new BrokeredMessage(value);
+            _client.Send(message);
+        }
+
         public async Task SendAsync(T payload)
         {
             string value = _queueSerializer.Serialize(payload);
