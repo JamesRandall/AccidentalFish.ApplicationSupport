@@ -19,6 +19,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
             return String.Format("{0}.storage-account-connection-string", componentIdentity.FullyQualifiedName);
         }
 
+        public string ServiceBusConnectionString(IComponentIdentity componentIdentity)
+        {
+            return String.Format("{0}.service-bus-connection-string", componentIdentity.FullyQualifiedName);
+        }
+
         public string DefaultTableName(IComponentIdentity componentIdentity)
         {
             return String.Format("{0}.default-table-name", componentIdentity.FullyQualifiedName);
@@ -32,6 +37,16 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         public string DefaultBlobContainerName(IComponentIdentity componentIdentity)
         {
             return String.Format("{0}.default-blob-container-name", componentIdentity.FullyQualifiedName);
+        }
+
+        public string DefaultTopicName(IComponentIdentity componentIdentity)
+        {
+            return String.Format("{0}.default-topic-name", componentIdentity.FullyQualifiedName);
+        }
+
+        public string DefaultSubscriptionName(IComponentIdentity componentIdentity)
+        {
+            return String.Format("{0}.default-subscription-name", componentIdentity.FullyQualifiedName);
         }
 
         public string SettingName(IComponentIdentity componentIdentity, string setting)

@@ -75,8 +75,7 @@ namespace AccidentalFish.ApplicationSupport.Core
             {
                 container.RegisterType(typeof (ILoggerExtension), loggerExtension);
             }
-
-            container.RegisterInstance(container);
+            container.RegisterInstance<IComponentFactory>(new ComponentFactory(container));
         }
     }
 }

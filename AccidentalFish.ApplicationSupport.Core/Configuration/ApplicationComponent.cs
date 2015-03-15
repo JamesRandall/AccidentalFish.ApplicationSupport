@@ -18,6 +18,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
 
         public string StorageAccountConnectionString { get; set; }
 
+        public string ServiceBusConnectionString { get; set; }
+
         public string DbContextType { get; set; }
 
         public BlobContainerPublicAccessType DefaultBlobContainerAccessType { get; set; }
@@ -29,6 +31,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         public string DefaultTableName { get; set; }
 
         public string DefaultLeaseBlockName { get; set; }
+
+        public string DefaultTopicName { get; set; }
+
+        public string DefaultSubscriptionName { get; set; }
 
         public string TableData { get; set; }
 
@@ -42,6 +48,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             {
                 return !String.IsNullOrWhiteSpace(StorageAccountConnectionString);
             }
+        }
+
+        public bool UsesServiceBus
+        {
+            get { return !String.IsNullOrWhiteSpace(ServiceBusConnectionString); }
         }
     }
 }

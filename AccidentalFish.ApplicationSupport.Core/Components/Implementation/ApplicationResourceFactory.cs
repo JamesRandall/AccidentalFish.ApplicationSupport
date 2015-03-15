@@ -100,6 +100,38 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queuename);
         }
 
+        public IAsynchronousTopic<T> GetTopic<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            Condition.Requires(componentIdentity).IsNotNull();
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
+            return _queueFactory.CreateAsynchronousTopic<T>(serviceBusConnectionString, defaultTopicName);
+        }
+
+        public IAsynchronousTopic<T> GetTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class
+        {
+            Condition.Requires(componentIdentity).IsNotNull();
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            return _queueFactory.CreateAsynchronousTopic<T>(serviceBusConnectionString, topicName);
+        }
+
+        public IAsynchronousSubscription<T> GetSubscription<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            Condition.Requires(componentIdentity).IsNotNull();
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
+            string defaultSubscriptionName = _applicationResourceSettingProvider.DefaultSubscriptionName(componentIdentity);
+            return _queueFactory.CreateAsynchronousSubscription<T>(serviceBusConnectionString, defaultTopicName, defaultSubscriptionName);
+        }
+
+        public IAsynchronousSubscription<T> GetSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class
+        {
+            Condition.Requires(componentIdentity).IsNotNull();
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
+            return _queueFactory.CreateAsynchronousSubscription<T>(serviceBusConnectionString, defaultTopicName, subscriptionName);
+        }
+
         public IAsynchronousBlockBlobRepository GetBlockBlobRepository(IComponentIdentity componentIdentity)
         {
             Condition.Requires(componentIdentity).IsNotNull();

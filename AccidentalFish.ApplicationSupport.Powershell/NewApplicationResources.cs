@@ -6,6 +6,9 @@ using System.Management.Automation;
 using System.Net;
 using System.Xml.Linq;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
+using Microsoft.ServiceBus;
+using Microsoft.ServiceBus.Messaging;
+using Microsoft.SqlServer.Server;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -38,6 +41,61 @@ namespace AccidentalFish.ApplicationSupport.Powershell
 
             foreach (ApplicationComponent component in configuration.ApplicationComponents)
             {
+                if (component.UsesServiceBus)
+                {
+                    if (!String.IsNullOrWhiteSpace(component.DefaultTopicName))
+                    {
+                        NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                    
+                        if (!namespaceManager.TopicExists(component.DefaultTopicName))
+                        {
+                            namespaceManager.CreateTopic(new TopicDescription(component.DefaultTopicName));
+                        }
+
+                        if (!String.IsNullOrWhiteSpace(component.DefaultSubscriptionName))
+                        {
+                            if (
+                                !namespaceManager.SubscriptionExists(component.DefaultTopicName,
+                                    component.DefaultSubscriptionName))
+                            {
+                                namespaceManager.CreateSubscription(
+                                    new SubscriptionDescription(component.DefaultTopicName,
+                                        component.DefaultSubscriptionName));
+                            }
+                        }
+                    }
+
+                    foreach (ApplicationComponentSetting setting in component.Settings)
+                    {
+                        string resourceType = setting.ResourceType;
+                        if (resourceType != null)
+                        {
+                            resourceType = resourceType.ToLower();
+                            if (resourceType == "topic")
+                            {
+                                NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                                if (!namespaceManager.TopicExists(setting.Value))
+                                {
+                                    namespaceManager.CreateTopic(new TopicDescription(setting.Value));
+                                }
+                            }
+                            else if (resourceType == "subscription")
+                            {
+                                NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                                string topicPath = setting.Attributes["topic"];
+                                if (!namespaceManager.TopicExists(topicPath))
+                                {
+                                    namespaceManager.CreateTopic(new TopicDescription(topicPath));
+                                }
+                                if (!namespaceManager.SubscriptionExists(topicPath, setting.Value))
+                                {
+                                    namespaceManager.CreateSubscription(new SubscriptionDescription(topicPath, setting.Value));
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (component.UsesAzureStorage)
                 {
                     CloudStorageAccount storageAccount = CloudStorageAccount.Parse(component.StorageAccountConnectionString);
@@ -110,6 +168,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                             }   
                         }
                     }
+
 
                     foreach (ApplicationComponentSetting setting in component.Settings)
                     {

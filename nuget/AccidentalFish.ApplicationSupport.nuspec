@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>accidentalfish.applicationsupport</id>
-    <version>0.1.0.26</version>
+    <version>0.2.0.2</version>
     <title>Azure PaaS Application Framework</title>
     <authors>James Randall</authors>
     <owners>James Randall</owners>
@@ -38,6 +38,7 @@
       <dependency id="WindowsAzure.Storage" version="4.3.0" />
       <dependency id="Microsoft.AspNet.Razor" version="3.2.2" />
       <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.2" />
+      <dependency id="WindowsAzure.ServiceBus" version="2.6.1" />
     </dependencies>
   </metadata>
 </package>
