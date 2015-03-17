@@ -23,6 +23,7 @@
       <Setting name="com.accidental-fish.email.default-queue-name" />
       <Setting name="com.accidental-fish.email.default-blob-container-name" />
       <Setting name="com.accidental-fish.email.setting.email-poison-queue" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bydate-desc-table" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

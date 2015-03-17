@@ -9,7 +9,7 @@
       <Setting name="com.accidental-fish.application-support.setting.realtime-settings-table" value="realtimesettings" />
       <Setting name="com.accidentalfish.log-queue-processor.storage-account-connection-string" value="UseDevelopmentStorage=true;" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-queue" value="logger" />
-      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bydate-table" value="logbydatedesc" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bydate-table" value="logbydate" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-byseverity-table" value="logbyseverity" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bysource-table" value="logbysource" />
       <Setting name="com.accidentalfish.log-queue-processor.setting.realtime-settings-table" value="realtimesettings" />
@@ -22,6 +22,7 @@
       <Setting name="com.accidental-fish.email.default-queue-name" value="email" />
       <Setting name="com.accidental-fish.email.default-blob-container-name" value="emailtemplates" />
       <Setting name="com.accidental-fish.email.setting.email-poison-queue" value="poisonemail" />
+      <Setting name="com.accidentalfish.log-queue-processor.setting.logger-bydate-desc-table" value="logbydatedesc" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

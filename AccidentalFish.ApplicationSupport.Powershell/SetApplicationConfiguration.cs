@@ -23,8 +23,8 @@ namespace AccidentalFish.ApplicationSupport.Powershell
         [Parameter(HelpMessage = "The application settings file to update - this can be a .cscfg, a .csdef or a .config file.", Mandatory = true)]
         public string Target { get; set; }
 
-        [Parameter(HelpMessage = "Optional settings file", Mandatory = false)]
-        public string Settings { get; set; }
+        [Parameter(HelpMessage = "Optional settings file(s). If more than one file is specified they are combined.", Mandatory = false)]
+        public string[] Settings { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -37,7 +37,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                 throw new InvalidOperationException("Target does not exist");
             }
 
-            ApplicationConfigurationSettings settings = String.IsNullOrWhiteSpace(Settings) ? null : ApplicationConfigurationSettings.FromFile(Settings);
+            ApplicationConfigurationSettings settings = Settings != null && Settings.Length > 0 ? ApplicationConfigurationSettings.FromFiles(Settings) :null;
             ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings);
 
             string extension = Path.GetExtension(Target).ToLower();

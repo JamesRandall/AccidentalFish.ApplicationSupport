@@ -26,6 +26,20 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             }
         }
 
+        public static ApplicationConfigurationSettings FromFiles(string[] filenames)
+        {
+            ApplicationConfigurationSettings settings = new ApplicationConfigurationSettings();
+            foreach (string filename in filenames)
+            {
+                using (StreamReader streamReader = new StreamReader(filename))
+                {
+                    XDocument document = XDocument.Load(streamReader);
+                    document.Root.Elements("setting").ToList().ForEach(element => settings._settings[element.Attribute("key").Value] = element.Value);
+                }
+            }
+            return settings;
+        }
+
         public string Merge(StreamReader reader)
         {
             string content = reader.ReadToEnd();
