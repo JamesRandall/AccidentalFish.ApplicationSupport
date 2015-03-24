@@ -23,5 +23,6 @@
         string SettingName(IComponentIdentity componentIdentity, string setting);
 
         string DefaultLeaseBlockName(IComponentIdentity componentIdentity);
+        string DefaultBrokeredMessageQueueName(IComponentIdentity componentIdentity);
     }
 }

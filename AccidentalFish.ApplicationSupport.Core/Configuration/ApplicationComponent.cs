@@ -6,6 +6,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
     public class ApplicationComponent
     {
+        private string _defaultBrokeredMessageQueueName;
+
         public ApplicationComponent()
         {
             Settings = new List<ApplicationComponentSetting>();
@@ -54,5 +56,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         {
             get { return !String.IsNullOrWhiteSpace(ServiceBusConnectionString); }
         }
+
+        public string DefaultBrokeredMessageQueueName { get; set; }
     }
 }

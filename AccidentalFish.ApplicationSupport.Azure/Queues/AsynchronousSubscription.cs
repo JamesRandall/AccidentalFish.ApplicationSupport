@@ -43,7 +43,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             else
             {
                 // we pass null into the process function as it may still want to take action based on their being no message.
-                process(null);
+                await process(null);
             }
             return message != null;
         }

@@ -140,6 +140,8 @@
     <Compile Include="Alerts\IAlertSender.cs" />
     <Compile Include="Alerts\Implementation\AlertSender.cs" />
     <Compile Include="Alerts\Model\AlertSubscriber.cs" />
+    <Compile Include="BackoffProcesses\BackoffQueueProcessor.cs" />
+    <Compile Include="BackoffProcesses\BackoffSubscriptionProcessor.cs" />
     <Compile Include="Blobs\IAsynchronousBlockBlobRepository.cs" />
     <Compile Include="Blobs\IBlob.cs" />
     <Compile Include="Blobs\IBlobRepositoryFactory.cs" />

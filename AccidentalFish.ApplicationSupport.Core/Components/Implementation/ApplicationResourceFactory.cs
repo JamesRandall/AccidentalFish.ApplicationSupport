@@ -42,7 +42,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public IUnitOfWorkFactory GetUnitOfWorkFactory(IComponentIdentity componentIdentity)
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string sqlConnectionString = _applicationResourceSettingProvider.SqlConnectionString(componentIdentity);
             string contextType = _applicationResourceSettingProvider.SqlContextType(componentIdentity);
             return new EntityFrameworkUnitOfWorkFactory(contextType, sqlConnectionString, _dbConfiguration);
@@ -50,7 +50,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(IComponentIdentity componentIdentity) where T : NoSqlEntity, new()
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string defaultTableName = _applicationResourceSettingProvider.DefaultTableName(componentIdentity);
             return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, defaultTableName);
@@ -58,21 +58,21 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity) where T : NoSqlEntity, new()
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, tablename);
         }
 
         public IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity, bool lazyCreateTable) where T : NoSqlEntity, new()
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, tablename, lazyCreateTable);
         }
 
         public ILeaseManager<T> GetLeaseManager<T>(IComponentIdentity componentIdentity)
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string defaultLeaseBlockName = _applicationResourceSettingProvider.DefaultLeaseBlockName(componentIdentity);
             return _leaseManagerFactory.CreateLeaseManager<T>(storageAccountConnectionString, defaultLeaseBlockName);
@@ -80,7 +80,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public ILeaseManager<T> GetLeaseManager<T>(string leaseBlockName, IComponentIdentity componentIdentity)
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _leaseManagerFactory.CreateLeaseManager<T>(storageAccountConnectionString, leaseBlockName);
         }
@@ -95,14 +95,30 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public IAsynchronousQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queuename);
         }
 
+        public IAsynchronousQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            string defaultQueueName = _applicationResourceSettingProvider.DefaultBrokeredMessageQueueName(componentIdentity);
+            return _queueFactory.CreateAsynchronousBrokeredMessageQueue<T>(serviceBusConnectionString, defaultQueueName);
+        }
+
+        public IAsynchronousQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        {
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
+            Condition.Requires(queuename).IsNotNullOrWhiteSpace("queue name must be supplied");
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            return _queueFactory.CreateAsynchronousBrokeredMessageQueue<T>(serviceBusConnectionString, queuename);
+        }
+
         public IAsynchronousTopic<T> GetTopic<T>(IComponentIdentity componentIdentity) where T : class
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
             return _queueFactory.CreateAsynchronousTopic<T>(serviceBusConnectionString, defaultTopicName);
@@ -110,14 +126,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public IAsynchronousTopic<T> GetTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             return _queueFactory.CreateAsynchronousTopic<T>(serviceBusConnectionString, topicName);
         }
 
         public IAsynchronousSubscription<T> GetSubscription<T>(IComponentIdentity componentIdentity) where T : class
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
             string defaultSubscriptionName = _applicationResourceSettingProvider.DefaultSubscriptionName(componentIdentity);
@@ -126,7 +142,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public IAsynchronousSubscription<T> GetSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
             return _queueFactory.CreateAsynchronousSubscription<T>(serviceBusConnectionString, defaultTopicName, subscriptionName);
@@ -134,7 +150,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public IAsynchronousBlockBlobRepository GetBlockBlobRepository(IComponentIdentity componentIdentity)
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string blobContainerName = _applicationResourceSettingProvider.DefaultBlobContainerName(componentIdentity);
             return _blobRepositoryFactory.CreateAsynchronousBlockBlobRepository(storageAccountConnectionString, blobContainerName);
@@ -142,15 +158,16 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
         public IAsynchronousBlockBlobRepository GetBlockBlobRepository(string containerName, IComponentIdentity componentIdentity)
         {
-            Condition.Requires(componentIdentity).IsNotNull();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
+            Condition.Requires(containerName).IsNotNullOrWhiteSpace("container name must be supplied");
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _blobRepositoryFactory.CreateAsynchronousBlockBlobRepository(storageAccountConnectionString, containerName);
         }
 
         public string Setting(IComponentIdentity componentIdentity, string settingName)
         {
-            Condition.Requires(componentIdentity).IsNotNull();
-            Condition.Requires(settingName).IsNotNullOrWhiteSpace();
+            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
+            Condition.Requires(settingName).IsNotNullOrWhiteSpace("setting name must be supplied");
             return _configuration[_nameProvider.SettingName(componentIdentity, settingName)];
         }
 

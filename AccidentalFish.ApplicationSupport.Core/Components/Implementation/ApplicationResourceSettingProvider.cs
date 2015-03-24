@@ -64,5 +64,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         {
             return _configuration[_nameProvider.DefaultSubscriptionName(componentIdentity)];
         }
+
+        public string DefaultBrokeredMessageQueueName(IComponentIdentity componentIdentity)
+        {
+            return _configuration[_nameProvider.DefaultBrokeredMessageQueueName(componentIdentity)];
+        }
     }
 }

@@ -107,7 +107,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe.config" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

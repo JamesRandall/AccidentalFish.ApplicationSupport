@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>accidentalfish.applicationsupport</id>
-    <version>0.2.0.4</version>
+    <version>0.2.0.6</version>
     <title>Azure PaaS Application Framework</title>
     <authors>James Randall</authors>
     <owners>James Randall</owners>
@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A dependency injectable application framework for building, configuring, deploying and managing applications on Azure PaaS</description>
     <summary></summary>
-    <releaseNotes>Early release</releaseNotes>
+    <releaseNotes>Added brokered message queue support and backoff wrappers for queue and subscription processing</releaseNotes>
     <copyright>Copyright 2013 Accidental Fish Ltd.</copyright>
     <tags>azure paas application framework table sql queue deployment configuration</tags>
     <dependencies>

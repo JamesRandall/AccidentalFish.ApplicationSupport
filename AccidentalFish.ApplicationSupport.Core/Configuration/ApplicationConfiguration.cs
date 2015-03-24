@@ -74,6 +74,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 XElement defaultLeaseBlockNameElement = element.Element("default-lease-block-name");
                 XElement defaultSubscriptionNameElement = element.Element("default-subscription-name");
                 XElement defaultTopicNameElement = element.Element("default-topic-name");
+                XElement defaultBrokeredMessageQueueNameElement = element.Element("default-brokered-message-queue-name");
                 XElement settingsElement = element.Element("settings");
                 XAttribute defaultBlobContainerAccessAttribute = defaultBlobContainerNameElement == null ? null : defaultBlobContainerNameElement.Attribute("public-permission");
 
@@ -120,6 +121,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 component.DefaultLeaseBlockName = defaultLeaseBlockNameElement == null ? null : defaultLeaseBlockNameElement.Value;
                 component.DefaultTopicName = defaultTopicNameElement == null ? null : defaultTopicNameElement.Value;
                 component.DefaultSubscriptionName = defaultSubscriptionNameElement == null ? null : defaultSubscriptionNameElement.Value;
+                component.DefaultBrokeredMessageQueueName = defaultBrokeredMessageQueueNameElement == null? null : defaultBrokeredMessageQueueNameElement.Value;
                 component.TableData = defaultTableData == null ? null : defaultTableData.Value;
                 component.Uploads = element.Elements("upload").Select(x => x.Value).ToList();
                 if (defaultBlobContainerAccessAttribute != null)

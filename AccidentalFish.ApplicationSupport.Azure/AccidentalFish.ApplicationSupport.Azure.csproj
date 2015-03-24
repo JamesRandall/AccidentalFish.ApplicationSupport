@@ -173,9 +173,11 @@
     <Compile Include="Policies\SqlAzureRetryPolicy.cs" />
     <Compile Include="Policies\SqlDatabaseConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queues\AsynchronousBrokeredMessageQueue.cs" />
     <Compile Include="Queues\AsynchronousQueue.cs" />
     <Compile Include="Queues\AsynchronousSubscription.cs" />
     <Compile Include="Queues\AsynchronousTopic.cs" />
+    <Compile Include="Queues\BrokeredMessageQueueItem.cs" />
     <Compile Include="Queues\CloudQueueItem.cs" />
     <Compile Include="Queues\QueueFactory.cs" />
     <Compile Include="Queues\QueueItem.cs" />

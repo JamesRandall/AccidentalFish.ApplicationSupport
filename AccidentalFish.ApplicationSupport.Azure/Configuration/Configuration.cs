@@ -37,6 +37,18 @@ namespace AccidentalFish.ApplicationSupport.Azure.Configuration
             }
         }
 
+        public string ServiceBusConnectionString
+        {
+            get
+            {
+                if (!_forceAppConfig)
+                {
+                    return CloudConfigurationManager.GetSetting("service-bus-connection-string");
+                }
+                return ConfigurationManager.AppSettings["service-bus-connection-string"];
+            }
+        }
+
         public string this[string key]
         {
             get

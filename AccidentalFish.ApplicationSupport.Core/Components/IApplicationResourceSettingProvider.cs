@@ -21,5 +21,6 @@
         string ServiceBusConnectionString(IComponentIdentity componentIdentity);
         
         string DefaultSubscriptionName(IComponentIdentity componentIdentity);
+        string DefaultBrokeredMessageQueueName(IComponentIdentity componentIdentity);
     }
 }

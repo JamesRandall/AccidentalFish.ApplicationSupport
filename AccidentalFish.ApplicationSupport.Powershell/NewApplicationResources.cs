@@ -65,6 +65,15 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                         }
                     }
 
+                    if (!String.IsNullOrWhiteSpace(component.DefaultBrokeredMessageQueueName))
+                    {
+                        NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                        if (!namespaceManager.QueueExists(component.DefaultBrokeredMessageQueueName))
+                        {
+                            namespaceManager.CreateQueue(component.DefaultBrokeredMessageQueueName);
+                        }
+                    }
+
                     foreach (ApplicationComponentSetting setting in component.Settings)
                     {
                         string resourceType = setting.ResourceType;
@@ -90,6 +99,14 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                                 if (!namespaceManager.SubscriptionExists(topicPath, setting.Value))
                                 {
                                     namespaceManager.CreateSubscription(new SubscriptionDescription(topicPath, setting.Value));
+                                }
+                            }
+                            else if (resourceType == "brokered-message-queue")
+                            {
+                                NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                                if (!namespaceManager.QueueExists(setting.Value))
+                                {
+                                    namespaceManager.CreateQueue(setting.Value);
                                 }
                             }
                         }

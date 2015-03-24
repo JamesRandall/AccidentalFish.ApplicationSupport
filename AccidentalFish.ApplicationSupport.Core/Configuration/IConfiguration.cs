@@ -4,6 +4,7 @@
     {
         string StorageAccountConnectionString { get; }
         string SqlConnectionString { get; }
+        string ServiceBusConnectionString { get; }
         string this[string key] { get; }
     }
 }

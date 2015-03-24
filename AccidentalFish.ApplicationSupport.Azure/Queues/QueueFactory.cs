@@ -25,6 +25,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             return new AsynchronousQueue<T>(new QueueSerializer<T>(), storageAccountConnectionString, queueName);
         }
 
+        public IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string queueName) where T : class
+        {
+            return new AsynchronousBrokeredMessageQueue<T>(new QueueSerializer<T>(), _configuration.ServiceBusConnectionString, queueName);
+        }
+
+        public IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string serviceBusConnectionString, string queueName) where T : class
+        {
+            return new AsynchronousBrokeredMessageQueue<T>(new QueueSerializer<T>(), serviceBusConnectionString, queueName);
+        }
+
         public IAsynchronousTopic<T> CreateAsynchronousTopic<T>(string topicName) where T : class
         {
             return new AsynchronousTopic<T>(new QueueSerializer<T>(), _configuration.StorageAccountConnectionString, topicName);
