@@ -33,6 +33,8 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
 
         protected ILogger Logger { get {  return _logger; } }
 
+        protected IAsynchronousQueue<T> Queue { get {  return _queue; } } 
+
         protected abstract Task<bool> HandleRecievedItem(IQueueItem<T> item);
 
         public abstract IComponentIdentity ComponentIdentity { get; }

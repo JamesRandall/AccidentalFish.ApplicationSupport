@@ -90,6 +90,11 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
                     string key = _nameProvider.DefaultTopicName(componentIdentity);
                     ApplyAppSetting(appSettings, key, component.DefaultTopicName);
                 }
+                if (!string.IsNullOrWhiteSpace(component.DefaultBrokeredMessageQueueName))
+                {
+                    string key = _nameProvider.DefaultBrokeredMessageQueueName(componentIdentity);
+                    ApplyAppSetting(appSettings, key, component.DefaultBrokeredMessageQueueName);
+                }
 
                 foreach (ApplicationComponentSetting setting in component.Settings)
                 {
