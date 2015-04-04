@@ -19,18 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Processes.Tests.Unit", "AccidentalFish.ApplicationSupport.Processes.Tests.Unit\AccidentalFish.ApplicationSupport.Processes.Tests.Unit.csproj", "{97192BD5-BFC5-4F58-BEC1-F47A460E46FA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BCFE3F98-C6A3-4733-BBBC-8A7370413183}"
-	ProjectSection(SolutionItems) = preProject
-		AssemblyDependencies.dgml = AssemblyDependencies.dgml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FE65A51D-F1AC-4EFD-9C83-76999AA6E985}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NugetPackaging", "NugetPackaging", "{6C431FDC-56A3-4222-A99D-11E35069035A}"
 	ProjectSection(SolutionItems) = preProject
 		nuget\AccidentalFish.ApplicationSupport.nuspec = nuget\AccidentalFish.ApplicationSupport.nuspec
