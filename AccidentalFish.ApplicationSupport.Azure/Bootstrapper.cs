@@ -12,7 +12,6 @@ using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
-using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
@@ -26,14 +25,22 @@ namespace AccidentalFish.ApplicationSupport.Azure
     {
         public static void RegisterDependencies(IDependencyResolver dependencyResolver)
         {
-            RegisterDependencies(dependencyResolver, false, true);
+            RegisterDependencies(dependencyResolver, false, true, false);
         }
 
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver, bool forceAppConfig, bool useSqlDatabaseConfiguration)
+        public static void RegisterDependencies(IDependencyResolver dependencyResolver, bool forceAppConfig, bool useAzureSqlDatabaseConfiguration, bool useLegacyQueueSerializer)
         {
             // internal
             dependencyResolver.Register<ITableStorageQueryBuilder, TableStorageQueryBuilder>();
             dependencyResolver.Register<ITableContinuationTokenSerializer, TableContinuationTokenSerializer>();
+            if (useLegacyQueueSerializer)
+            {
+                dependencyResolver.Register<IQueueSerializer, LegacyQueueSerializer>();
+            }
+            else
+            {
+                dependencyResolver.Register<IQueueSerializer, QueueSerializer>();
+            }
 
             // configuration
             dependencyResolver.RegisterInstance<IConfiguration>(new Configuration.Configuration(forceAppConfig));

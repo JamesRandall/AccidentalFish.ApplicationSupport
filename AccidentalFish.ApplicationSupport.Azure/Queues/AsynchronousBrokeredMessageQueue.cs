@@ -7,11 +7,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 {
     internal class AsynchronousBrokeredMessageQueue<T> : IAsynchronousQueue<T> where T : class
     {
-        private readonly IQueueSerializer<T> _queueSerializer;
+        private readonly IQueueSerializer _queueSerializer;
         private readonly QueueClient _client;
 
         public AsynchronousBrokeredMessageQueue(
-            IQueueSerializer<T> queueSerializer,
+            IQueueSerializer queueSerializer,
             string connectionString,
             string queueName)
         {
@@ -58,7 +58,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 try
                 {
                     string body = message.GetBody<string>();
-                    T payload = _queueSerializer.Deserialize(body);
+                    T payload = _queueSerializer.Deserialize<T>(body);
                     BrokeredMessageQueueItem<T> queueItem = new BrokeredMessageQueueItem<T>(message, payload, message.DeliveryCount, null);
                     bool markComplete = await process(queueItem);
                     if (markComplete)
@@ -96,7 +96,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 try
                 {
                     string body = message.GetBody<string>();
-                    T payload = _queueSerializer.Deserialize(body);
+                    T payload = _queueSerializer.Deserialize<T>(body);
                     BrokeredMessageQueueItem<T> queueItem = new BrokeredMessageQueueItem<T>(message, payload, message.DeliveryCount, null);
                     bool markComplete = success(queueItem);
                     if (markComplete)

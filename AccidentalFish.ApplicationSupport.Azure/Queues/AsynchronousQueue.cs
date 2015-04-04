@@ -11,9 +11,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     internal class AsynchronousQueue<T> : IAsynchronousQueue<T> where T : class
     {
         private readonly CloudQueue _queue;
-        private readonly IQueueSerializer<T> _serializer;
+        private readonly IQueueSerializer _serializer;
 
-        public AsynchronousQueue(IQueueSerializer<T> queueSerializer, string connectionString, string queueName)
+        public AsynchronousQueue(IQueueSerializer queueSerializer, string connectionString, string queueName)
         {
             Condition.Requires(queueSerializer).IsNotNull();
             Condition.Requires(queueName).IsNotNullOrWhiteSpace();
@@ -62,7 +62,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             CloudQueueMessage message = await _queue.GetMessageAsync(visibilityTimeout, null, null);
             if (message != null)
             {
-                T item = _serializer.Deserialize(message.AsString);
+                T item = _serializer.Deserialize<T>(message.AsString);
                 if (await processor(new CloudQueueItem<T>(message, item, message.DequeueCount, message.PopReceipt)))
                 {
                     await _queue.DeleteMessageAsync(message);
@@ -96,7 +96,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 CloudQueueMessage message = await _queue.GetMessageAsync();
                 if (message != null)
                 {
-                    T item = _serializer.Deserialize(message.AsString);
+                    T item = _serializer.Deserialize<T>(message.AsString);
                     if (success(new CloudQueueItem<T>(message, item, message.DequeueCount, message.PopReceipt)))
                     {
                         await _queue.DeleteMessageAsync(message);

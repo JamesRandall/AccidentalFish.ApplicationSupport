@@ -7,10 +7,10 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 {
     internal class AsynchronousSubscription<T> : IAsynchronousSubscription<T> where T : class
     {
-        private readonly IQueueSerializer<T> _queueSerializer;
+        private readonly IQueueSerializer _queueSerializer;
         private readonly SubscriptionClient _client;
 
-        public AsynchronousSubscription(IQueueSerializer<T> queueSerializer, string connectionString, string topicName, string subscriptionName)
+        public AsynchronousSubscription(IQueueSerializer queueSerializer, string connectionString, string topicName, string subscriptionName)
         {
             _queueSerializer = queueSerializer;
             _client = SubscriptionClient.CreateFromConnectionString(connectionString, topicName, subscriptionName, ReceiveMode.PeekLock);
@@ -24,7 +24,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 try
                 {
                     string body = message.GetBody<string>();
-                    T payload = _queueSerializer.Deserialize(body);
+                    T payload = _queueSerializer.Deserialize<T>(body);
                     bool markComplete = await process(payload);
                     if (markComplete)
                     {

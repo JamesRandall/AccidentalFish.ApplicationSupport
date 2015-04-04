@@ -1,8 +1,8 @@
 ﻿namespace AccidentalFish.ApplicationSupport.Core.Queues
 {
-    public interface IQueueSerializer<T> where T : class
+    public interface IQueueSerializer
     {
-        string Serialize(T item);
-        T Deserialize(string item);
+        string Serialize<T>(T item) where T : class;
+        T Deserialize<T>(string item) where T : class;
     }
 }

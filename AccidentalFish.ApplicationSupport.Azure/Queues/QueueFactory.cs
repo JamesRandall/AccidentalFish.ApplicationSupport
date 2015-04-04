@@ -8,47 +8,50 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     internal class QueueFactory : IQueueFactory
     {
         private readonly IConfiguration _configuration;
+        private readonly IQueueSerializer _queueSerializer;
 
-        public QueueFactory(IConfiguration configuration)
+        public QueueFactory(IConfiguration configuration,
+            IQueueSerializer queueSerializer)
         {
             Condition.Requires(configuration).IsNotNull();
             _configuration = configuration;
+            _queueSerializer = queueSerializer;
         }
 
         public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string queueName) where T : class
         {
-            return new AsynchronousQueue<T>(new QueueSerializer<T>(), _configuration.StorageAccountConnectionString, queueName);
+            return new AsynchronousQueue<T>(_queueSerializer, _configuration.StorageAccountConnectionString, queueName);
         }
 
         public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string storageAccountConnectionString, string queueName) where T : class
         {
-            return new AsynchronousQueue<T>(new QueueSerializer<T>(), storageAccountConnectionString, queueName);
+            return new AsynchronousQueue<T>(_queueSerializer, storageAccountConnectionString, queueName);
         }
 
         public IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string queueName) where T : class
         {
-            return new AsynchronousBrokeredMessageQueue<T>(new QueueSerializer<T>(), _configuration.ServiceBusConnectionString, queueName);
+            return new AsynchronousBrokeredMessageQueue<T>(_queueSerializer, _configuration.ServiceBusConnectionString, queueName);
         }
 
         public IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string serviceBusConnectionString, string queueName) where T : class
         {
-            return new AsynchronousBrokeredMessageQueue<T>(new QueueSerializer<T>(), serviceBusConnectionString, queueName);
+            return new AsynchronousBrokeredMessageQueue<T>(_queueSerializer, serviceBusConnectionString, queueName);
         }
 
         public IAsynchronousTopic<T> CreateAsynchronousTopic<T>(string topicName) where T : class
         {
-            return new AsynchronousTopic<T>(new QueueSerializer<T>(), _configuration.StorageAccountConnectionString, topicName);
+            return new AsynchronousTopic<T>(_queueSerializer, _configuration.StorageAccountConnectionString, topicName);
         }
 
         public IAsynchronousTopic<T> CreateAsynchronousTopic<T>(string storageAccountConnectionString, string topicName) where T : class
         {
-            return new AsynchronousTopic<T>(new QueueSerializer<T>(), storageAccountConnectionString, topicName);
+            return new AsynchronousTopic<T>(_queueSerializer, storageAccountConnectionString, topicName);
         }
 
         public IAsynchronousSubscription<T> CreateAsynchronousSubscriptionWithConfiguration<T>(string topicName) where T : class
         {
             return new AsynchronousSubscription<T>(
-                new QueueSerializer<T>(),
+                _queueSerializer,
                 _configuration.StorageAccountConnectionString,
                 topicName,
                 Guid.NewGuid().ToString().Replace("-", ""));
@@ -57,7 +60,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         public IAsynchronousSubscription<T> CreateAsynchronousSubscriptionWithConfiguration<T>(string topicName, string subscrioptionName) where T : class
         {
             return new AsynchronousSubscription<T>(
-                new QueueSerializer<T>(),
+                _queueSerializer,
                 _configuration.StorageAccountConnectionString,
                 topicName,
                 subscrioptionName);
@@ -67,7 +70,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             string subscriptionName) where T : class
         {
             return new AsynchronousSubscription<T>(
-                new QueueSerializer<T>(),
+                _queueSerializer,
                 storageAccountConnectionString,
                 topicName,
                 subscriptionName);
@@ -76,7 +79,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         public IAsynchronousSubscription<T> CreateAsynchronousSubscription<T>(string storageAccountConnectionString, string topicName) where T : class
         {
             return new AsynchronousSubscription<T>(
-                new QueueSerializer<T>(),
+                _queueSerializer,
                 storageAccountConnectionString,
                 topicName,
                 Guid.NewGuid().ToString().Replace("-", ""));

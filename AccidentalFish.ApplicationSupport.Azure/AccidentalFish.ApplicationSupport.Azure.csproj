@@ -125,10 +125,12 @@
     <Compile Include="Blobs\BlobMultipartStreamProvider.cs" />
     <Compile Include="Blobs\BlobRepositoryFactory.cs" />
     <Compile Include="Blobs\BlockBlob.cs" />
+    <Compile Include="Blobs\IAsynchronousBlockBlobRepositoryExtensions.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\IAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\Implementation\AzureApplicationResourceFactory.cs" />
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Queues\QueueSerializer.cs" />
     <Compile Include="TableStorage\IAsynchronousTableStorageRepository.cs" />
     <Compile Include="TableStorage\Implementation\AsynchronousTableStorageRepository.cs" />
     <Compile Include="TableStorage\Implementation\AzureTableCreator.cs" />
@@ -150,7 +152,7 @@
     <Compile Include="Queues\CloudQueueItem.cs" />
     <Compile Include="Queues\QueueFactory.cs" />
     <Compile Include="Queues\QueueItem.cs" />
-    <Compile Include="Queues\QueueSerializer.cs" />
+    <Compile Include="Queues\LegacyQueueSerializer.cs" />
     <Compile Include="Runtime\RuntimeEnvironment.cs" />
     <Compile Include="TableStorage\ITableStorageConcurrencyManager.cs" />
     <Compile Include="TableStorage\ITableStorageRepositoryFactory.cs" />
