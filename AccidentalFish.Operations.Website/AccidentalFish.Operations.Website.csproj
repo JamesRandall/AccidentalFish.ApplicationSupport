@@ -305,6 +305,10 @@
       <Project>{578e1681-f5f4-4cba-bec3-7f1d8a765254}</Project>
       <Name>AccidentalFish.ApplicationSupport.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj">
+      <Project>{09c4344b-a00b-4404-bea0-f0b5521faa99}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Unity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AccidentalFish.Operations.Website.Domain\AccidentalFish.Operations.Website.Domain.csproj">
       <Project>{7a1e0ffa-d645-47d6-803e-cdfd39b3dcff}</Project>
       <Name>AccidentalFish.Operations.Website.Domain</Name>

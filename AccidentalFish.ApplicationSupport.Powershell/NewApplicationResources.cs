@@ -120,7 +120,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                     {
                         CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                         CloudBlobContainer blobContainer = blobClient.GetContainerReference(component.DefaultBlobContainerName);
-                        blobContainer.CreateIfNotExists(component.DefaultBlobContainerAccessType);
+                        blobContainer.CreateIfNotExists(BlobContainerPublicAccessType(component.DefaultBlobContainerAccessType));
 
                         WriteVerbose(String.Format("Creating blob container {0} in {1}", component.DefaultBlobContainerName, storageAccount.BlobEndpoint));
 
@@ -140,7 +140,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                     {
                         CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                         CloudBlobContainer blobContainer = blobClient.GetContainerReference(component.DefaultLeaseBlockName);
-                        blobContainer.CreateIfNotExists(component.DefaultBlobContainerAccessType);
+                        blobContainer.CreateIfNotExists(BlobContainerPublicAccessType(component.DefaultBlobContainerAccessType));
 
                         WriteVerbose(String.Format("Creating lease block container {0} in {1}", component.DefaultLeaseBlockName, storageAccount.BlobEndpoint));
                     }
@@ -430,6 +430,23 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                 return new EntityProperty(value);
             }
             throw new InvalidOperationException(String.Format("Type {0} not understood", type));
+        }
+
+        private static BlobContainerPublicAccessType BlobContainerPublicAccessType(
+            BlobContainerPublicAccessTypeEnum value)
+        {
+            switch (value)
+            {
+                case BlobContainerPublicAccessTypeEnum.Off:
+                    return Microsoft.WindowsAzure.Storage.Blob.BlobContainerPublicAccessType.Off;
+
+                case BlobContainerPublicAccessTypeEnum.Blob:
+                    return Microsoft.WindowsAzure.Storage.Blob.BlobContainerPublicAccessType.Blob;
+
+                case BlobContainerPublicAccessTypeEnum.Container:
+                    return Microsoft.WindowsAzure.Storage.Blob.BlobContainerPublicAccessType.Container;
+            }
+            throw new InvalidOperationException("Invalid blob access type");
         }
 
         public void CheatRun()

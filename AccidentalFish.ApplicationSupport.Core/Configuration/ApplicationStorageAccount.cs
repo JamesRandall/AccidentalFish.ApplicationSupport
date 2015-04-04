@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
-using Microsoft.Practices.ObjectBuilder2;
 
 namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
@@ -19,7 +14,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         {
             Fqn = element.Element("fqn").Value;
             ConnectionString = element.Element("connection-string").Value;
-            element.Elements("cors-rule").ForEach(cr => CorsRules.Add(new ApplicationCorsRule(cr)));
+            foreach (XElement cr in element.Elements("cors-rule"))
+            {
+                CorsRules.Add(new ApplicationCorsRule(cr));
+            }
         }
 
         public string Fqn { get; set; }

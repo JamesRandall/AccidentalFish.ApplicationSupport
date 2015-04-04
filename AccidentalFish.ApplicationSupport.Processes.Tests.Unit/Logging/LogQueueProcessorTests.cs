@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using AccidentalFish.ApplicationSupport.Azure.Components;
 using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
@@ -14,7 +15,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
     [TestClass]
     public class LogQueueProcessorTests
     {
-        private Mock<IApplicationResourceFactory> _applicationResourceFactory;
+        private Mock<IAzureApplicationResourceFactory> _applicationResourceFactory;
         private Mock<IAsynchronousBackoffPolicy> _asynchronousBackoffPolicy;
         private Mock<IMapperFactory> _mapperFactory;
         private Mock<IAlertSender> _alertSender;
@@ -22,7 +23,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
         [TestInitialize]
         public void Setup()
         {
-            _applicationResourceFactory = new Mock<IApplicationResourceFactory>();
+            _applicationResourceFactory = new Mock<IAzureApplicationResourceFactory>();
             _asynchronousBackoffPolicy = new Mock<IAsynchronousBackoffPolicy>();
             _alertSender = new Mock<IAlertSender>();
             _mapperFactory = new Mock<IMapperFactory>();

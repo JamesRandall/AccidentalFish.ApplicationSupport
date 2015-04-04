@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
     public class ApplicationComponent
     {
-        private string _defaultBrokeredMessageQueueName;
-
         public ApplicationComponent()
         {
             Settings = new List<ApplicationComponentSetting>();
@@ -24,7 +21,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
 
         public string DbContextType { get; set; }
 
-        public BlobContainerPublicAccessType DefaultBlobContainerAccessType { get; set; }
+        public BlobContainerPublicAccessTypeEnum DefaultBlobContainerAccessType { get; set; }
 
         public string DefaultBlobContainerName { get; set; }
 

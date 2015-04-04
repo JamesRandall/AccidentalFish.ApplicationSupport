@@ -1,9 +1,9 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Alerts.Model;
+﻿using AccidentalFish.ApplicationSupport.Azure.Alerts.Model;
 using AccidentalFish.ApplicationSupport.Core.Mappers;
 
 namespace AccidentalFish.Operations.Website.Domain.Mappers.Implementation
 {
-    internal class AlertSubscriberMapper : AbstractMapper<AlertSubscriber, ViewModel.AlertSubscriber>
+    internal class AlertSubscriberMapper : AbstractBidirectionalMapper<AlertSubscriber, ViewModel.AlertSubscriber>
     {
         public override ViewModel.AlertSubscriber Map(AlertSubscriber @from)
         {

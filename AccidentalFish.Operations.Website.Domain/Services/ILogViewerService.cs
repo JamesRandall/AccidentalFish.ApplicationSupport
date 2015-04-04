@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Core.Logging.Model;
-using AccidentalFish.ApplicationSupport.Core.NoSql;
+using AccidentalFish.ApplicationSupport.Azure.TableStorage;
+using AccidentalFish.Operations.Website.Domain.Model;
 
 namespace AccidentalFish.Operations.Website.Domain.Services
 {

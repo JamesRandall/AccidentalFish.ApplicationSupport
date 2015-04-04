@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
@@ -117,7 +116,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 component.DefaultBlobContainerName = defaultBlobContainerNameElement == null ? null : defaultBlobContainerNameElement.Value;
                 component.DefaultQueueName = defaultQueueNameElement == null ? null : defaultQueueNameElement.Value;
                 component.DefaultTableName = defaultTableNameElement == null ? null : defaultTableNameElement.Value;
-                component.DefaultBlobContainerAccessType = BlobContainerPublicAccessType.Off;
+                component.DefaultBlobContainerAccessType = BlobContainerPublicAccessTypeEnum.Off;
                 component.DefaultLeaseBlockName = defaultLeaseBlockNameElement == null ? null : defaultLeaseBlockNameElement.Value;
                 component.DefaultTopicName = defaultTopicNameElement == null ? null : defaultTopicNameElement.Value;
                 component.DefaultSubscriptionName = defaultSubscriptionNameElement == null ? null : defaultSubscriptionNameElement.Value;
@@ -129,11 +128,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     string accessAttribtueValue = defaultBlobContainerAccessAttribute.Value.ToLower();
                     if (accessAttribtueValue == "blob")
                     {
-                        component.DefaultBlobContainerAccessType = BlobContainerPublicAccessType.Blob;
+                        component.DefaultBlobContainerAccessType = BlobContainerPublicAccessTypeEnum.Blob;
                     }
                     else if (accessAttribtueValue == "container")
                     {
-                        component.DefaultBlobContainerAccessType = BlobContainerPublicAccessType.Container;
+                        component.DefaultBlobContainerAccessType = BlobContainerPublicAccessTypeEnum.Container;
                     }
                 }
 

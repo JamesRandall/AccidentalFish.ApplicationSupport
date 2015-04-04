@@ -4,7 +4,6 @@ using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Repository;
-using AccidentalFish.ApplicationSupport.Core.Repository.Implementaton;
 using CuttingEdge.Conditions;
 
 namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
@@ -13,31 +12,28 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
     {
         private readonly IApplicationResourceSettingProvider _applicationResourceSettingProvider;
         private readonly IApplicationResourceSettingNameProvider _nameProvider;
-        private readonly INoSqlRepositoryFactory _noSqlRepositoryFactory;
         private readonly IQueueFactory _queueFactory;
         private readonly IBlobRepositoryFactory _blobRepositoryFactory;
-        private readonly IDbConfiguration _dbConfiguration;
         private readonly IConfiguration _configuration;
         private readonly ILeaseManagerFactory _leaseManagerFactory;
+        private readonly IUnitOfWorkFactoryProvider _unitOfWorkFactoryProvider;
 
         public ApplicationResourceFactory(
             IApplicationResourceSettingProvider applicationResourceSettingProvider,
             IApplicationResourceSettingNameProvider nameProvider,
-            INoSqlRepositoryFactory noSqlRepositoryFactory,
             IQueueFactory queueFactory,
             IBlobRepositoryFactory blobRepositoryFactory,
-            IDbConfiguration dbConfiguration,
             IConfiguration configuration,
-            ILeaseManagerFactory leaseManagerFactory)
+            ILeaseManagerFactory leaseManagerFactory,
+            IUnitOfWorkFactoryProvider unitOfWorkFactoryProvider)
         {
             _applicationResourceSettingProvider = applicationResourceSettingProvider;
             _nameProvider = nameProvider;
-            _noSqlRepositoryFactory = noSqlRepositoryFactory;
             _queueFactory = queueFactory;
             _blobRepositoryFactory = blobRepositoryFactory;
-            _dbConfiguration = dbConfiguration;
             _configuration = configuration;
             _leaseManagerFactory = leaseManagerFactory;
+            _unitOfWorkFactoryProvider = unitOfWorkFactoryProvider;
         }
 
         public IUnitOfWorkFactory GetUnitOfWorkFactory(IComponentIdentity componentIdentity)
@@ -45,29 +41,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
             string sqlConnectionString = _applicationResourceSettingProvider.SqlConnectionString(componentIdentity);
             string contextType = _applicationResourceSettingProvider.SqlContextType(componentIdentity);
-            return new EntityFrameworkUnitOfWorkFactory(contextType, sqlConnectionString, _dbConfiguration);
-        }
-
-        public IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(IComponentIdentity componentIdentity) where T : NoSqlEntity, new()
-        {
-            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
-            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
-            string defaultTableName = _applicationResourceSettingProvider.DefaultTableName(componentIdentity);
-            return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, defaultTableName);
-        }
-
-        public IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity) where T : NoSqlEntity, new()
-        {
-            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
-            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
-            return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, tablename);
-        }
-
-        public IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity, bool lazyCreateTable) where T : NoSqlEntity, new()
-        {
-            Condition.Requires(componentIdentity).IsNotNull("component identity must be given");
-            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
-            return _noSqlRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, tablename, lazyCreateTable);
+            return _unitOfWorkFactoryProvider.Create(contextType, sqlConnectionString);
         }
 
         public ILeaseManager<T> GetLeaseManager<T>(IComponentIdentity componentIdentity)

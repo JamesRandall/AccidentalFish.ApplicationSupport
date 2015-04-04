@@ -9,9 +9,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
     {
         IUnitOfWorkFactory GetUnitOfWorkFactory(IComponentIdentity componentIdentity);
 
-        IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(IComponentIdentity componentIdentity) where T : NoSqlEntity, new();
-        IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity) where T : NoSqlEntity, new();
-        IAsynchronousNoSqlRepository<T> GetNoSqlRepository<T>(string tablename, IComponentIdentity componentIdentity, bool lazyCreateTable) where T : NoSqlEntity, new();
         ILeaseManager<T> GetLeaseManager<T>(IComponentIdentity componentIdentity);
         ILeaseManager<T> GetLeaseManager<T>(string leaseBlockName, IComponentIdentity componentIdentity);
 

@@ -1,10 +1,11 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Mappers;
+using AccidentalFish.ApplicationSupport.Processes.Logging.Model;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Mappers
 {
-    internal class LogQueueItemLogTableItemMapper : AbstractMapper<LogQueueItem, LogTableItem>
+    internal class LogQueueItemLogTableItemMapper : AbstractBidirectionalMapper<LogQueueItem, LogTableItem>
     {
         public override LogTableItem Map(LogQueueItem @from)
         {

@@ -1,20 +1,19 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Components;
-using Microsoft.Practices.Unity;
 
 namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 {
     internal class ComponentFactory : IComponentFactory
     {
-        private readonly IUnityContainer _unityContainer;
+        private readonly IDependencyResolver _container;
 
-        public ComponentFactory(IUnityContainer unityContainer)
+        public ComponentFactory(IDependencyResolver container)
         {
-            _unityContainer = unityContainer;
+            _container = container;
         }
 
         public IHostableComponent Create(IComponentIdentity componentIdentity)
         {
-            return _unityContainer.Resolve<IHostableComponent>(componentIdentity.ToString());
+            return _container.Resolve<IHostableComponent>(componentIdentity.ToString());
         }
     }
 }

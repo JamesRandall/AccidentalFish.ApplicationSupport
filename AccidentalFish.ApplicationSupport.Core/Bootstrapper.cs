@@ -1,22 +1,16 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Alerts;
-using AccidentalFish.ApplicationSupport.Core.Alerts.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Components.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.Core.Email.Implementation;
-using AccidentalFish.ApplicationSupport.Core.Email.Providers;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Policies.Implementation;
-using AccidentalFish.ApplicationSupport.Core.Repository;
-using AccidentalFish.ApplicationSupport.Core.Repository.Implementaton;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
 using AccidentalFish.ApplicationSupport.Core.Runtime.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Threading;
 using AccidentalFish.ApplicationSupport.Core.Threading.Implementation;
-using Microsoft.Practices.Unity;
 
 namespace AccidentalFish.ApplicationSupport.Core
 {
@@ -27,53 +21,33 @@ namespace AccidentalFish.ApplicationSupport.Core
     /// </summary>
     public static class Bootstrapper
     {
-        public static void RegisterDependencies(IUnityContainer container)
+        public static void RegisterDependencies(IDependencyResolver container)
         {
-            RegisterDependencies(container, EmailProviderEnum.SendGrid, null);
+            RegisterDependencies(container, null);
         }
 
         public static void RegisterDependencies(
-            IUnityContainer container,
-            EmailProviderEnum emailProvider,
+            IDependencyResolver container,
             Type loggerExtension)
         {
-            if (emailProvider == EmailProviderEnum.AmazonSimpleEmailService)
-            {
-                container.RegisterType<IEmailProvider, AmazonSimpleEmailProvider>();
-            }
-            else if (emailProvider == EmailProviderEnum.SendGrid)
-            {
-                container.RegisterType<IEmailProvider, SendGridEmailProvider>();
-            }
-            else
-            {
-                throw new NotImplementedException("Email provider not recognised");
-            }
-
-            if (!container.IsRegistered<ISqlRetryPolicy>())
-            {
-                container.RegisterType<ISqlRetryPolicy, NullSqlRetryPolicy>();
-            }
-            container.RegisterType<IUnitOfWorkFactory, EntityFrameworkUnitOfWorkFactory>();
-            container.RegisterType<IBackoffPolicy, BackoffPolicy>();
-            container.RegisterType<ILeasedRetry, LeasedRetry>();
-            container.RegisterType<IAsynchronousBackoffPolicy, AsynchronousBackoffPolicy>();
-            container.RegisterType<IWaitHandle, ManualResetEventWaitHandle>();
-            container.RegisterType<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>();
-            container.RegisterType<IApplicationResourceFactory, ApplicationResourceFactory>();
-            container.RegisterType<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>();
-            container.RegisterType<ILoggerFactory, LoggerFactory>();
-            container.RegisterType<IComponentHost, ComponentHost>();
-            container.RegisterType<IAlertSender, AlertSender>();
-            container.RegisterType<IEmailManager, EmailManager>();
+            container.Register<IBackoffPolicy, BackoffPolicy>();
+            container.Register<ILeasedRetry, LeasedRetry>();
+            container.Register<IAsynchronousBackoffPolicy, AsynchronousBackoffPolicy>();
+            container.Register<IWaitHandle, ManualResetEventWaitHandle>();
+            container.Register<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>();
+            container.Register<IApplicationResourceFactory, ApplicationResourceFactory>();
+            container.Register<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>();
+            container.Register<ILoggerFactory, LoggerFactory>();
+            container.Register<IComponentHost, ComponentHost>();
+            container.Register<IEmailManager, EmailManager>();
 
             if (loggerExtension == null)
             {
-                container.RegisterType<ILoggerExtension, NullLoggerExtension>();
+                container.Register<ILoggerExtension, NullLoggerExtension>();
             }
             else
             {
-                container.RegisterType(typeof (ILoggerExtension), loggerExtension);
+                container.Register(typeof(ILoggerExtension), loggerExtension);
             }
             container.RegisterInstance<IComponentFactory>(new ComponentFactory(container));
         }

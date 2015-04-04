@@ -85,6 +85,7 @@
     <Compile Include="Mappers\IMapperFactory.cs" />
     <Compile Include="Mappers\Implementation\AlertSubscriberMapper.cs" />
     <Compile Include="Mappers\Implementation\MapperFactory.cs" />
+    <Compile Include="Model\LogTableItem.cs" />
     <Compile Include="Services\IAlertSubscriberService.cs" />
     <Compile Include="Services\ILogViewerService.cs" />
     <Compile Include="Services\Implementation\AlertSubscriberService.cs" />

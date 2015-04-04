@@ -66,6 +66,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C721
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopicsAndSubscriptions", "Samples\TopicsAndSubscriptions\TopicsAndSubscriptions.csproj", "{B0EF8F56-C9B3-4C1D-80C6-DD65B3C00F5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Email.SendGrid", "AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.csproj", "{1FAB02F3-6930-4FF3-96BE-E23F2D428325}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Email.Amazon", "AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.csproj", "{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Repository.EntityFramework", "AccidentalFish.ApplicationSupport.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.csproj", "{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Unity", "AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj", "{09C4344B-A00B-4404-BEA0-F0B5521FAA99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +158,30 @@ Global
 		{B0EF8F56-C9B3-4C1D-80C6-DD65B3C00F5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0EF8F56-C9B3-4C1D-80C6-DD65B3C00F5E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B0EF8F56-C9B3-4C1D-80C6-DD65B3C00F5E}.Release|x64.ActiveCfg = Release|Any CPU
+		{1FAB02F3-6930-4FF3-96BE-E23F2D428325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FAB02F3-6930-4FF3-96BE-E23F2D428325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FAB02F3-6930-4FF3-96BE-E23F2D428325}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1FAB02F3-6930-4FF3-96BE-E23F2D428325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FAB02F3-6930-4FF3-96BE-E23F2D428325}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FAB02F3-6930-4FF3-96BE-E23F2D428325}.Release|x64.ActiveCfg = Release|Any CPU
+		{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}.Release|x64.ActiveCfg = Release|Any CPU
+		{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}.Release|x64.ActiveCfg = Release|Any CPU
+		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -165,7 +197,7 @@ Global
 		{B0EF8F56-C9B3-4C1D-80C6-DD65B3C00F5E} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
 	EndGlobalSection
 EndGlobal

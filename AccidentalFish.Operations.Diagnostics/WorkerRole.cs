@@ -5,6 +5,7 @@ using System.Threading;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
+using AccidentalFish.ApplicationSupport.Unity;
 using Microsoft.Practices.Unity;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
@@ -50,9 +51,11 @@ namespace AccidentalFish.Operations.Diagnostics
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
 
             _container = new UnityContainer();
-            ApplicationSupport.Core.Bootstrapper.RegisterDependencies(_container);
-            ApplicationSupport.Azure.Bootstrapper.RegisterDependencies(_container);
-            ApplicationSupport.Processes.Bootstrapper.RegisterDependencies(_container);
+            UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(_container);
+
+            ApplicationSupport.Core.Bootstrapper.RegisterDependencies(resolver);
+            ApplicationSupport.Azure.Bootstrapper.RegisterDependencies(resolver);
+            ApplicationSupport.Processes.Bootstrapper.RegisterDependencies(resolver);
 
             return base.OnStart();
         }

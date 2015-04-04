@@ -1,0 +1,16 @@
+﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+
+namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies.Implementation
+{
+    internal class NullDatabaseConfiguration : DbConfiguration, IDbConfiguration
+    {
+        public NullDatabaseConfiguration()
+        {
+            
+        }
+
+        public IDbExecutionStrategy ExecutionStrategy { get { return new DefaultExecutionStrategy();} }
+        public bool SuspendExecutionStrategy { get; set; }
+    }
+}

@@ -107,6 +107,10 @@
       <Project>{578e1681-f5f4-4cba-bec3-7f1d8a765254}</Project>
       <Name>AccidentalFish.ApplicationSupport.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj">
+      <Project>{09c4344b-a00b-4404-bea0-f0b5521faa99}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Unity</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

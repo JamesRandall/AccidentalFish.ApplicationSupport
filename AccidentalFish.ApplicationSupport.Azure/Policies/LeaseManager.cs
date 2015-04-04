@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Core.NoSql;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -49,7 +50,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             {
                 if (ex.RequestInformation.HttpStatusCode == 400)
                 {
-                    throw new UnableToAcquireLease("Unable to acquire lease", ex);
+                    throw new UnableToAcquireLeaseException("Unable to acquire lease", ex);
                 }
                 throw;
             }

@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Azure.Components;
+using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
@@ -11,6 +13,7 @@ using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Private;
+using AccidentalFish.ApplicationSupport.Processes.Logging.Model;
 using AccidentalFish.ApplicationSupport.Processes.Mappers;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Logging
@@ -22,13 +25,13 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
         private readonly IMapperFactory _mapperFactory;
         private readonly IAlertSender _alertSender;
         private readonly IAsynchronousQueue<LogQueueItem> _queue;
-        private readonly IAsynchronousNoSqlRepository<LogTableItem> _bySourceTable;
-        private readonly IAsynchronousNoSqlRepository<LogTableItem> _bySeverityTable;
-        private readonly IAsynchronousNoSqlRepository<LogTableItem> _byDateDescTable;
-        private readonly IAsynchronousNoSqlRepository<LogTableItem> _byDateTable;
+        private readonly IAsynchronousTableStorageRepository<LogTableItem> _bySourceTable;
+        private readonly IAsynchronousTableStorageRepository<LogTableItem> _bySeverityTable;
+        private readonly IAsynchronousTableStorageRepository<LogTableItem> _byDateDescTable;
+        private readonly IAsynchronousTableStorageRepository<LogTableItem> _byDateTable;
 
         public LogQueueProcessor(
-            IApplicationResourceFactory applicationResourceFactory,
+            IAzureApplicationResourceFactory applicationResourceFactory,
             IAsynchronousBackoffPolicy backoffPolicy,
             IMapperFactory mapperFactory,
             IAlertSender alertSender)
@@ -43,10 +46,10 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             string bySeverityTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-byseverity-table");
             string bySourceTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bysource-table");
 
-            _bySourceTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySourceTableName, ComponentIdentity);
-            _bySeverityTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySeverityTableName, ComponentIdentity);
-            _byDateTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateTableName, ComponentIdentity);
-            _byDateDescTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateDescTableName, ComponentIdentity);
+            _bySourceTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(bySourceTableName, ComponentIdentity);
+            _bySeverityTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(bySeverityTableName, ComponentIdentity);
+            _byDateTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(byDateTableName, ComponentIdentity);
+            _byDateDescTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(byDateDescTableName, ComponentIdentity);
         }
 
         // TODO: This is a bleed through of the component host not being correct

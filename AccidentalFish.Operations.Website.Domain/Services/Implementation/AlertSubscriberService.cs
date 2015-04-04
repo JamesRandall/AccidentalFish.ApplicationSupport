@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Azure.Components;
+using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.Operations.Website.Domain.Mappers;
 using AccidentalFish.Operations.Website.Domain.ViewModel;
-using AlertSubscriber = AccidentalFish.ApplicationSupport.Core.Alerts.Model.AlertSubscriber;
+using AlertSubscriber = AccidentalFish.ApplicationSupport.Azure.Alerts.Model.AlertSubscriber;
 
 namespace AccidentalFish.Operations.Website.Domain.Services.Implementation
 {
     internal class AlertSubscriberService : IAlertSubscriberService
     {
         private readonly IMapperFactory _mapperFactory;
-        private readonly IAsynchronousNoSqlRepository<AlertSubscriber> _subscriberTable;
+        private readonly IAsynchronousTableStorageRepository<AlertSubscriber> _subscriberTable;
 
-        public AlertSubscriberService(IApplicationResourceFactory applicationResourceFactory,
+        public AlertSubscriberService(IAzureApplicationResourceFactory applicationResourceFactory,
             IMapperFactory mapperFactory)
         {
             _mapperFactory = mapperFactory;
-            _subscriberTable = applicationResourceFactory.GetNoSqlRepository<AlertSubscriber>(new ComponentIdentity("com.accidentalfish.alert-sender"));
+            _subscriberTable = applicationResourceFactory.GetTableStorageRepository<AlertSubscriber>(new ComponentIdentity("com.accidentalfish.alert-sender"));
         }
 
         public async Task<PageResult<ViewModel.AlertSubscriber>> GetSubscribers(int page, int pageSize)

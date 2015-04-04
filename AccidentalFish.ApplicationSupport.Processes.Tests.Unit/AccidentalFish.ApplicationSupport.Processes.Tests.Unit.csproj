@@ -79,6 +79,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.csproj">
+      <Project>{F4F8B4B5-4519-4669-8D30-CD7866CC6B33}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj">
       <Project>{578e1681-f5f4-4cba-bec3-7f1d8a765254}</Project>
       <Name>AccidentalFish.ApplicationSupport.Core</Name>

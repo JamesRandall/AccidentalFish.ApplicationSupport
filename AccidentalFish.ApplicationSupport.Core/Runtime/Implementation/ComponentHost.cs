@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
-using Microsoft.Practices.Unity;
 
 namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 {
