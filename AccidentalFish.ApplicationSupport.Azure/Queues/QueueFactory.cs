@@ -1,7 +1,6 @@
 ﻿using System;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Queues;
-using CuttingEdge.Conditions;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Queues
 {
@@ -13,7 +12,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         public QueueFactory(IConfiguration configuration,
             IQueueSerializer queueSerializer)
         {
-            Condition.Requires(configuration).IsNotNull();
+            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (queueSerializer == null) throw new ArgumentNullException("queueSerializer");
             _configuration = configuration;
             _queueSerializer = queueSerializer;
         }

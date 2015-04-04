@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
-using CuttingEdge.Conditions;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Blobs
@@ -16,7 +15,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
 
         public BlockBlob(CloudBlockBlob blockBlob)
         {
-            Condition.Requires(blockBlob).IsNotNull();
+            if (blockBlob == null) throw new ArgumentNullException("blockBlob");
+
             _blockBlob = blockBlob;
         }
 

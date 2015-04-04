@@ -1,6 +1,6 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Blobs;
+﻿using System;
+using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
-using CuttingEdge.Conditions;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Blobs
 {
@@ -10,21 +10,24 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
 
         public BlobRepositoryFactory(IConfiguration configuration)
         {
-            Condition.Requires(configuration).IsNotNull();
+            if (configuration == null) throw new ArgumentNullException("configuration");
+
             _configuration = configuration;
         }
 
         public IAsynchronousBlockBlobRepository CreateAsynchronousBlockBlobRepository(string containerName)
         {
-            Condition.Requires(containerName).IsNotNullOrWhiteSpace();
+            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentNullException("containerName");
+
             return new AsynchronousBlockBlobRepository(_configuration.StorageAccountConnectionString, containerName);
         }
 
         public IAsynchronousBlockBlobRepository CreateAsynchronousBlockBlobRepository(string storageAccountConnectionString,
             string blobContainerName)
         {
-            Condition.Requires(blobContainerName).IsNotNull();
-            Condition.Requires(storageAccountConnectionString).IsNotNull();
+            if (String.IsNullOrWhiteSpace(storageAccountConnectionString)) throw new ArgumentNullException("storageAccountConnectionString");
+            if (String.IsNullOrWhiteSpace(blobContainerName)) throw new ArgumentNullException("blobContainerName");
+
             return new AsynchronousBlockBlobRepository(storageAccountConnectionString, blobContainerName);
         }
     }

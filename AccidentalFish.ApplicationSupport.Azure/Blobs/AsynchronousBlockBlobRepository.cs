@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
-using CuttingEdge.Conditions;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
@@ -16,8 +15,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
         
         public AsynchronousBlockBlobRepository(string storageAccountConnectionString, string containerName)
         {
-            Condition.Requires(storageAccountConnectionString).IsNotNullOrWhiteSpace();
-            Condition.Requires(containerName).IsNotNullOrWhiteSpace();
+            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentNullException("containerName");
+            if (String.IsNullOrWhiteSpace(storageAccountConnectionString)) throw new ArgumentNullException("storageAccountConnectionString");
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
             CloudBlobClient client = storageAccount.CreateCloudBlobClient();

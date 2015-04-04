@@ -5,8 +5,6 @@ using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
-using CuttingEdge.Conditions;
-using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 {
@@ -25,8 +23,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
             ILoggerExtension loggerExtension,
             LogLevelEnum minimumLoggingLevel)
         {
-            Condition.Requires(queue).IsNotNull();
-            Condition.Requires(source).IsNotNull();
             _runtimeEnvironment = runtimeEnvironment;
             _queue = queue;
             _source = source;

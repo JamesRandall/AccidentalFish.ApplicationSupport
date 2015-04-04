@@ -1,4 +1,4 @@
-﻿using CuttingEdge.Conditions;
+﻿using System;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging
 {
@@ -8,7 +8,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging
 
         public LoggerSource(string fullyQualifiedName)
         {
-            Condition.Requires(fullyQualifiedName).IsNotNullOrWhiteSpace();
+            if (String.IsNullOrWhiteSpace(fullyQualifiedName)) throw new ArgumentNullException("fullyQualifiedName");
+
             _fullyQualifiedName = fullyQualifiedName;
         }
 

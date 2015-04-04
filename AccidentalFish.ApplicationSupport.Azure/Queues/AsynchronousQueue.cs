@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Queues;
-using CuttingEdge.Conditions;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
@@ -15,9 +14,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 
         public AsynchronousQueue(IQueueSerializer queueSerializer, string connectionString, string queueName)
         {
-            Condition.Requires(queueSerializer).IsNotNull();
-            Condition.Requires(queueName).IsNotNullOrWhiteSpace();
-            Condition.Requires(connectionString).IsNotNullOrWhiteSpace();
+            if (queueSerializer == null) throw new ArgumentNullException("queueSerializer");
+            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException("connectionString");
+            if (String.IsNullOrWhiteSpace(queueName)) throw new ArgumentNullException("queueName");
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();

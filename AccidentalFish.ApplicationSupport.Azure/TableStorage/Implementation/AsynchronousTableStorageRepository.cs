@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Azure.NoSql;
-using AccidentalFish.ApplicationSupport.Core.NoSql;
 using AccidentalFish.ApplicationSupport.Core.Policies;
-using CuttingEdge.Conditions;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -26,8 +23,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
         {
             _tableStorageQueryBuilder = tableStorageQueryBuilder;
             _tableContinuationTokenSerializer = tableContinuationTokenSerializer;
-            Condition.Requires(tableName).IsNotNullOrWhiteSpace();
-            Condition.Requires(connectionString).IsNotNullOrWhiteSpace();
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
