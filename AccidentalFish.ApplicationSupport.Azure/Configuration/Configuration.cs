@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
-using Microsoft.WindowsAzure;
+using Microsoft.Azure;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Configuration
 {
