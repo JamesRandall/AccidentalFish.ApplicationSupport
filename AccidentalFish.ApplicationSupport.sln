@@ -25,7 +25,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NugetPackaging", "NugetPack
 		AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.nuspec = AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.nuspec
 		AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.nuspec = AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.nuspec
 		AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.nuspec = AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.nuspec
-		nuget\AccidentalFish.ApplicationSupport.nuspec = nuget\AccidentalFish.ApplicationSupport.nuspec
 		AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec = AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec
 		AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.nuspec = AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.nuspec
 		AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.nuspec = AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.nuspec
@@ -46,6 +45,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Repository.EntityFramework", "AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.csproj", "{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Unity", "AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj", "{09C4344B-A00B-4404-BEA0-F0B5521FAA99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitOfWorkAndRepository", "Samples\UnitOfWorkAndRepository\UnitOfWorkAndRepository.csproj", "{0D6F0331-7BD5-4E74-A1B8-2430CAE35478}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +132,12 @@ Global
 		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09C4344B-A00B-4404-BEA0-F0B5521FAA99}.Release|x64.ActiveCfg = Release|Any CPU
+		{0D6F0331-7BD5-4E74-A1B8-2430CAE35478}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D6F0331-7BD5-4E74-A1B8-2430CAE35478}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D6F0331-7BD5-4E74-A1B8-2430CAE35478}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0D6F0331-7BD5-4E74-A1B8-2430CAE35478}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D6F0331-7BD5-4E74-A1B8-2430CAE35478}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D6F0331-7BD5-4E74-A1B8-2430CAE35478}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +147,7 @@ Global
 		{120C9550-5A83-4E1C-A5B5-1C336E1FCC49} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
 		{97192BD5-BFC5-4F58-BEC1-F47A460E46FA} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
 		{B0EF8F56-C9B3-4C1D-80C6-DD65B3C00F5E} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
+		{0D6F0331-7BD5-4E74-A1B8-2430CAE35478} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45

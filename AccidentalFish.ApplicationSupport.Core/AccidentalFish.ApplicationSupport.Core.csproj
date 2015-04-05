@@ -104,7 +104,7 @@
     <Compile Include="Queues\IAsynchronousTopic.cs" />
     <Compile Include="Repository\IRepositoryAsync.cs" />
     <Compile Include="Repository\IUnitOfWorkAsync.cs" />
-    <Compile Include="Repository\IUnitOfWorkFactoryFactory.cs" />
+    <Compile Include="Repository\IUnitOfWorkFactoryProvider.cs" />
     <Compile Include="Runtime\IComponentFactory.cs" />
     <Compile Include="Runtime\IComponentHost.cs" />
     <Compile Include="Runtime\IComponentHostConfigurationProvider.cs" />
