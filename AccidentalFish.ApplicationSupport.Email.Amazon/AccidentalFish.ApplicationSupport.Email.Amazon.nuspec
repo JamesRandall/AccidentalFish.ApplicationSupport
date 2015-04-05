@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$-beta</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.githubusercontent.com/JamesRandall/AccidentalFish.ApplicationSupport/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/JamesRandall/AccidentalFish.ApplicationSupport</projectUrl>
+    <iconUrl>http://www.accidentalfish.com/nugetidentity.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Prerelease for v1.</releaseNotes>
+    <copyright>Copyright 2015 Accidental Fish Ltd.</copyright>
+    <tags>azure paas application framework table sql queue deployment configuration email amazon</tags>
+  </metadata>
+</package>

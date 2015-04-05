@@ -68,6 +68,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
     <Compile Include="Alerts\IAlertSender.cs" />
     <Compile Include="BackoffProcesses\BackoffQueueProcessor.cs" />
     <Compile Include="BackoffProcesses\BackoffSubscriptionProcessor.cs" />

@@ -85,6 +85,9 @@
     <Compile Include="..\AccidentalFish.ApplicationSupport.Core\Private\Constants.cs">
       <Link>Private\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Email\EmailQueueProcessor.cs" />
     <Compile Include="HostableComponentNames.cs" />

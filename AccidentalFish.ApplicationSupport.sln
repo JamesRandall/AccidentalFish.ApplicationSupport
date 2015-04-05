@@ -21,7 +21,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NugetPackaging", "NugetPackaging", "{6C431FDC-56A3-4222-A99D-11E35069035A}"
 	ProjectSection(SolutionItems) = preProject
+		AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.nuspec = AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.nuspec
+		AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.nuspec = AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.nuspec
+		AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.nuspec = AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.nuspec
+		AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.nuspec = AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.nuspec
 		nuget\AccidentalFish.ApplicationSupport.nuspec = nuget\AccidentalFish.ApplicationSupport.nuspec
+		AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec = AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec
+		AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.nuspec = AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.nuspec
+		AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.nuspec = AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.nuspec
+		AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.nuspec = AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.nuspec
+		AssemblyInfoCommon.cs = AssemblyInfoCommon.cs
 		package-nuget.ps1 = package-nuget.ps1
 		package-tools-init.ps1 = package-tools-init.ps1
 	EndProjectSection
@@ -34,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Email.Amazon", "AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.csproj", "{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Repository.EntityFramework", "AccidentalFish.ApplicationSupport.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.csproj", "{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Repository.EntityFramework", "AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.csproj", "{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Unity", "AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj", "{09C4344B-A00B-4404-BEA0-F0B5521FAA99}"
 EndProject
