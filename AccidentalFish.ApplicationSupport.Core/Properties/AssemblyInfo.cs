@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AccidentalFish.ApplicationSupport.Interfaces")]
+[assembly: AssemblyTitle("AccidentalFish ApplicationSupport Core")]
 [assembly: AssemblyDescription("Core interfaces and components for the Accidental Fish Application framework")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.Interfaces")]
+[assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.Core")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AccidentalFish.ApplicationSupport.Processes")]
+[assembly: AssemblyTitle("AccidentalFish ApplicationSupport Background Processes")]
 [assembly: AssemblyDescription("Optional background processes for the Accidental Fish applicaton framework. Includes email and logging.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.Processes")]

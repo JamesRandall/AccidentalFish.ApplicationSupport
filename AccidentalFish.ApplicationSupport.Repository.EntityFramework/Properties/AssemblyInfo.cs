@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AccidentalFish.ApplicationSupport.EntityFramework")]
+[assembly: AssemblyTitle("AccidentalFish ApplicationSupport EntityFramework Repository Pattern")]
 [assembly: AssemblyDescription("Entity Framework unit of work and repository pattern implementation for the Accidental Fish Application framework")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.EntityFramework")]

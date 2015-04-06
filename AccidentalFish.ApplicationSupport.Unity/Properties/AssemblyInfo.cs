@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AccidentalFish.ApplicationSupport.Unity")]
+[assembly: AssemblyTitle("AccidentalFish ApplicationSupport Unity Dependency Resolver")]
 [assembly: AssemblyDescription("Unity dependency resolver for the Accidental Fish application framework.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.Unity")]

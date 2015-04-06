@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AccidentalFish.ApplicationSupport.Email.Amazon")]
+[assembly: AssemblyTitle("AccidentalFish ApplicationSupport Amazon SES Email Provider")]
 [assembly: AssemblyDescription("Amazon email provider for the Accidental Fish application framework")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.Email.Amazon")]
