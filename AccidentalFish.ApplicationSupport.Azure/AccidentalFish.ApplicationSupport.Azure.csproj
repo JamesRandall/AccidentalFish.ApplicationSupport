@@ -131,7 +131,10 @@
     <Compile Include="Components\IAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\Implementation\AzureApplicationResourceFactory.cs" />
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Queues\BrokeredMessageQueue.cs" />
+    <Compile Include="Queues\IAsynchronousStorageQueue.cs" />
     <Compile Include="Queues\QueueSerializer.cs" />
+    <Compile Include="Queues\StorageQueue.cs" />
     <Compile Include="TableStorage\IAsynchronousTableStorageRepository.cs" />
     <Compile Include="TableStorage\Implementation\AsynchronousTableStorageRepository.cs" />
     <Compile Include="TableStorage\Implementation\AzureTableCreator.cs" />

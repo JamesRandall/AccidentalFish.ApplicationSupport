@@ -100,6 +100,7 @@
     <Compile Include="Policies\Implementation\LeasedRetry.cs" />
     <Compile Include="Policies\IResourceCreator.cs" />
     <Compile Include="Queues\IAsynchronousSubscription.cs" />
+    <Compile Include="Queues\IQueue.cs" />
     <Compile Include="Queues\IQueueItem.cs" />
     <Compile Include="Queues\IAsynchronousTopic.cs" />
     <Compile Include="Repository\IRepositoryAsync.cs" />

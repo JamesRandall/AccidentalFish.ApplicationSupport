@@ -16,7 +16,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 
         public EmailManager(IApplicationResourceFactory applicationResourceFactory)
         {
-            _queue = applicationResourceFactory.GetQueue<EmailQueueItem>(ComponentIdentity);
+            _queue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(ComponentIdentity);
         }
 
         public Task Send(string to, string cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues)

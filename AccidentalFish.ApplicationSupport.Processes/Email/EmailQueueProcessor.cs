@@ -46,9 +46,9 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
             string poisonQueueName = applicationResourceFactory.Setting(emailComponentIdentity, "email-poison-queue");
 
-            _queue = applicationResourceFactory.GetQueue<EmailQueueItem>(emailComponentIdentity);
-            _poisonQueue = applicationResourceFactory.GetQueue<EmailQueueItem>(poisonQueueName, emailComponentIdentity);
-            _blobRepository = applicationResourceFactory.GetBlockBlobRepository(emailComponentIdentity);
+            _queue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(emailComponentIdentity);
+            _poisonQueue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(poisonQueueName, emailComponentIdentity);
+            _blobRepository = applicationResourceFactory.GetAsyncBlockBlobRepository(emailComponentIdentity);
             _logger = loggerFactory.CreateLongLivedLogger(ComponentIdentity);
         }
 

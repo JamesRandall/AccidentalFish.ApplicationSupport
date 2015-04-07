@@ -12,18 +12,23 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         ILeaseManager<T> GetLeaseManager<T>(IComponentIdentity componentIdentity);
         ILeaseManager<T> GetLeaseManager<T>(string leaseBlockName, IComponentIdentity componentIdentity);
 
-        IAsynchronousQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class;
-        IAsynchronousQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
-        IAsynchronousQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class;
-        IAsynchronousQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
-
-        IAsynchronousTopic<T> GetTopic<T>(IComponentIdentity componentIdentity) where T : class;
-        IAsynchronousTopic<T> GetTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class;
-        IAsynchronousSubscription<T> GetSubscription<T>(IComponentIdentity componentIdentity) where T : class;
-        IAsynchronousSubscription<T> GetSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousQueue<T> GetAsyncQueue<T>(IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
         
-        IAsynchronousBlockBlobRepository GetBlockBlobRepository(IComponentIdentity componentIdentity);
-        IAsynchronousBlockBlobRepository GetBlockBlobRepository(string containerName, IComponentIdentity componentIdentity);
+        IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class;
+        IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
+        IQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class;
+        IQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
+
+        IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousTopic<T> GetAsyncTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousSubscription<T> GetAsyncSubscription<T>(IComponentIdentity componentIdentity) where T : class;
+        IAsynchronousSubscription<T> GetAsyncSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class;
+        
+        IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(IComponentIdentity componentIdentity);
+        IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(string containerName, IComponentIdentity componentIdentity);
 
         string StorageAccountConnectionString(IComponentIdentity componentIdentity);
         string SqlConnectionString(IComponentIdentity componentIdentity);

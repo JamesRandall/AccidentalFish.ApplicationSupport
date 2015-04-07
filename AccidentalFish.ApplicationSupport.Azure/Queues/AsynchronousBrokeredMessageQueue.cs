@@ -34,21 +34,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             await _client.SendAsync(message);
         }
 
-        public void Enqueue(T item, Action<T> success, Action<T, Exception> failure)
-        {
-            try
-            {
-                string value = _queueSerializer.Serialize(item);
-                BrokeredMessage message = new BrokeredMessage(value);
-                _client.Send(message);
-                if (success != null) success(item);
-            }
-            catch (Exception ex)
-            {
-                if (failure != null) failure(item, ex);
-            }
-        }
-
         public async Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> process)
         {
             BrokeredMessage message = await _client.ReceiveAsync();
@@ -80,45 +65,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 // we pass null into the process function as it may still want to take action based on their being no message.
                 await process(null);
             }
-        }
-
-        public Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor, TimeSpan? visibilityTimeout)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dequeue(Func<IQueueItem<T>, bool> success, Action<Exception> failure)
-        {
-            BrokeredMessage message = _client.Receive();
-
-            if (message != null)
-            {
-                try
-                {
-                    string body = message.GetBody<string>();
-                    T payload = _queueSerializer.Deserialize<T>(body);
-                    BrokeredMessageQueueItem<T> queueItem = new BrokeredMessageQueueItem<T>(message, payload, message.DeliveryCount, null);
-                    bool markComplete = success(queueItem);
-                    if (markComplete)
-                    {
-                        message.Complete();
-                    }
-                    else
-                    {
-                        message.Abandon();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    message.Abandon();
-                    failure(ex);
-                }
-            }
-        }
-
-        public void Dequeue(Func<IQueueItem<T>, bool> success, Action noMessageAction, Action<Exception> failure)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task ExtendLeaseAsync(IQueueItem<T> queueItem, TimeSpan visibilityTimeout)

@@ -27,9 +27,9 @@ namespace TopicsAndSubscriptions
 
             IApplicationResourceFactory applicationResourceFactory = container.Resolve<IApplicationResourceFactory>();
             string secondSubscriptionName = applicationResourceFactory.Setting(SampleComponent, "second-subscription");
-            IAsynchronousTopic<MyMessage> topic = applicationResourceFactory.GetTopic<MyMessage>(SampleComponent);
-            IAsynchronousSubscription<MyMessage> firstSubscription = applicationResourceFactory.GetSubscription<MyMessage>(SampleComponent);
-            IAsynchronousSubscription<MyMessage> secondSubscription = applicationResourceFactory.GetSubscription<MyMessage>(secondSubscriptionName, SampleComponent);
+            IAsynchronousTopic<MyMessage> topic = applicationResourceFactory.GetAsyncTopic<MyMessage>(SampleComponent);
+            IAsynchronousSubscription<MyMessage> firstSubscription = applicationResourceFactory.GetAsyncSubscription<MyMessage>(SampleComponent);
+            IAsynchronousSubscription<MyMessage> secondSubscription = applicationResourceFactory.GetAsyncSubscription<MyMessage>(secondSubscriptionName, SampleComponent);
 
             // below is exceedingly naive but is just to illustrate api usage
             Task.Run(async () =>

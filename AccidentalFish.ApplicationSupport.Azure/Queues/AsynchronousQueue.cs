@@ -7,7 +7,7 @@ using Microsoft.WindowsAzure.Storage.RetryPolicies;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Queues
 {
-    internal class AsynchronousQueue<T> : IAsynchronousQueue<T> where T : class
+    internal class AsynchronousQueue<T> : IAsynchronousStorageQueue<T> where T : class
     {
         private readonly CloudQueue _queue;
         private readonly IQueueSerializer _serializer;
@@ -37,19 +37,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             return _queue.AddMessageAsync(message, null, initialVisibilityDelay, null, null);
         }
 
-        public async void Enqueue(T item, Action<T> success, Action<T, Exception> failure)
-        {
-            try
-            {
-                CloudQueueMessage message = new CloudQueueMessage(_serializer.Serialize(item));
-                await _queue.AddMessageAsync(message);
-                if (success != null) success(item);
-            }
-            catch (Exception ex)
-            {
-                if (failure != null) failure(item, ex);
-            }
-        }
+        
 
         public Task DequeueAsync(Func<IQueueItem<T>, Task<bool>> processor)
         {
@@ -83,33 +71,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             await _queue.UpdateMessageAsync(queueItemImpl.CloudQueueMessage, visibilityTimeout, MessageUpdateFields.Visibility);
         }
 
-        public void Dequeue(Func<IQueueItem<T>, bool> success, Action<Exception> failure)
-        {
-            Dequeue(success, null, failure);
-        }
         
-        public async void Dequeue(Func<IQueueItem<T>, bool> success, Action noMessageAction, Action<Exception> failure)
-        {
-            try
-            {
-                CloudQueueMessage message = await _queue.GetMessageAsync();
-                if (message != null)
-                {
-                    T item = _serializer.Deserialize<T>(message.AsString);
-                    if (success(new CloudQueueItem<T>(message, item, message.DequeueCount, message.PopReceipt)))
-                    {
-                        await _queue.DeleteMessageAsync(message);
-                    }
-                }
-                else if (noMessageAction != null)
-                {
-                    noMessageAction();
-                }
-            }
-            catch (Exception ex)
-            {
-                failure(ex);
-            }
-        }
     }
 }

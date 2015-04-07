@@ -40,54 +40,74 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
             return _applicationResourceFactory.GetLeaseManager<T>(leaseBlockName, componentIdentity);
         }
 
-        public IAsynchronousQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousQueue<T> GetAsyncQueue<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            return _applicationResourceFactory.GetAsyncQueue<T>(componentIdentity);
+        }
+
+        public IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        {
+            return _applicationResourceFactory.GetAsyncQueue<T>(queuename, componentIdentity);
+        }
+
+        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            return _applicationResourceFactory.GetAsyncBrokeredMessageQueue<T>(componentIdentity);
+        }
+
+        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        {
+            return _applicationResourceFactory.GetAsyncBrokeredMessageQueue<T>(queuename, componentIdentity);
+        }
+
+        public IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetQueue<T>(componentIdentity);
         }
 
-        public IAsynchronousQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        public IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetQueue<T>(queuename, componentIdentity);
         }
 
-        public IAsynchronousQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
+        public IQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetBrokeredMessageQueue<T>(componentIdentity);
         }
 
-        public IAsynchronousQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        public IQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetBrokeredMessageQueue<T>(queuename, componentIdentity);
         }
 
-        public IAsynchronousTopic<T> GetTopic<T>(IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class
         {
-            return _applicationResourceFactory.GetTopic<T>(componentIdentity);
+            return _applicationResourceFactory.GetAsyncTopic<T>(componentIdentity);
         }
 
-        public IAsynchronousTopic<T> GetTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousTopic<T> GetAsyncTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class
         {
-            return _applicationResourceFactory.GetTopic<T>(topicName, componentIdentity);
+            return _applicationResourceFactory.GetAsyncTopic<T>(topicName, componentIdentity);
         }
 
-        public IAsynchronousSubscription<T> GetSubscription<T>(IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousSubscription<T> GetAsyncSubscription<T>(IComponentIdentity componentIdentity) where T : class
         {
-            return _applicationResourceFactory.GetSubscription<T>(componentIdentity);
+            return _applicationResourceFactory.GetAsyncSubscription<T>(componentIdentity);
         }
 
-        public IAsynchronousSubscription<T> GetSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousSubscription<T> GetAsyncSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class
         {
-            return _applicationResourceFactory.GetSubscription<T>(subscriptionName, componentIdentity);
+            return _applicationResourceFactory.GetAsyncSubscription<T>(subscriptionName, componentIdentity);
         }
 
-        public IAsynchronousBlockBlobRepository GetBlockBlobRepository(IComponentIdentity componentIdentity)
+        public IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(IComponentIdentity componentIdentity)
         {
-            return _applicationResourceFactory.GetBlockBlobRepository(componentIdentity);
+            return _applicationResourceFactory.GetAsyncBlockBlobRepository(componentIdentity);
         }
 
-        public IAsynchronousBlockBlobRepository GetBlockBlobRepository(string containerName, IComponentIdentity componentIdentity)
+        public IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(string containerName, IComponentIdentity componentIdentity)
         {
-            return _applicationResourceFactory.GetBlockBlobRepository(containerName, componentIdentity);
+            return _applicationResourceFactory.GetAsyncBlockBlobRepository(containerName, componentIdentity);
         }
 
         public string StorageAccountConnectionString(IComponentIdentity componentIdentity)

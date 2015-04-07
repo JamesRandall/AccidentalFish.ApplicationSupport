@@ -10,7 +10,7 @@ namespace AccidentalFish.ApplicationSupport.Private
         private static readonly IComponentIdentity ApplicationSupportComponentIdentity =new ComponentIdentity(Constants.ApplicationSupportFqn);
         public static IAsynchronousQueue<LogQueueItem> GetLoggerQueue(this IApplicationResourceFactory factory)
         {
-            return factory.GetQueue<LogQueueItem>(factory.Setting(ApplicationSupportComponentIdentity, "logger-queue"), ApplicationSupportComponentIdentity);
+            return factory.GetAsyncQueue<LogQueueItem>(factory.Setting(ApplicationSupportComponentIdentity, "logger-queue"), ApplicationSupportComponentIdentity);
         }
     }
 }

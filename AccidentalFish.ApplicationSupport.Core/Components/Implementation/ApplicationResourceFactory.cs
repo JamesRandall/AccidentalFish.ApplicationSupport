@@ -63,7 +63,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _leaseManagerFactory.CreateLeaseManager<T>(storageAccountConnectionString, leaseBlockName);
         }
 
-        public IAsynchronousQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousQueue<T> GetAsyncQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
 
@@ -72,7 +72,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, defaultQueueName);
         }
 
-        public IAsynchronousQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
 
@@ -80,7 +80,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queuename);
         }
 
-        public IAsynchronousQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
 
@@ -89,7 +89,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousBrokeredMessageQueue<T>(serviceBusConnectionString, defaultQueueName);
         }
 
-        public IAsynchronousQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
         {
             if (String.IsNullOrWhiteSpace(queuename)) throw new ArgumentNullException("queuename");
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
@@ -98,7 +98,42 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousBrokeredMessageQueue<T>(serviceBusConnectionString, queuename);
         }
 
-        public IAsynchronousTopic<T> GetTopic<T>(IComponentIdentity componentIdentity) where T : class
+        public IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
+
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            string defaultQueueName = _applicationResourceSettingProvider.DefaultQueueName(componentIdentity);
+            return _queueFactory.CreateQueue<T>(storageAccountConnectionString, defaultQueueName);
+        }
+
+        public IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
+
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            return _queueFactory.CreateQueue<T>(storageAccountConnectionString, queuename);
+        }
+
+        public IQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
+
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            string defaultQueueName = _applicationResourceSettingProvider.DefaultBrokeredMessageQueueName(componentIdentity);
+            return _queueFactory.CreateBrokeredMessageQueue<T>(serviceBusConnectionString, defaultQueueName);
+        }
+
+        public IQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        {
+            if (String.IsNullOrWhiteSpace(queuename)) throw new ArgumentNullException("queuename");
+            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
+
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            return _queueFactory.CreateBrokeredMessageQueue<T>(serviceBusConnectionString, queuename);
+        }
+
+        public IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
 
@@ -107,7 +142,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousTopic<T>(serviceBusConnectionString, defaultTopicName);
         }
 
-        public IAsynchronousTopic<T> GetTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousTopic<T> GetAsyncTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class
         {
             if (String.IsNullOrWhiteSpace(topicName)) throw new ArgumentNullException("topicName");
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
@@ -116,7 +151,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousTopic<T>(serviceBusConnectionString, topicName);
         }
 
-        public IAsynchronousSubscription<T> GetSubscription<T>(IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousSubscription<T> GetAsyncSubscription<T>(IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
 
@@ -126,7 +161,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousSubscription<T>(serviceBusConnectionString, defaultTopicName, defaultSubscriptionName);
         }
 
-        public IAsynchronousSubscription<T> GetSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class
+        public IAsynchronousSubscription<T> GetAsyncSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class
         {
             if (String.IsNullOrWhiteSpace(subscriptionName)) throw new ArgumentNullException("subscriptionName");
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
@@ -136,7 +171,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousSubscription<T>(serviceBusConnectionString, defaultTopicName, subscriptionName);
         }
 
-        public IAsynchronousBlockBlobRepository GetBlockBlobRepository(IComponentIdentity componentIdentity)
+        public IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(IComponentIdentity componentIdentity)
         {
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
 
@@ -145,7 +180,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _blobRepositoryFactory.CreateAsynchronousBlockBlobRepository(storageAccountConnectionString, blobContainerName);
         }
 
-        public IAsynchronousBlockBlobRepository GetBlockBlobRepository(string containerName, IComponentIdentity componentIdentity)
+        public IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(string containerName, IComponentIdentity componentIdentity)
         {
             if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentNullException("containerName");
             if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
