@@ -46,5 +46,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             content = _settings.Aggregate(content, (current, kvp) => current.Replace(String.Format("{{{{{0}}}}}", kvp.Key), kvp.Value));
             return content;
         }
+
+        public IReadOnlyDictionary<string, string> Settings
+        {
+            get {  return _settings; }
+        } 
     }
 }

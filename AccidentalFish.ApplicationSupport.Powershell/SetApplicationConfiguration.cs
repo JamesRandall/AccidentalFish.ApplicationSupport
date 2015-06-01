@@ -14,7 +14,8 @@ namespace AccidentalFish.ApplicationSupport.Powershell
         {
             { ".config", typeof(DotNetConfigurationApplier) },
             { ".csdef", typeof(CsdefConfigurationApplier) },
-            { ".cscfg", typeof(CscfgConfigurationApplier) }
+            { ".cscfg", typeof(CscfgConfigurationApplier) },
+            { ".js", typeof(JsConfigurationApplier) }
         };
             
         [Parameter(HelpMessage = "The application configuration file", Mandatory = true)]
@@ -48,7 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
             }
 
             IConfigurationApplier configurationApplier = (IConfigurationApplier)Activator.CreateInstance(configurationApplierType);
-            configurationApplier.Apply(configuration, Target);
+            configurationApplier.Apply(configuration, settings, Target);
         }
     }
 }

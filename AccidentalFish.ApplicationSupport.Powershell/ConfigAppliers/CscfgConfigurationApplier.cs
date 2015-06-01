@@ -26,7 +26,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
             _nameProvider = nameProvider;
         }
 
-        public void Apply(ApplicationConfiguration configuration, string targetFile)
+        public void Apply(ApplicationConfiguration configuration, ApplicationConfigurationSettings settings, string targetFile)
         {
             XDocument cscfg;
             XNamespace ns = CscfgNamespace;
