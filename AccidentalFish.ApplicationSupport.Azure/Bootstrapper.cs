@@ -8,13 +8,13 @@ using AccidentalFish.ApplicationSupport.Azure.Queues;
 using AccidentalFish.ApplicationSupport.Azure.Runtime;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation;
-using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
+using AccidentalFish.ApplicationSupport.Injection;
 
 namespace AccidentalFish.ApplicationSupport.Azure
 {

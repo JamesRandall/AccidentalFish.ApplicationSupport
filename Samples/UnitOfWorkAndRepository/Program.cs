@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using AccidentalFish.ApplicationSupport.Unity;
 using Microsoft.Practices.Unity;
@@ -23,7 +21,7 @@ namespace UnitOfWorkAndRepository
         {
             IUnityContainer container = new UnityContainer();
             UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
-            AccidentalFish.ApplicationSupport.Core.Bootstrapper.RegisterDependencies(resolver);
+            Bootstrapper.RegisterDependencies(resolver);
             AccidentalFish.ApplicationSupport.Repository.EntityFramework.Bootstrapper.RegisterDependencies(resolver);
 
             IUnitOfWorkFactoryProvider provider = container.Resolve<IUnitOfWorkFactoryProvider>();

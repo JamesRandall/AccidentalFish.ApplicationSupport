@@ -60,6 +60,10 @@
       <Project>{578e1681-f5f4-4cba-bec3-7f1d8a765254}</Project>
       <Name>AccidentalFish.ApplicationSupport.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Injection\AccidentalFish.ApplicationSupport.Injection.csproj">
+      <Project>{18671945-cd5c-4ce6-8c02-cd7c8b0cc68e}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Injection</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -88,7 +88,6 @@
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailManager.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="IDependencyResolver.cs" />
     <Compile Include="Logging\ILoggerExtension.cs" />
     <Compile Include="Logging\Implementation\NullLoggerExtension.cs" />
     <Compile Include="Mappers\AbstractBidirectionalMapper.cs" />
@@ -160,6 +159,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Injection\AccidentalFish.ApplicationSupport.Injection.csproj">
+      <Project>{18671945-cd5c-4ce6-8c02-cd7c8b0cc68e}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Injection</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,15 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{09C4344B-A00B-4404-BEA0-F0B5521FAA99}</ProjectGuid>
+    <ProjectGuid>{82B25A63-C543-4807-933F-6ED6530DB291}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AccidentalFish.ApplicationSupport.Unity</RootNamespace>
-    <AssemblyName>AccidentalFish.ApplicationSupport.Unity</AssemblyName>
+    <RootNamespace>AccidentalFish.ApplicationSupport.CloudPatterns</RootNamespace>
+    <AssemblyName>AccidentalFish.ApplicationSupport.CloudPatterns</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,17 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.Unity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration">
-      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
-      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,21 +39,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfoCommon.cs">
-      <Link>Properties\AssemblyInfoCommon.cs</Link>
-    </Compile>
-    <Compile Include="UnityApplicationFrameworkDependencyResolver.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="ICircuitBreaker.cs" />
+    <Compile Include="ICircuitBreakerFactory.cs" />
+    <Compile Include="Implementation\CircuitBreaker.cs" />
+    <Compile Include="Implementation\CircuitBreakerFactory.cs" />
+    <Compile Include="Implementation\ICircuitBreakerStateStore.cs" />
+    <Compile Include="Implementation\InMemoryCircuitBreakerStateStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj">
+      <Project>{578e1681-f5f4-4cba-bec3-7f1d8a765254}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Injection\AccidentalFish.ApplicationSupport.Injection.csproj">
       <Project>{18671945-cd5c-4ce6-8c02-cd7c8b0cc68e}</Project>
       <Name>AccidentalFish.ApplicationSupport.Injection</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
