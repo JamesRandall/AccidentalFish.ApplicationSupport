@@ -24,6 +24,31 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
                     {
                         tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForGuid(kvp.Key, QueryComparisons.Equal, (Guid)kvp.Value));
                     }
+                    else if (kvp.Value is bool)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForBool(kvp.Key, QueryComparisons.Equal, (bool)kvp.Value));
+                    }
+                    else if (kvp.Value is DateTime)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForDate(kvp.Key, QueryComparisons.Equal, (DateTime)kvp.Value));
+                    }
+                    else if (kvp.Value is int)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForInt(kvp.Key, QueryComparisons.Equal, (int)kvp.Value));
+                    }
+                    else if (kvp.Value is long)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForLong(kvp.Key, QueryComparisons.Equal, (long)kvp.Value));
+                    }
+                    else if (kvp.Value is double)
+                    {
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterConditionForDouble(kvp.Key, QueryComparisons.Equal, (double)kvp.Value));
+                    }
+                    else
+                    {
+                        Type dataType = kvp.Value.GetType();
+                        throw new InvalidOperationException(String.Format("Type {0} is not supported in table query operations", dataType.Name));
+                    }
                 }
                 string queryString = tableQueries[0];
                 string tableOp = op == TableStorageQueryOperator.And ? TableOperators.And : TableOperators.Or;
