@@ -7,8 +7,8 @@
     <ProjectGuid>{18671945-CD5C-4CE6-8C02-CD7C8B0CC68E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AccidentalFish.ApplicationSupport.Injection</RootNamespace>
-    <AssemblyName>AccidentalFish.ApplicationSupport.Injection</AssemblyName>
+    <RootNamespace>AccidentalFish.ApplicationSupport.DependencyResolver</RootNamespace>
+    <AssemblyName>AccidentalFish.ApplicationSupport.DependencyResolver</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

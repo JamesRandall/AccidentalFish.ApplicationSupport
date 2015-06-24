@@ -1,5 +1,5 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Injection;
+using AccidentalFish.ApplicationSupport.DependencyResolver;
 using Microsoft.Practices.Unity;
 
 namespace AccidentalFish.ApplicationSupport.Unity

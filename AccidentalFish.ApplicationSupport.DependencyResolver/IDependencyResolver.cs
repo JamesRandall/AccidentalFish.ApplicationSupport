@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AccidentalFish.ApplicationSupport.Injection
+namespace AccidentalFish.ApplicationSupport.DependencyResolver
 {
     public interface IDependencyResolver
     {

@@ -109,9 +109,9 @@
       <Project>{578e1681-f5f4-4cba-bec3-7f1d8a765254}</Project>
       <Name>AccidentalFish.ApplicationSupport.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\AccidentalFish.ApplicationSupport.Injection\AccidentalFish.ApplicationSupport.Injection.csproj">
+    <ProjectReference Include="..\..\AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.csproj">
       <Project>{18671945-cd5c-4ce6-8c02-cd7c8b0cc68e}</Project>
-      <Name>AccidentalFish.ApplicationSupport.Injection</Name>
+      <Name>AccidentalFish.ApplicationSupport.DependencyResolver</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj">
       <Project>{09c4344b-a00b-4404-bea0-f0b5521faa99}</Project>

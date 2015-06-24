@@ -18,8 +18,8 @@ cp package-tools-init.ps1 nuget-powershell\tools\init.ps1
 cp .\AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec nuget-powershell
 .\nuget pack .\nuget-powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec
 
-.\nuget pack .\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Injection.csproj
-.\nuget pack .\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj
+.\nuget pack .\AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.csproj
+.\nuget pack .\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj -IncludeReferencedProjects
 .\nuget pack .\AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.csproj -IncludeReferencedProjects
 .\nuget pack .\AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.csproj -IncludeReferencedProjects
 .\nuget pack .\AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.csproj -IncludeReferencedProjects

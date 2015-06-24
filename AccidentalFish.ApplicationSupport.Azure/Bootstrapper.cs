@@ -14,7 +14,7 @@ using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
-using AccidentalFish.ApplicationSupport.Injection;
+using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.Azure
 {

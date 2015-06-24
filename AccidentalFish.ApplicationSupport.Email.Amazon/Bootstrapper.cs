@@ -1,5 +1,5 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Email;
-using AccidentalFish.ApplicationSupport.Injection;
+using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.Email.Amazon
 {

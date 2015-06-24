@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AccidentalFish Abstract Injector Interface")]
+[assembly: AssemblyTitle("AccidentalFish Abstract Dependency Resolver Interface")]
 [assembly: AssemblyDescription("Defines an interface to abstract away dependency injectors from the framework")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.Injection")]

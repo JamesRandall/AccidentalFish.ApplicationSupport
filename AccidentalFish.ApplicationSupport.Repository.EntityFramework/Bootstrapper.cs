@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 using AccidentalFish.ApplicationSupport.Core.Repository;
-using AccidentalFish.ApplicationSupport.Injection;
+using AccidentalFish.ApplicationSupport.DependencyResolver;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies.Implementation;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repository;

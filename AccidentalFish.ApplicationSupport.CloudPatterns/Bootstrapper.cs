@@ -1,5 +1,5 @@
 ﻿using AccidentalFish.ApplicationSupport.CloudPatterns.Implementation;
-using AccidentalFish.ApplicationSupport.Injection;
+using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.CloudPatterns
 {

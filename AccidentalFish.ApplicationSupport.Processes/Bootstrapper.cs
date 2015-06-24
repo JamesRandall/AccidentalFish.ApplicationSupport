@@ -1,5 +1,5 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Injection;
+using AccidentalFish.ApplicationSupport.DependencyResolver;
 using AccidentalFish.ApplicationSupport.Processes.Email;
 using AccidentalFish.ApplicationSupport.Processes.Logging;
 using AccidentalFish.ApplicationSupport.Processes.Mappers;
