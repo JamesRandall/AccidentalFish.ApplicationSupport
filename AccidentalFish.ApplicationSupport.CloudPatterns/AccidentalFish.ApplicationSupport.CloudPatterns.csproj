@@ -43,6 +43,7 @@
     <Compile Include="ICircuitBreaker.cs" />
     <Compile Include="ICircuitBreakerFactory.cs" />
     <Compile Include="Implementation\CircuitBreaker.cs" />
+    <Compile Include="Implementation\CircuitBreakerException.cs" />
     <Compile Include="Implementation\CircuitBreakerFactory.cs" />
     <Compile Include="Implementation\ICircuitBreakerStateStore.cs" />
     <Compile Include="Implementation\InMemoryCircuitBreakerStateStore.cs" />

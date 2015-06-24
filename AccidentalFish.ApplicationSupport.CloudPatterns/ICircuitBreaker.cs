@@ -20,6 +20,7 @@ namespace AccidentalFish.ApplicationSupport.CloudPatterns
         DateTime LastStateChange { get; }
         void Close();
         void Open();
-        bool IsClosed { get; }
+        void Execute(Action action);
+        Task ExecuteAsync(Func<Task> action);
     }
 }
