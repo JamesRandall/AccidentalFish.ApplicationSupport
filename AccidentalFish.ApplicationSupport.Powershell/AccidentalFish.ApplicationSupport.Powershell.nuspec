@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AccidentalFish.ApplicationSupport.Powershell</id>
-    <version>1.0.0.2-beta</version>
+    <version>1.0.0.2</version>
     <title>AccidentalFish Application Support Powershell Cmdlets</title>
     <authors>James Randall</authors>
     <owners>James Randall</owners>
