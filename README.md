@@ -1,7 +1,7 @@
 AccidentalFish.ApplicationSupport
 =================================
 
-Note: There is currently a major new release in the v1.0.0 branch and in the pre-release area of NuGet. I've had the oppurtunity to use this fairly extensively now and it's working fine. If you're new to this project I strongly recommend starting there as it fixes a bunch of what I consider to be fundamental issues with the code as it stands in master and includes a number of breaking changes. It is likely to become the mainline version in early May.
+Note: The v1.0.0 branch has been merged into master and is now in the main area of NuGet. I've had the oppurtunity to use this fairly extensively now and it's working fine. If you're new to this project I strongly recommend starting there as it fixes a bunch of what I consider to be fundamental issues with the code as it stands in master and includes a number of breaking changes.
 
 As I've worked on a variety of Azure projects over the last 18 months there is a bunch of plumbing I've found to be common for example wanting dependency injectable patterns for resource access, configuring components across multiple projects and servers, deployment, separation of concerns, fault diagnosis and a management dashboard, to name just a few.
 
