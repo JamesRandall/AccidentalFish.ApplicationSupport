@@ -7,6 +7,8 @@ using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Policies.Implementation;
+using AccidentalFish.ApplicationSupport.Core.Repository;
+using AccidentalFish.ApplicationSupport.Core.Repository.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
 using AccidentalFish.ApplicationSupport.Core.Runtime.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Threading;
@@ -41,6 +43,7 @@ namespace AccidentalFish.ApplicationSupport.Core
             container.Register<ILoggerFactory, LoggerFactory>();
             container.Register<IComponentHost, ComponentHost>();
             container.Register<IEmailManager, EmailManager>();
+            container.Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>();
 
             if (loggerExtension == null)
             {

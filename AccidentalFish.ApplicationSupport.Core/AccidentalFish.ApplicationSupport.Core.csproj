@@ -102,6 +102,7 @@
     <Compile Include="Queues\IQueue.cs" />
     <Compile Include="Queues\IQueueItem.cs" />
     <Compile Include="Queues\IAsynchronousTopic.cs" />
+    <Compile Include="Repository\Implementation\NotSupportedUnitOfWorkFactoryProvider.cs" />
     <Compile Include="Repository\IRepositoryAsync.cs" />
     <Compile Include="Repository\IUnitOfWorkAsync.cs" />
     <Compile Include="Repository\IUnitOfWorkFactoryProvider.cs" />
