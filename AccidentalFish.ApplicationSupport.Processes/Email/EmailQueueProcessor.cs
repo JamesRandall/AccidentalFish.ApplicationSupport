@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using AccidentalFish.ApplicationSupport.Core.BackoffProcesses;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Email;
@@ -17,7 +16,7 @@ using RazorEngine.Templating;
 namespace AccidentalFish.ApplicationSupport.Processes.Email
 {
     [ComponentIdentity(HostableComponentNames.EmailQueueProcessor)]
-    internal class EmailQueueProcessor : AbstractApplicationComponent, IHostableComponent
+    internal class EmailQueueProcessor : BackoffQueueProcessor<EmailQueueItem>
     {
         private class EmailContent
         {
@@ -27,9 +26,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
         }
 
         private const string EmailFullyQualifiedName = "com.accidental-fish.email";
-        private readonly IAsynchronousBackoffPolicy _backoffPolicy;
         private readonly IEmailProvider _emailProvider;
-        private readonly IAsynchronousQueue<EmailQueueItem> _queue;
         private readonly IAsynchronousQueue<EmailQueueItem> _poisonQueue; 
         private readonly IAsynchronousBlockBlobRepository _blobRepository;
         private readonly ILogger _logger;
@@ -39,48 +36,20 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             IAsynchronousBackoffPolicy backoffPolicy,
             ILoggerFactory loggerFactory,
             IEmailProvider emailProvider)
+            : base(backoffPolicy, applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(new ComponentIdentity(EmailFullyQualifiedName)))
         {
             IComponentIdentity emailComponentIdentity = new ComponentIdentity(EmailFullyQualifiedName);
-            _backoffPolicy = backoffPolicy;
             _emailProvider = emailProvider;
 
             string poisonQueueName = applicationResourceFactory.Setting(emailComponentIdentity, "email-poison-queue");
 
-            _queue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(emailComponentIdentity);
             _poisonQueue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(poisonQueueName, emailComponentIdentity);
             _blobRepository = applicationResourceFactory.GetAsyncBlockBlobRepository(emailComponentIdentity);
-            _logger = loggerFactory.CreateLongLivedLogger(ComponentIdentity);
+            _logger = loggerFactory.CreateLongLivedLogger(emailComponentIdentity);
         }
 
-        public async Task Start(CancellationToken cancellationToken)
+        protected override async Task<bool> HandleRecievedItem(IQueueItem<EmailQueueItem> queueItem)
         {
-            _backoffPolicy.Execute(AttemptDequeue, cancellationToken);
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                await Task.Delay(500, cancellationToken);
-            }
-        }
-
-        private async void AttemptDequeue(Action<bool> backoffResultAction)
-        {
-            try
-            {
-                await _queue.DequeueAsync(item => ProcessItem(item, backoffResultAction));
-            }
-            catch (Exception)
-            {
-                Trace.TraceError("Unable to process queue item");
-            }
-        }
-
-        private async Task<bool> ProcessItem(IQueueItem<EmailQueueItem> queueItem, Action<bool> backoffResultAction)
-        {
-            if (queueItem == null)
-            {
-                backoffResultAction(false);
-                return await Task.FromResult(false);
-            }
-
             EmailQueueItem item = queueItem.Item;
             bool success;
             try
@@ -116,8 +85,8 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                     success = false;
                 }
             }
-            backoffResultAction(true);
-            return await Task.FromResult(success);
+            
+            return success;
         }
 
         private async Task GetTemplate(string emailTemplateId)
@@ -192,6 +161,11 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                 Body = body,
                 Title = title
             };
+        }
+
+        public override IComponentIdentity ComponentIdentity
+        {
+            get { return new ComponentIdentity(HostableComponentNames.EmailQueueProcessor); }
         }
     }
 }
