@@ -31,6 +31,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
                 {
                     shouldContinue = await Backoff();
                 }
+                else
+                {
+                    _backoffIndex = -1;
+                }
+
+                if (_cancellationToken.IsCancellationRequested)
+                {
+                    shouldContinue = false;
+                }
             } while (shouldContinue);
             if (_shutdownAction != null)
             {
@@ -41,14 +50,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
         private async Task<bool> Backoff()
         {
 
-            int backoffIndex = Interlocked.Increment(ref _backoffIndex);
-            if (backoffIndex >= BackoffTimings.Count)
+            _backoffIndex++;
+            if (_backoffIndex >= BackoffTimings.Count)
             {
-                backoffIndex = BackoffTimings.Count - 1;
+                _backoffIndex = BackoffTimings.Count - 1;
             }
             try
             {
-                await Task.Delay(BackoffTimings[backoffIndex], _cancellationToken);
+                await Task.Delay(BackoffTimings[_backoffIndex], _cancellationToken);
                 return true;
             }
             catch (TaskCanceledException)
