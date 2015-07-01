@@ -1,6 +1,7 @@
 ﻿using System;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Components.Implementation;
+using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.Core.Email.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Logging;
@@ -24,14 +25,21 @@ namespace AccidentalFish.ApplicationSupport.Core
     /// </summary>
     public static class Bootstrapper
     {
+        public enum LoggerTypeEnum
+        {
+            Queue,
+            Console
+        }
+
         public static void RegisterDependencies(IDependencyResolver container)
         {
-            RegisterDependencies(container, null);
+            RegisterDependencies(container, null, LoggerTypeEnum.Queue);
         }
 
         public static void RegisterDependencies(
             IDependencyResolver container,
-            Type loggerExtension)
+            Type loggerExtension,
+            LoggerTypeEnum loggerType)
         {
             container.Register<IBackoffPolicy, BackoffPolicy>();
             container.Register<ILeasedRetry, LeasedRetry>();
@@ -40,10 +48,21 @@ namespace AccidentalFish.ApplicationSupport.Core
             container.Register<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>();
             container.Register<IApplicationResourceFactory, ApplicationResourceFactory>();
             container.Register<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>();
-            container.Register<ILoggerFactory, LoggerFactory>();
+
+            if (loggerType == LoggerTypeEnum.Console)
+            {
+                container.Register<ILoggerFactory, ConsoleLoggerFactory>();
+            }
+            else
+            {
+                container.Register<ILoggerFactory, LoggerFactory>();
+            }
+
             container.Register<IComponentHost, ComponentHost>();
             container.Register<IEmailManager, EmailManager>();
             container.Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>();
+            container.Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>();
+            container.RegisterInstance<IConfiguration>(new DefaultConfiguration());
 
             if (loggerExtension == null)
             {

@@ -53,6 +53,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
@@ -84,11 +85,14 @@
     <Compile Include="Configuration\ApplicationCorsRule.cs" />
     <Compile Include="Configuration\ApplicationStorageAccount.cs" />
     <Compile Include="Configuration\BlobContainerPublicAccessTypeEnum.cs" />
+    <Compile Include="Configuration\DefaultConfiguration.cs" />
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailManager.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Logging\ILoggerExtension.cs" />
+    <Compile Include="Logging\Implementation\ConsoleLogger.cs" />
+    <Compile Include="Logging\Implementation\ConsoleLoggerFactory.cs" />
     <Compile Include="Logging\Implementation\NullLoggerExtension.cs" />
     <Compile Include="Mappers\AbstractBidirectionalMapper.cs" />
     <Compile Include="Mappers\IBidirectionalMapper.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="Components\IHostableComponent.cs" />
     <Compile Include="Runtime\Implementation\ComponentFactory.cs" />
     <Compile Include="Runtime\Implementation\ComponentHost.cs" />
+    <Compile Include="Runtime\Implementation\DefaultRuntimeEnvironment.cs" />
     <Compile Include="Runtime\IRuntimeEnvironment.cs" />
     <Compile Include="Runtime\StaticComponentHostConfigurationProvider.cs" />
     <Compile Include="Configuration\ApplicationComponentSetting.cs" />
