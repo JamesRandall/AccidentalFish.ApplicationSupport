@@ -5,81 +5,56 @@ using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
 {
-    internal class AsynchronousBackoffPolicy : IAsynchronousBackoffPolicy, IDisposable
+    internal class AsynchronousBackoffPolicy : IAsynchronousBackoffPolicy
     {
         private static readonly List<int> BackoffTimings = new List<int> { 100, 250, 500, 1000, 5000 };
-        private Action<Action<bool>> _workerAction;
         private Action _shutdownAction;
         private int _backoffIndex = -1;
         private CancellationToken _cancellationToken;
-        private readonly ManualResetEventSlim _exitBackoffEvent = new ManualResetEventSlim(false);
 
-        public void Execute(Action<Action<bool>> function, CancellationToken cancellationToken)
+        public async Task Execute(Func<Task<bool>> function, CancellationToken cancellationToken)
         {
-            Execute(function, null, cancellationToken);
+            await Execute(function, null, cancellationToken);
         }
 
-        public void Execute(Action<Action<bool>> function, Action shutdownAction, CancellationToken cancellationToken)
+        public async Task Execute(Func<Task<bool>> function, Action shutdownAction, CancellationToken cancellationToken)
         {
             _shutdownAction = shutdownAction;
             _cancellationToken = cancellationToken;
-            _workerAction = function;
-            _workerAction(Next);
+
+            bool shouldContinue = true;
+
+            do
+            {
+                bool didWork = await function();
+                if (!didWork)
+                {
+                    shouldContinue = await Backoff();
+                }
+            } while (shouldContinue);
+            if (_shutdownAction != null)
+            {
+                _shutdownAction();
+            }
+        }
+
+        private async Task<bool> Backoff()
+        {
+
+            int backoffIndex = Interlocked.Increment(ref _backoffIndex);
+            if (backoffIndex >= BackoffTimings.Count)
+            {
+                backoffIndex = BackoffTimings.Count - 1;
+            }
             try
             {
-                _exitBackoffEvent.Wait(cancellationToken);
+                await Task.Delay(BackoffTimings[backoffIndex], _cancellationToken);
+                return true;
             }
-            catch (OperationCanceledException)
+            catch (TaskCanceledException)
             {
-                // cancelled    
+                return false;
             }
-        }
-
-        private async void Next(bool didWork)
-        {
-            if (_cancellationToken.IsCancellationRequested)
-            {
-                if (_shutdownAction != null)
-                {
-                    _shutdownAction();
-                    _exitBackoffEvent.Set();
-                }
-                return;
-            }
-
-            if (!didWork)
-            {
-                int backoffIndex = Interlocked.Increment(ref _backoffIndex);
-                if (backoffIndex >= BackoffTimings.Count)
-                {
-                    backoffIndex = BackoffTimings.Count - 1;
-                }
-                try
-                {
-                    await Task.Delay(BackoffTimings[backoffIndex], _cancellationToken);
-                }
-                catch (TaskCanceledException)
-                {
-                    if (_shutdownAction != null)
-                    {
-                        _shutdownAction();
-                        _exitBackoffEvent.Set();
-                    }
-                    return;
-                }
-                
-                _workerAction(Next);
-            }
-            else
-            {
-                Interlocked.Exchange(ref _backoffIndex, -1);
-                _workerAction(Next);
-            }
-        }
-
-        public void Dispose()
-        {
-            _exitBackoffEvent.Dispose();
         }
     }
 }

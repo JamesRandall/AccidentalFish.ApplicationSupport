@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Policies
 {
     public interface IAsynchronousBackoffPolicy
     {
-        void Execute(Action<Action<bool>> function, CancellationToken token);
-        void Execute(Action<Action<bool>> function, Action shutdownAction, CancellationToken cancellationToken);
+        Task Execute(Func<Task<bool>> function, CancellationToken token);
+        Task Execute(Func<Task<bool>> function, Action shutdownAction, CancellationToken cancellationToken);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging.Model;
@@ -46,7 +47,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
             processor.Start(source.Token);
 
             // Assert
-            _asynchronousBackoffPolicy.Verify(x => x.Execute(It.IsAny<Action<Action<bool>>>(), source.Token));
+            _asynchronousBackoffPolicy.Verify(x => x.Execute(It.IsAny<Func<Task<bool>>>(), source.Token));
         }
 
         public void NullQueueItemReturnsFalseToBackoff()

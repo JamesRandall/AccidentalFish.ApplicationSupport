@@ -49,7 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
 
         public IReadOnlyDictionary<string, string> Settings
         {
-            get {  return _settings; }
-        } 
+            get { return _settings; }
+        }
     }
 }

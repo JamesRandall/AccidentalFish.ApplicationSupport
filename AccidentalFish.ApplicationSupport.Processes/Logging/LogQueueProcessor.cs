@@ -12,11 +12,12 @@ using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Private;
 using AccidentalFish.ApplicationSupport.Processes.Mappers;
+using AccidentalFish.ApplicationSupport.Core.BackoffProcesses;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Logging
 {
     [ComponentIdentity(HostableComponentNames.LogQueueProcessor)]
-    internal class LogQueueProcessor : AbstractApplicationComponent, IHostableComponent
+    internal class LogQueueProcessor : BackoffQueueProcessor<LogQueueItem>
     {
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
         private readonly IMapperFactory _mapperFactory;
@@ -32,53 +33,28 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             IAsynchronousBackoffPolicy backoffPolicy,
             IMapperFactory mapperFactory,
             IAlertSender alertSender)
+            : base(backoffPolicy, applicationResourceFactory.GetLoggerQueue())
         {
             _queue = applicationResourceFactory.GetLoggerQueue();
             _backoffPolicy = backoffPolicy;
             _mapperFactory = mapperFactory;
             _alertSender = alertSender;
 
-            string byDateTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bydate-table");
-            string byDateDescTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bydate-desc-table");
-            string bySeverityTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-byseverity-table");
-            string bySourceTableName = applicationResourceFactory.Setting(ComponentIdentity, "logger-bysource-table");
+            IComponentIdentity componentIdentity = new ComponentIdentity(HostableComponentNames.LogQueueProcessor);
 
-            _bySourceTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySourceTableName, ComponentIdentity);
-            _bySeverityTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySeverityTableName, ComponentIdentity);
-            _byDateTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateTableName, ComponentIdentity);
-            _byDateDescTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateDescTableName, ComponentIdentity);
+            string byDateTableName = applicationResourceFactory.Setting(componentIdentity, "logger-bydate-table");
+            string byDateDescTableName = applicationResourceFactory.Setting(componentIdentity, "logger-bydate-desc-table");
+            string bySeverityTableName = applicationResourceFactory.Setting(componentIdentity, "logger-byseverity-table");
+            string bySourceTableName = applicationResourceFactory.Setting(componentIdentity, "logger-bysource-table");
+
+            _bySourceTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySourceTableName, componentIdentity);
+            _bySeverityTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(bySeverityTableName, componentIdentity);
+            _byDateTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateTableName, componentIdentity);
+            _byDateDescTable = applicationResourceFactory.GetNoSqlRepository<LogTableItem>(byDateDescTableName, componentIdentity);
         }
 
-        // TODO: This is a bleed through of the component host not being correct
-        public async Task Start(CancellationToken cancellationToken)
+        protected override async Task<bool> HandleRecievedItem(IQueueItem<LogQueueItem> queueItem)
         {
-            _backoffPolicy.Execute(AttemptDequeue, cancellationToken);
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                await Task.Delay(500, cancellationToken);
-            }
-        }
-
-        private async void AttemptDequeue(Action<bool> backoffResultAction)
-        {
-            try
-            {
-                await _queue.DequeueAsync(item => ProcessItem(item, backoffResultAction));
-            }
-            catch (Exception)
-            {
-                Trace.TraceError("Unable to process queue item");
-            }            
-        }
-
-        private async Task<bool> ProcessItem(IQueueItem<LogQueueItem> queueItem, Action<bool> backoffResultAction)
-        {
-            if (queueItem == null)
-            {
-                backoffResultAction(false);
-                return await Task.FromResult(false);
-            }
-
             LogQueueItem item = queueItem.Item;
             if (item.Level == LogLevelEnum.Error)
             {
@@ -113,8 +89,12 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
                 Trace.TraceError("Unable to store items in log");
             }
 
-            backoffResultAction(true);
-            return await Task.FromResult(success);
+            return success;
+        }
+
+        public override IComponentIdentity ComponentIdentity
+        {
+            get { return new ComponentIdentity(HostableComponentNames.LogQueueProcessor); }
         }
     }
 }

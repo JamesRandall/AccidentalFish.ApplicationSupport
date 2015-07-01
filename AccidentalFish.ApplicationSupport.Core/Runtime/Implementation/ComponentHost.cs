@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
-using Microsoft.Practices.Unity;
 
 namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 {
@@ -64,6 +63,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                             shouldRetry = false; // normal exit
                             _logger.Information(String.Format("Hostable component {0} is exiting", componentIdentity));
                         }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Wait();
+                        shouldRetry = false;
                     }
                     catch (Exception ex)
                     {
@@ -82,7 +82,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                             {
                                 foreach (Exception innerException in ((AggregateException)ex).InnerExceptions)
                                 {
-                                    _logger.Error(String.Format("Aggregate error for component start", retryCount, componentIdentity), ex);
+                                    _logger.Error(String.Format("Aggregate error for component {1} on retry {0}", retryCount, componentIdentity), innerException);
                                 }
                             }
                         }
@@ -90,9 +90,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                         {
                             if (ex is AggregateException)
                             {
-                                foreach (Exception innerException in ((AggregateException) ex).InnerExceptions)
+                                foreach (Exception innerException in ((AggregateException)ex).InnerExceptions)
                                 {
-                                    _logger.Error(String.Format("Component failure {0} for component {1}", retryCount, componentIdentity), ex);
+                                    _logger.Error(String.Format("Component failure {0} for component {1}", retryCount, componentIdentity), innerException);
                                 }
                             }
                             else
@@ -102,7 +102,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                         }
                     }
                 }
-                
+
             }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
     }

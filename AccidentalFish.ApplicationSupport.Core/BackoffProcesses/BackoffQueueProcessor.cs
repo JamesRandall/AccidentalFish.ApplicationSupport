@@ -14,11 +14,19 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         private readonly IAsynchronousQueue<T> _queue;
         private readonly ILogger _logger;
 
+        private class ProcessResult
+        {
+            public bool Complete { get; set; }
+
+            public bool DidWork { get; set; }
+        }
+
         protected BackoffQueueProcessor(
             IAsynchronousBackoffPolicy backoffPolicy,
-            IAsynchronousQueue<T> queue) : this(backoffPolicy, queue, null)
+            IAsynchronousQueue<T> queue)
+            : this(backoffPolicy, queue, null)
         {
-            
+
         }
 
         protected BackoffQueueProcessor(
@@ -31,9 +39,9 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             _logger = logger;
         }
 
-        protected ILogger Logger { get {  return _logger; } }
+        protected ILogger Logger { get { return _logger; } }
 
-        protected IAsynchronousQueue<T> Queue { get {  return _queue; } } 
+        protected IAsynchronousQueue<T> Queue { get { return _queue; } }
 
         protected abstract Task<bool> HandleRecievedItem(IQueueItem<T> item);
 
@@ -41,45 +49,47 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
 
         public async Task Start(CancellationToken token)
         {
-            _backoffPolicy.Execute(AttemptDequeue, token);
-            while (!token.IsCancellationRequested)
-            {
-                await Task.Delay(500, token);
-            }
+            await _backoffPolicy.Execute(AttemptDequeue, token);
         }
 
-        private async void AttemptDequeue(Action<bool> backoffResultAction)
+        private async Task<bool> AttemptDequeue()
         {
             try
             {
-                await _queue.DequeueAsync(item => ProcessItem(item, backoffResultAction));
+                bool didWork = true;
+                await _queue.DequeueAsync(async (item) =>
+                {
+                    ProcessResult result = await ProcessItem(item);
+                    didWork = result.DidWork;
+                    return result.Complete;
+                });
+                return didWork;
             }
             catch (Exception ex)
             {
                 LogError("Unable to dequeue message from queue", ex);
+                throw;
             }
         }
 
-        private async Task<bool> ProcessItem(IQueueItem<T> message, Action<bool> backoffResultAction)
+        private async Task<ProcessResult> ProcessItem(IQueueItem<T> message)
         {
             if (message == null)
             {
-                backoffResultAction(false); // no item to process
-                return false;
+                return new ProcessResult
+                {
+                    Complete = false,
+                    DidWork = false
+                };
             }
 
-            try
+            ProcessResult result = new ProcessResult
             {
-                return await HandleRecievedItem(message); // let the virtual method decide whether to complete (true) or abandon (false) the message
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                backoffResultAction(true); // yes we processed an item
-            }
+                Complete = true,
+                DidWork = await HandleRecievedItem(message) // let the virtual method decide whether to complete (true) or abandon (false) the message
+            };
+
+            return result;
         }
 
         private void LogError(string message, Exception ex)

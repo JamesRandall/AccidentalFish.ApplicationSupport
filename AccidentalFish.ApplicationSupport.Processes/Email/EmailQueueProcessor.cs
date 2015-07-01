@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using AccidentalFish.ApplicationSupport.Core.BackoffProcesses;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Email;
@@ -16,7 +17,7 @@ using RazorEngine;
 namespace AccidentalFish.ApplicationSupport.Processes.Email
 {
     [ComponentIdentity(HostableComponentNames.EmailQueueProcessor)]
-    internal class EmailQueueProcessor : AbstractApplicationComponent, IHostableComponent
+    internal class EmailQueueProcessor : BackoffQueueProcessor<EmailQueueItem>
     {
         private class EmailContent
         {
@@ -38,6 +39,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             IAsynchronousBackoffPolicy backoffPolicy,
             ILoggerFactory loggerFactory,
             IEmailProvider emailProvider)
+            : base(backoffPolicy, applicationResourceFactory.GetQueue<EmailQueueItem>(new ComponentIdentity(EmailFullyQualifiedName)))
         {
             IComponentIdentity emailComponentIdentity = new ComponentIdentity(EmailFullyQualifiedName);
             _backoffPolicy = backoffPolicy;
@@ -48,38 +50,11 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             _queue = applicationResourceFactory.GetQueue<EmailQueueItem>(emailComponentIdentity);
             _poisonQueue = applicationResourceFactory.GetQueue<EmailQueueItem>(poisonQueueName, emailComponentIdentity);
             _blobRepository = applicationResourceFactory.GetBlockBlobRepository(emailComponentIdentity);
-            _logger = loggerFactory.CreateLongLivedLogger(ComponentIdentity);
+            _logger = loggerFactory.CreateLongLivedLogger(emailComponentIdentity);
         }
 
-        public async Task Start(CancellationToken cancellationToken)
+        protected override async Task<bool> HandleRecievedItem(IQueueItem<EmailQueueItem> queueItem)
         {
-            _backoffPolicy.Execute(AttemptDequeue, cancellationToken);
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                await Task.Delay(500, cancellationToken);
-            }
-        }
-
-        private async void AttemptDequeue(Action<bool> backoffResultAction)
-        {
-            try
-            {
-                await _queue.DequeueAsync(item => ProcessItem(item, backoffResultAction));
-            }
-            catch (Exception)
-            {
-                Trace.TraceError("Unable to process queue item");
-            }
-        }
-
-        private async Task<bool> ProcessItem(IQueueItem<EmailQueueItem> queueItem, Action<bool> backoffResultAction)
-        {
-            if (queueItem == null)
-            {
-                backoffResultAction(false);
-                return await Task.FromResult(false);
-            }
-
             EmailQueueItem item = queueItem.Item;
             bool success;
             try
@@ -115,8 +90,12 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                     success = false;
                 }
             }
-            backoffResultAction(true);
-            return await Task.FromResult(success);
+            return success;
+        }
+
+        public override IComponentIdentity ComponentIdentity
+        {
+            get { return new ComponentIdentity(EmailFullyQualifiedName); }
         }
 
         private async Task<XDocument> GetTemplate(string emailTemplateId)
