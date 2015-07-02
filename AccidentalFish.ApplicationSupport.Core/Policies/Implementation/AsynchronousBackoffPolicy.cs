@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
         private Action _shutdownAction;
         private int _backoffIndex = -1;
         private CancellationToken _cancellationToken;
-        
+
         public async Task Execute(Func<Task<bool>> function, CancellationToken cancellationToken)
         {
             await Execute(function, null, cancellationToken);
@@ -22,7 +21,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
         {
             _shutdownAction = shutdownAction;
             _cancellationToken = cancellationToken;
-            
+
             bool shouldContinue = true;
 
             do
@@ -31,6 +30,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
                 if (!didWork)
                 {
                     shouldContinue = await Backoff();
+                }
+                else
+                {
+                    _backoffIndex = -1;
+                }
+
+                if (_cancellationToken.IsCancellationRequested)
+                {
+                    shouldContinue = false;
                 }
             } while (shouldContinue);
             if (_shutdownAction != null)
@@ -41,15 +49,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
 
         private async Task<bool> Backoff()
         {
-            
-            int backoffIndex = Interlocked.Increment(ref _backoffIndex);
-            if (backoffIndex >= BackoffTimings.Count)
+
+            _backoffIndex++;
+            if (_backoffIndex >= BackoffTimings.Count)
             {
-                backoffIndex = BackoffTimings.Count - 1;
+                _backoffIndex = BackoffTimings.Count - 1;
             }
             try
             {
-                await Task.Delay(BackoffTimings[backoffIndex], _cancellationToken);
+                await Task.Delay(BackoffTimings[_backoffIndex], _cancellationToken);
                 return true;
             }
             catch (TaskCanceledException)
