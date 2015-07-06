@@ -26,6 +26,7 @@ cp .\AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupp
 .\nuget pack .\AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.csproj -IncludeReferencedProjects
 .\nuget pack .\AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj -IncludeReferencedProjects
 .\nuget pack .\AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj -IncludeReferencedProjects
+.\nuget pack .\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.csproj -IncludeReferencedProjects
 
 if ($pushLocal)
 {

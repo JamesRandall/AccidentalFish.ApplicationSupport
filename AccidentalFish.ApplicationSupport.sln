@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Core", "AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj", "{578E1681-F5F4-4CBA-BEC3-7F1D8A765254}"
 EndProject
@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NugetPackaging", "NugetPack
 		AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.nuspec = AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.nuspec
 		AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.nuspec = AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.nuspec
 		AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.nuspec = AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.nuspec
+		AccidentalFish.ApplicationSupport.Logging.ApplicationInsights\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.nuspec = AccidentalFish.ApplicationSupport.Logging.ApplicationInsights\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.nuspec
 		AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec = AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec
 		AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.nuspec = AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.nuspec
 		AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.nuspec = AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.nuspec
@@ -56,6 +57,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackoffPolicy", "BackoffPolicy\BackoffPolicy.csproj", "{1317DE04-F3DA-47AA-BD6E-B7F4BC81E85F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComponentHost", "Samples\ComponentHost\ComponentHost.csproj", "{FF473D27-77E7-4592-A1EC-8E52B8A190C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Logging.ApplicationInsights", "AccidentalFish.ApplicationSupport.Logging.ApplicationInsights\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.csproj", "{D9B998A8-F054-422D-AE5A-05DF51B3648B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,6 +174,14 @@ Global
 		{FF473D27-77E7-4592-A1EC-8E52B8A190C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF473D27-77E7-4592-A1EC-8E52B8A190C9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF473D27-77E7-4592-A1EC-8E52B8A190C9}.Release|x64.ActiveCfg = Release|Any CPU
+		{D9B998A8-F054-422D-AE5A-05DF51B3648B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9B998A8-F054-422D-AE5A-05DF51B3648B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9B998A8-F054-422D-AE5A-05DF51B3648B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D9B998A8-F054-422D-AE5A-05DF51B3648B}.Debug|x64.Build.0 = Debug|Any CPU
+		{D9B998A8-F054-422D-AE5A-05DF51B3648B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9B998A8-F054-422D-AE5A-05DF51B3648B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9B998A8-F054-422D-AE5A-05DF51B3648B}.Release|x64.ActiveCfg = Release|Any CPU
+		{D9B998A8-F054-422D-AE5A-05DF51B3648B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -185,7 +196,7 @@ Global
 		{FF473D27-77E7-4592-A1EC-8E52B8A190C9} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal
