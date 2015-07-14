@@ -24,13 +24,17 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Providers
             _secretKey = configuration["amazon-secret-key"];
         }
 
-        public string Send(IEnumerable<string> to, IEnumerable<string> cc, string from, string title, string body)
+        public string Send(IEnumerable<string> to, IEnumerable<string> cc, string from, string title, string htmlBody, string textBody)
         {
             AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(_accessKey, _secretKey);
             Destination destination = new Destination();
             destination.ToAddresses = to.ToList();
             Content subject = new Content(title);
-            Body bodyContent = new Body(new Content(body));
+            Body bodyContent = new Body()
+            {
+                Html = htmlBody == null ? null : new Content(htmlBody),
+                Text = textBody == null ? null : new Content(textBody)
+            };
             Message message = new Message(subject, bodyContent);
             SendEmailRequest request = new SendEmailRequest
             {

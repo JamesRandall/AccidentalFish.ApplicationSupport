@@ -23,7 +23,9 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
         {
             public string Title { get; set; }
 
-            public string Body { get; set; }
+            public string HtmlBody { get; set; }
+
+            public string TextBody { get; set; }
         }
 
         private const string EmailFullyQualifiedName = "com.accidental-fish.email";
@@ -63,11 +65,11 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                 {
                     XDocument template = await GetTemplate(item.EmailTemplateId);
                     EmailContent content = ProcessTemplate(template, item.MergeData);
-                    _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.Body);
+                    _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.HtmlBody, content.TextBody);
                 }
                 else
                 {
-                    _emailProvider.Send(item.To, item.Cc, item.From, item.Subject, item.Body);
+                    _emailProvider.Send(item.To, item.Cc, item.From, item.Subject, item.HtmlBody, item.TextBody);
                 }
                 
                 success = true;
@@ -112,14 +114,16 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
         private EmailContent ProcessTemplate(XDocument template, Dictionary<string, string> mergeData)
         {
-            string titleTemplate = template.Root.Element("title").Value;
-            string bodyTemplate = template.Root.Element("body").Value;
+            var titleTemplate = template.Root.Element("title");
+            var htmlBodyTemplate = template.Root.Element("body") ?? template.Root.Element("html");
+            var textBodyTemplate = template.Root.Element("text");
             string title;
-            string body;
+            string htmlBody;
+            string textBody;
             
             try
             {
-                title = Razor.Parse(titleTemplate, mergeData);
+                title = titleTemplate == null ? null : Razor.Parse(titleTemplate.Value, mergeData);
             }
             catch (Exception ex)
             {
@@ -129,7 +133,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
             try
             {
-                body = Razor.Parse(bodyTemplate, mergeData);
+                htmlBody = htmlBodyTemplate == null ? null : Razor.Parse(htmlBodyTemplate.Value, mergeData);
             }
             catch (Exception ex)
             {
@@ -137,10 +141,21 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                 throw;
             }
 
+            try
+            {
+                textBody = textBodyTemplate == null ? null : Razor.Parse(textBodyTemplate.Value, mergeData);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error processing text template", ex);
+                throw;
+            }
+
             return new EmailContent
             {
-                Body = body,
-                Title = title
+                HtmlBody = htmlBody,
+                TextBody = textBody,
+                Title = title,
             };
         }
     }
