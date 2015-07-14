@@ -11,7 +11,6 @@ using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using RazorEngine;
-using RazorEngine.Templating;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Email
 {
@@ -22,7 +21,9 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
         {
             public string Title { get; set; }
 
-            public string Body { get; set; }
+            public string HtmlBody { get; set; }
+
+            public string TextBody { get; set; }
         }
 
         private const string EmailFullyQualifiedName = "com.accidental-fish.email";
@@ -56,13 +57,13 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             {
                 if (!String.IsNullOrWhiteSpace(item.EmailTemplateId))
                 {
-                    await GetTemplate(item.EmailTemplateId);
-                    EmailContent content = ProcessTemplate(item.EmailTemplateId, item.MergeData);
-                    _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.Body);
+                    XDocument template = await GetTemplate(item.EmailTemplateId);
+                    EmailContent content = ProcessTemplate(template, item.MergeData);
+                    _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.HtmlBody, content.TextBody);
                 }
                 else
                 {
-                    _emailProvider.Send(item.To, item.Cc, item.From, item.Subject, item.Body);
+                    _emailProvider.Send(item.To, item.Cc, item.From, item.Subject, item.HtmlBody, item.TextBody);
                 }
                 
                 success = true;
@@ -89,13 +90,8 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             return success;
         }
 
-        private async Task GetTemplate(string emailTemplateId)
+        private async Task<XDocument> GetTemplate(string emailTemplateId)
         {
-            if (Engine.Razor.IsTemplateCached(TitleTemplateCacheName(emailTemplateId), typeof (Dictionary<string, string>)))
-            {
-                return;
-            }
-            
             if (!Path.HasExtension(emailTemplateId))
             {
                 emailTemplateId = String.Format("{0}.xml", emailTemplateId);
@@ -103,14 +99,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             IBlob blob = _blobRepository.Get(emailTemplateId);
             string template = await blob.DownloadStringAsync();
             XDocument xdoc = XDocument.Parse(template);
-
-            string titleTemplate = xdoc.Root.Element("title").Value;
-            string bodyTemplate = xdoc.Root.Element("body").Value;
-
-            Engine.Razor.AddTemplate(TitleTemplateCacheName(emailTemplateId), titleTemplate);
-            Engine.Razor.AddTemplate(BodyTemplateCacheName(emailTemplateId), bodyTemplate);
-            Engine.Razor.Compile(TitleTemplateCacheName(emailTemplateId), typeof(Dictionary<string, string>));
-            Engine.Razor.Compile(BodyTemplateCacheName(emailTemplateId), typeof(Dictionary<string, string>));
+            return xdoc;
         }
 
         private string TitleTemplateCacheName(string emailTemplateId)
@@ -123,19 +112,18 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             return String.Format("{0}-body", emailTemplateId);
         }
 
-        private EmailContent ProcessTemplate(string emailTemplateId, Dictionary<string, string> mergeData)
+        private EmailContent ProcessTemplate(XDocument template, Dictionary<string, string> mergeData)
         {
-            
+            var titleTemplate = template.Root.Element("title");
+            var htmlBodyTemplate = template.Root.Element("body") ?? template.Root.Element("html");
+            var textBodyTemplate = template.Root.Element("text");
             string title;
-            string body;
-            
+            string htmlBody;
+            string textBody;
+
             try
             {
-
-                title = Engine.Razor.Run(
-                    TitleTemplateCacheName(emailTemplateId),
-                    typeof (Dictionary<string, string>),
-                    mergeData);
+                title = titleTemplate == null ? null : Razor.Parse(titleTemplate.Value, mergeData);
             }
             catch (Exception ex)
             {
@@ -145,10 +133,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
             try
             {
-                body = Engine.Razor.Run(
-                    BodyTemplateCacheName(emailTemplateId),
-                    typeof(Dictionary<string, string>),
-                    mergeData);
+                htmlBody = htmlBodyTemplate == null ? null : Razor.Parse(htmlBodyTemplate.Value, mergeData);
             }
             catch (Exception ex)
             {
@@ -156,10 +141,21 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                 throw;
             }
 
+            try
+            {
+                textBody = textBodyTemplate == null ? null : Razor.Parse(textBodyTemplate.Value, mergeData);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error processing text template", ex);
+                throw;
+            }
+
             return new EmailContent
             {
-                Body = body,
-                Title = title
+                HtmlBody = htmlBody,
+                TextBody = textBody,
+                Title = title,
             };
         }
 

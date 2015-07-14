@@ -38,12 +38,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
             await _queue.EnqueueAsync(item);
         }
 
-        public Task Send(string to, string cc, string @from, string subject, string body)
+        public Task Send(string to, string cc, string @from, string subject, string htmlBody, string textBody)
         {
-            return Send(new[] { to }, new[] { cc }, @from, subject, body);
+            return Send(new[] { to }, new[] { cc }, @from, subject, htmlBody, textBody);
         }
 
-        public async Task Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string subject, string body)
+        public async Task Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string subject, string htmlBody, string textBody)
         {
             EmailQueueItem item = new EmailQueueItem
             {
@@ -51,7 +51,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
                 From = from,
                 To = new List<string>(to),
                 Subject = subject,
-                Body = body
+                HtmlBody = htmlBody,
+                TextBody = textBody
             };
 
             await _queue.EnqueueAsync(item);
