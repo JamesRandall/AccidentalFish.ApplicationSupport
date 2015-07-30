@@ -75,7 +75,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 XElement defaultTopicNameElement = element.Element("default-topic-name");
                 XElement defaultBrokeredMessageQueueNameElement = element.Element("default-brokered-message-queue-name");
                 XElement settingsElement = element.Element("settings");
-                XAttribute defaultBlobContainerAccessAttribute = defaultBlobContainerNameElement == null ? null : defaultBlobContainerNameElement.Attribute("public-permission");
+                XAttribute defaultBlobContainerAccessAttribute = defaultBlobContainerNameElement?.Attribute("public-permission");
 
                 if (sqlServerElement != null)
                 {
@@ -85,7 +85,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     }
                     catch (KeyNotFoundException)
                     {
-                        throw new InvalidDataException(String.Format("Sql server with fqn of {0} is missing from configuration file.", sqlServerElement.Value));
+                        throw new InvalidDataException($"Sql server with fqn of {sqlServerElement.Value} is missing from configuration file.");
                     }
                     
                 }
@@ -97,7 +97,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     }
                     catch (Exception)
                     {
-                        throw new InvalidDataException(String.Format("Storage account with fqn of {0} is missing from configuration file.", storageElement.Value));
+                        throw new InvalidDataException($"Storage account with fqn of {storageElement.Value} is missing from configuration file.");
                     }
                 }
                 if (serviceBusElement != null)
@@ -108,20 +108,20 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     }
                     catch (Exception)
                     {
-                        throw new InvalidDataException(String.Format("Service bus account with fqn of {0} is missing from configuration file.", storageElement.Value));
+                        throw new InvalidDataException($"Service bus account with fqn of {serviceBusElement.Value} is missing from configuration file.");
                     }
                 }
 
-                component.DbContextType = dbContextTypeElement == null ? null : dbContextTypeElement.Value;
-                component.DefaultBlobContainerName = defaultBlobContainerNameElement == null ? null : defaultBlobContainerNameElement.Value;
-                component.DefaultQueueName = defaultQueueNameElement == null ? null : defaultQueueNameElement.Value;
-                component.DefaultTableName = defaultTableNameElement == null ? null : defaultTableNameElement.Value;
+                component.DbContextType = dbContextTypeElement?.Value;
+                component.DefaultBlobContainerName = defaultBlobContainerNameElement?.Value;
+                component.DefaultQueueName = defaultQueueNameElement?.Value;
+                component.DefaultTableName = defaultTableNameElement?.Value;
                 component.DefaultBlobContainerAccessType = BlobContainerPublicAccessTypeEnum.Off;
-                component.DefaultLeaseBlockName = defaultLeaseBlockNameElement == null ? null : defaultLeaseBlockNameElement.Value;
-                component.DefaultTopicName = defaultTopicNameElement == null ? null : defaultTopicNameElement.Value;
-                component.DefaultSubscriptionName = defaultSubscriptionNameElement == null ? null : defaultSubscriptionNameElement.Value;
-                component.DefaultBrokeredMessageQueueName = defaultBrokeredMessageQueueNameElement == null? null : defaultBrokeredMessageQueueNameElement.Value;
-                component.TableData = defaultTableData == null ? null : defaultTableData.Value;
+                component.DefaultLeaseBlockName = defaultLeaseBlockNameElement?.Value;
+                component.DefaultTopicName = defaultTopicNameElement?.Value;
+                component.DefaultSubscriptionName = defaultSubscriptionNameElement?.Value;
+                component.DefaultBrokeredMessageQueueName = defaultBrokeredMessageQueueNameElement?.Value;
+                component.TableData = defaultTableData?.Value;
                 component.Uploads = element.Elements("upload").Select(x => x.Value).ToList();
                 if (defaultBlobContainerAccessAttribute != null)
                 {
@@ -136,26 +136,23 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     }
                 }
 
-                if (settingsElement != null)
+                settingsElement?.Elements().ToList().ForEach(x =>
                 {
-                    settingsElement.Elements().ToList().ForEach(x =>
+                    string resourceType = null;
+                    XAttribute resourceTypeAttr = x.Attribute("resource-type");
+                    if (resourceTypeAttr != null)
                     {
-                        string resourceType = null;
-                        XAttribute resourceTypeAttr = x.Attribute("resource-type");
-                        if (resourceTypeAttr != null)
-                        {
-                            resourceType = resourceTypeAttr.Value;
-                        }
-                        Dictionary<string, string> attributeDictionary = x.Attributes().ToDictionary(attribute => attribute.Name.LocalName, attribute => attribute.Value);
-                        component.Settings.Add(new ApplicationComponentSetting
-                        {
-                            Key = x.Name.LocalName,
-                            ResourceType = resourceType,
-                            Value = x.Value,
-                            Attributes = attributeDictionary
-                        });                        
-                    });
-                }
+                        resourceType = resourceTypeAttr.Value;
+                    }
+                    Dictionary<string, string> attributeDictionary = x.Attributes().ToDictionary(attribute => attribute.Name.LocalName, attribute => attribute.Value);
+                    component.Settings.Add(new ApplicationComponentSetting
+                    {
+                        Key = x.Name.LocalName,
+                        ResourceType = resourceType,
+                        Value = x.Value,
+                        Attributes = attributeDictionary
+                    });                        
+                });
 
                 configuration.ApplicationComponents.Add(component);
             });
