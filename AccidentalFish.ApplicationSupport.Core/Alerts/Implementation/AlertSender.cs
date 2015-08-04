@@ -53,7 +53,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Alerts.Implementation
             List<string> emailAddresses = subscribers.Select(x => x.Email).ToList();
             try
             {
-                _emailProvider.Send(emailAddresses, null, _sourceEmailAddress, title, message);
+                _emailProvider.Send(emailAddresses, null, _sourceEmailAddress, title, message, null);
             }
             catch (Exception)
             {

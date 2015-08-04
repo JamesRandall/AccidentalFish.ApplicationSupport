@@ -22,7 +22,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Providers
             _sendgridPassword = applicationResourceFactory.Setting(ComponentIdentity, "password");
         }
 
-        public string Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string title, string body)
+        public string Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string title, string htmlBody, string textBody)
         {
             /*Mail mail = Mail.GetInstance();
             if (to != null && to.Any())
@@ -51,7 +51,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Providers
             {
                 message.AddTo(cc);
             }
-            message.Html = body;
+            if (htmlBody != null)
+                message.Html = htmlBody;
+            if (textBody != null)
+                message.Text = textBody;
             message.Subject = title;
 
             NetworkCredential credentials = new NetworkCredential(_sendgridUsername, _sendgridPassword);
