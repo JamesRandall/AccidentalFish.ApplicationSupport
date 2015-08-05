@@ -105,6 +105,6 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             _context.Dispose();
         }
 
-        
+        internal DbContext Context => _context;
     }
 }
