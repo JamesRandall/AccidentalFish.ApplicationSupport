@@ -242,7 +242,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             return await _repository.QueryAsync(columnValues);
         }
 
-        public async Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, bool> func)
+        public async Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, Task<bool>> func)
         {
             try
             {
@@ -259,7 +259,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             await _repository.QueryFuncAsync(column, value, func);
         }
 
-        public async Task QueryFuncAsync(Dictionary<string, object> conditions, TableStorageQueryOperator op, Func<IEnumerable<T>, bool> func)
+        public async Task QueryFuncAsync(Dictionary<string, object> conditions, TableStorageQueryOperator op, Func<IEnumerable<T>, Task<bool>> func)
         {
             try
             {
@@ -276,7 +276,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             await _repository.QueryFuncAsync(conditions, op, func);
         }
 
-        public async Task QueryFuncAsync(string column, IEnumerable<object> values, TableStorageQueryOperator op, Func<IEnumerable<T>, bool> func)
+        public async Task QueryFuncAsync(string column, IEnumerable<object> values, TableStorageQueryOperator op, Func<IEnumerable<T>, Task<bool>> func)
         {
             try
             {
@@ -293,7 +293,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             await _repository.QueryFuncAsync(column, values, op, func);
         }
 
-        public async Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action)
+        public async Task QueryActionAsync(string column, string value, Func<IEnumerable<T>, Task> action)
         {
             try
             {
@@ -310,7 +310,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             await _repository.QueryActionAsync(column, value, action);
         }
 
-        public async Task AllActionAsync(Action<IEnumerable<T>> action)
+        public async Task AllActionAsync(Func<IEnumerable<T>, Task> action)
         {
             try
             {
