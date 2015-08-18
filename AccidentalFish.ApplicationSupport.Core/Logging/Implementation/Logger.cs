@@ -78,7 +78,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         public async Task Log(LogLevelEnum level, string message, Exception exception)
         {
             LogQueueItem item = CreateLogQueueItem(level, message, exception);
-            _loggerExtension.Logger(item, level >= _minimumLoggingLevel);
+            _loggerExtension.Logger(item, exception, level >= _minimumLoggingLevel);
             if (level >= _minimumLoggingLevel)
             {
                 try
