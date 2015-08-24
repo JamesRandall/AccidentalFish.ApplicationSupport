@@ -59,11 +59,11 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                 {
                     XDocument template = await GetTemplate(item.EmailTemplateId);
                     EmailContent content = ProcessTemplate(template, item.MergeData);
-                    _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.HtmlBody, content.TextBody);
+                    await _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.HtmlBody, content.TextBody);
                 }
                 else
                 {
-                    _emailProvider.Send(item.To, item.Cc, item.From, item.Subject, item.HtmlBody, item.TextBody);
+                    await _emailProvider.Send(item.To, item.Cc, item.From, item.Subject, item.HtmlBody, item.TextBody);
                 }
                 
                 success = true;

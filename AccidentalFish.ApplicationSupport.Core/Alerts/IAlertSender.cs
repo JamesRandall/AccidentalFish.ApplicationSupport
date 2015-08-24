@@ -8,6 +8,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Alerts
 {
     public interface IAlertSender
     {
-        void Send(string title, string message);
+        Task Send(string title, string message);
     }
 }

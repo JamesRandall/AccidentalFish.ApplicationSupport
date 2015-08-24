@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Email;
 using SendGrid;
@@ -23,7 +24,7 @@ namespace AccidentalFish.ApplicationSupport.Email.SendGrid
             _sendgridPassword = applicationResourceFactory.Setting(ComponentIdentity, "password");
         }
 
-        public string Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string title, string htmlBody, string textBody)
+        public async Task<string> Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string title, string htmlBody, string textBody)
         {
             SendGridMessage message = new SendGridMessage();
             message.From = new MailAddress(@from);
@@ -43,7 +44,8 @@ namespace AccidentalFish.ApplicationSupport.Email.SendGrid
 
             NetworkCredential credentials = new NetworkCredential(_sendgridUsername, _sendgridPassword);
             Web transportWeb = new Web(credentials);
-            transportWeb.Deliver(message);
+            await transportWeb.DeliverAsync(message);
+            
             return null;
         }
     }

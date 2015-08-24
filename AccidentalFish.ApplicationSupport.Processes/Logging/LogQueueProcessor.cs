@@ -75,7 +75,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             LogQueueItem item = queueItem.Item;
             if (item.Level == LogLevelEnum.Error)
             {
-                _alertSender.Send($"SYSTEM ERROR: {item.Source}", item.Message);
+                await _alertSender.Send($"SYSTEM ERROR: {item.Source}", item.Message);
             }
 
             IMapper<LogQueueItem, LogTableItem> mapper = _mapperFactory.GetLogQueueItemLogTableItemMapper();

@@ -38,14 +38,14 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
         }
 
         [TestMethod]
-        public void StartInitiaitesBackoffPolicy()
+        public async Task StartInitiaitesBackoffPolicy()
         {
             // Arrange
             CancellationTokenSource source = new CancellationTokenSource();
             LogQueueProcessor processor = new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object, _alertSender.Object);
 
             // Act
-            processor.Start(source.Token);
+            await processor.Start(source.Token);
 
             // Assert
             _asynchronousBackoffPolicy.Verify(x => x.Execute(It.IsAny<Func<Task<bool>>>(), source.Token));
