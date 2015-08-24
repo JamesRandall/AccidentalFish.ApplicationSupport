@@ -12,22 +12,27 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         private readonly IRuntimeEnvironment _runtimeEnvironment;
         private readonly IApplicationResourceFactory _applicationResourceFactory;
         private readonly ILoggerExtension _loggerExtension;
+        private readonly ICorrelationIdProvider _correlationIdProvider;
 
-        public LoggerFactory(IRuntimeEnvironment runtimeEnvironment, IApplicationResourceFactory applicationResourceFactory, ILoggerExtension loggerExtension)
+        public LoggerFactory(IRuntimeEnvironment runtimeEnvironment,
+            IApplicationResourceFactory applicationResourceFactory,
+            ILoggerExtension loggerExtension,
+            ICorrelationIdProvider correlationIdProvider)
         {
             _runtimeEnvironment = runtimeEnvironment;
             _applicationResourceFactory = applicationResourceFactory;
             _loggerExtension = loggerExtension;
+            _correlationIdProvider = correlationIdProvider;
         }
 
         public ILogger CreateShortLivedLogger(IFullyQualifiedName source)
         {
-            return new Logger(_runtimeEnvironment, _applicationResourceFactory.GetLoggerQueue(), source, _loggerExtension, GetMinimumLogLevel(source));
+            return new Logger(_runtimeEnvironment, _applicationResourceFactory.GetLoggerQueue(), source, _loggerExtension, GetMinimumLogLevel(source), _correlationIdProvider);
         }
 
         public ILogger CreateShortLivedLogger(IAsynchronousQueue<LogQueueItem> queue, IFullyQualifiedName source, LogLevelEnum minimumLogLevel)
         {
-            return new Logger(_runtimeEnvironment, queue, source, _loggerExtension, GetMinimumLogLevel(source));
+            return new Logger(_runtimeEnvironment, queue, source, _loggerExtension, GetMinimumLogLevel(source), _correlationIdProvider);
         }
 
         public ILogger CreateLongLivedLogger(IFullyQualifiedName source)

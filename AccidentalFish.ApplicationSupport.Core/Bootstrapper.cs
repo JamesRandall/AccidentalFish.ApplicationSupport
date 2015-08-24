@@ -33,13 +33,14 @@ namespace AccidentalFish.ApplicationSupport.Core
 
         public static void RegisterDependencies(IDependencyResolver container)
         {
-            RegisterDependencies(container, null, LoggerTypeEnum.Queue);
+            RegisterDependencies(container, null, LoggerTypeEnum.Queue, "correlation-id");
         }
 
         public static void RegisterDependencies(
             IDependencyResolver container,
             Type loggerExtension,
-            LoggerTypeEnum loggerType)
+            LoggerTypeEnum loggerType,
+            string correlationIdKey)
         {
             container.Register<IBackoffPolicy, BackoffPolicy>();
             container.Register<ILeasedRetry, LeasedRetry>();
@@ -48,6 +49,15 @@ namespace AccidentalFish.ApplicationSupport.Core
             container.Register<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>();
             container.Register<IApplicationResourceFactory, ApplicationResourceFactory>();
             container.Register<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>();
+
+            if (!string.IsNullOrWhiteSpace(correlationIdKey))
+            {
+                container.RegisterInstance<ICorrelationIdProvider>(new CallContextCorrelationIdProvider(correlationIdKey));
+            }
+            else
+            {
+                container.RegisterInstance<ICorrelationIdProvider>(new NullCorrelationIdProvider());
+            }
 
             if (loggerType == LoggerTypeEnum.Console)
             {

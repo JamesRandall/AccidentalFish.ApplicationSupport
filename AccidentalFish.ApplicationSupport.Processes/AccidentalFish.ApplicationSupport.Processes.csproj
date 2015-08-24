@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Email\EmailQueueProcessor.cs" />
+    <Compile Include="HostableComponentIdentities.cs" />
     <Compile Include="HostableComponentNames.cs" />
     <Compile Include="Logging\LogQueueProcessor.cs" />
     <Compile Include="Logging\Model\LogTableItem.cs" />

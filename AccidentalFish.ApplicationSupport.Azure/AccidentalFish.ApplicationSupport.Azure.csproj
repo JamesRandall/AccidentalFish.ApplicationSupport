@@ -121,6 +121,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="Alerts\Implementation\AlertSender.cs" />
+    <Compile Include="Alerts\Implementation\NullAlertSender.cs" />
     <Compile Include="Alerts\Model\AlertSubscriber.cs" />
     <Compile Include="Blobs\AsynchronousBlockBlobRepository.cs" />
     <Compile Include="Blobs\BlobMultipartStreamProvider.cs" />
