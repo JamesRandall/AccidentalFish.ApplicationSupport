@@ -1,0 +1,41 @@
+@media screen and (min-width: 64em) {
+  .navbar-inner {
+    max-width: 64rem;
+    padding: 1em 6rem;
+    margin: 0 auto;
+    font-size: 1.1rem; } }
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+  .navbar-inner {
+    padding: 1em 4rem;
+    font-size: 1.1rem; } }
+
+@media screen and (max-width: 42em) {
+  .navbar-inner {
+    padding: 1em 1rem;
+    font-size: 1rem; } }
+
+.navbar {
+  margin: 0px;
+  background-color: #eee;
+}
+
+.navbar-title {
+  font-weight: bold;
+  color: black;
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  display: inline;
+  padding-right: 1em;
+}
+
+.article-site-footer-owner {
+  display: block;
+}

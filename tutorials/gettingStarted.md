@@ -1,5 +1,5 @@
 ---
 title: Getting Started
-layout: post
+layout: article
 ---
 Some sample content
