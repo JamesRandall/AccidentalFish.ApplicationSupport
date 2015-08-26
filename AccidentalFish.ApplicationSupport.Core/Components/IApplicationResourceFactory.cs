@@ -14,13 +14,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
 
         IAsynchronousQueue<T> GetAsyncQueue<T>(IComponentIdentity componentIdentity) where T : class;
         IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
-        IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class;
-        IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
         
         IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class;
         IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
-        IQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class;
-        IQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
 
         IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class;
         IAsynchronousTopic<T> GetAsyncTopic<T>(string topicName, IComponentIdentity componentIdentity) where T : class;

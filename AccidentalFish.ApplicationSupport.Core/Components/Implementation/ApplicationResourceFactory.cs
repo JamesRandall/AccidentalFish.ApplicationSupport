@@ -80,23 +80,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queuename);
         }
 
-        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
-        {
-            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
-
-            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
-            string defaultQueueName = _applicationResourceSettingProvider.DefaultBrokeredMessageQueueName(componentIdentity);
-            return _queueFactory.CreateAsynchronousBrokeredMessageQueue<T>(serviceBusConnectionString, defaultQueueName);
-        }
-
-        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
-        {
-            if (String.IsNullOrWhiteSpace(queuename)) throw new ArgumentNullException("queuename");
-            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
-
-            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
-            return _queueFactory.CreateAsynchronousBrokeredMessageQueue<T>(serviceBusConnectionString, queuename);
-        }
+        
 
         public IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
@@ -113,24 +97,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _queueFactory.CreateQueue<T>(storageAccountConnectionString, queuename);
-        }
-
-        public IQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
-        {
-            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
-
-            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
-            string defaultQueueName = _applicationResourceSettingProvider.DefaultBrokeredMessageQueueName(componentIdentity);
-            return _queueFactory.CreateBrokeredMessageQueue<T>(serviceBusConnectionString, defaultQueueName);
-        }
-
-        public IQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
-        {
-            if (String.IsNullOrWhiteSpace(queuename)) throw new ArgumentNullException("queuename");
-            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
-
-            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
-            return _queueFactory.CreateBrokeredMessageQueue<T>(serviceBusConnectionString, queuename);
         }
 
         public IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class

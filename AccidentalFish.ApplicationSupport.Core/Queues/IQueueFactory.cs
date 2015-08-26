@@ -4,12 +4,8 @@
     {
         IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string queueName) where T : class;
         IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string storageAccountConnectionString, string queueName) where T : class;
-        IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string queueName) where T : class;
-        IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string storageAccountConnectionString, string queueName) where T : class;
         IQueue<T> CreateQueue<T>(string queueName) where T : class;
         IQueue<T> CreateQueue<T>(string storageAccountConnectionString, string queueName) where T : class;
-        IQueue<T> CreateBrokeredMessageQueue<T>(string queueName) where T : class;
-        IQueue<T> CreateBrokeredMessageQueue<T>(string storageAccountConnectionString, string queueName) where T : class;
         IAsynchronousTopic<T> CreateAsynchronousTopic<T>(string topicName) where T : class;
         IAsynchronousTopic<T> CreateAsynchronousTopic<T>(string storageAccountConnectionString, string topicName) where T : class;
         IAsynchronousSubscription<T> CreateAsynchronousSubscriptionWithConfiguration<T>(string topicName) where T : class;

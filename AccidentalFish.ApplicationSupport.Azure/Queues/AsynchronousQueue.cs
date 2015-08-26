@@ -71,6 +71,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             await _queue.UpdateMessageAsync(queueItemImpl.CloudQueueMessage, visibilityTimeout, MessageUpdateFields.Visibility);
         }
 
-        
+        public async Task ExtendLeaseAsync(IQueueItem<T> queueItem)
+        {
+            CloudQueueItem<T> queueItemImpl = queueItem as CloudQueueItem<T>;
+            if (queueItemImpl == null)
+            {
+                throw new InvalidOperationException("Cannot mix Azure and non-Azure queue items when extending a lease");
+            }
+            await _queue.UpdateMessageAsync(queueItemImpl.CloudQueueMessage, TimeSpan.FromSeconds(30), MessageUpdateFields.Visibility);
+        }
     }
 }

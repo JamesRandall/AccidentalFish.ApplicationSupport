@@ -67,7 +67,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             }
         }
 
-        public async Task ExtendLeaseAsync(IQueueItem<T> queueItem, TimeSpan visibilityTimeout)
+        public Task ExtendLeaseAsync(IQueueItem<T> queueItem, TimeSpan visibilityTimeout)
+        {
+            throw new NotSupportedException("Service Bus queues do not support specified visibility timeout extensions on lease extension. They extend by the default visibility in the queue definition. Please use the overloaded ExtendLeaseAsync method");
+        }
+
+        public async Task ExtendLeaseAsync(IQueueItem<T> queueItem)
         {
             BrokeredMessageQueueItem<T> brokeredMessageQueueItem = queueItem as BrokeredMessageQueueItem<T>;
             if (brokeredMessageQueueItem != null)

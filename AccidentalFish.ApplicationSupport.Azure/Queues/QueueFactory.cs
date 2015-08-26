@@ -12,8 +12,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         public QueueFactory(IConfiguration configuration,
             IQueueSerializer queueSerializer)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (queueSerializer == null) throw new ArgumentNullException("queueSerializer");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (queueSerializer == null) throw new ArgumentNullException(nameof(queueSerializer));
             _configuration = configuration;
             _queueSerializer = queueSerializer;
         }
@@ -26,16 +26,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string storageAccountConnectionString, string queueName) where T : class
         {
             return new AsynchronousQueue<T>(_queueSerializer, storageAccountConnectionString, queueName);
-        }
-
-        public IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string queueName) where T : class
-        {
-            return new AsynchronousBrokeredMessageQueue<T>(_queueSerializer, _configuration.ServiceBusConnectionString, queueName);
-        }
-
-        public IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string serviceBusConnectionString, string queueName) where T : class
-        {
-            return new AsynchronousBrokeredMessageQueue<T>(_queueSerializer, serviceBusConnectionString, queueName);
         }
 
         public IQueue<T> CreateQueue<T>(string queueName) where T : class

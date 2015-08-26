@@ -1,5 +1,4 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Policies;
 
 namespace AccidentalFish.ApplicationSupport.Core.Repository
 {
@@ -7,9 +6,5 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository
     {
         IRepository<T> GetRepository<T>() where T : class;
         void Save();
-        void Execute(Action action);
-        T2 Execute<T2>(Func<T2> action);
-        bool SuspendExecutionPolicy { get; set; }
-
     }
 }

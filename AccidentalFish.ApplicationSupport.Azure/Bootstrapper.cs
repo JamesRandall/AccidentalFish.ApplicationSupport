@@ -60,6 +60,7 @@ namespace AccidentalFish.ApplicationSupport.Azure
             dependencyResolver.Register<IBlobRepositoryFactory, BlobRepositoryFactory>();
             dependencyResolver.Register<ITableStorageRepositoryFactory, TableStorageRepositoryFactory>();
             dependencyResolver.Register<ITableStorageConcurrencyManager, TableStorageConcurrencyManager>();
+            dependencyResolver.Register<IAzureQueueFactory, AzureQueueFactory>();
 
             // alerts
             if (registerEmailAlertSender)

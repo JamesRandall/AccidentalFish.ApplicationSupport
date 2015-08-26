@@ -16,9 +16,9 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
         public EntityFrameworkUnitOfWorkAsync(IConfiguration configuration, IDbContextFactory dbContextFactory, IDbConfiguration dbConfiguration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (dbContextFactory == null) throw new ArgumentNullException("dbContextFactory");
-            if (dbConfiguration == null) throw new ArgumentNullException("dbConfiguration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (dbContextFactory == null) throw new ArgumentNullException(nameof(dbContextFactory));
+            if (dbConfiguration == null) throw new ArgumentNullException(nameof(dbConfiguration));
 
 
             _context = dbContextFactory.CreateContext(configuration.SqlConnectionString);
@@ -27,9 +27,9 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
         public EntityFrameworkUnitOfWorkAsync(Type contextType, string connectionString, IDbConfiguration dbConfiguration)
         {
-            if (contextType == null) throw new ArgumentNullException("contextType");
-            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException("connectionString");
-            if (dbConfiguration == null) throw new ArgumentNullException("dbConfiguration");
+            if (contextType == null) throw new ArgumentNullException(nameof(contextType));
+            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+            if (dbConfiguration == null) throw new ArgumentNullException(nameof(dbConfiguration));
 
             _context = (DbContext) Activator.CreateInstance(contextType, connectionString);
             _dbConfiguration = dbConfiguration;
@@ -67,12 +67,12 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             return _dbConfiguration.ExecutionStrategy.ExecuteAsync(func, token);
         }
 
-        public Task<bool> OptimisticRepositoryWinsUpdate(Action update)
+        public Task<bool> OptimisticRepositoryWinsUpdateAsync(Action update)
         {
-            return OptimisticRepositoryWinsUpdate(update, int.MaxValue);
+            return OptimisticRepositoryWinsUpdateAsync(update, int.MaxValue);
         }
 
-        public async Task<bool> OptimisticRepositoryWinsUpdate(Action update, int maxRetries)
+        public async Task<bool> OptimisticRepositoryWinsUpdateAsync(Action update, int maxRetries)
         {
             bool saveFailed;
             int retries = 0;

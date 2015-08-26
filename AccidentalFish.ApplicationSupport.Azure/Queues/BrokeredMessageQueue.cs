@@ -97,6 +97,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 
         public void ExtendLease(IQueueItem<T> queueItem, TimeSpan visibilityTimeout)
         {
+            throw new NotSupportedException("Service Bus queues do not support specified visibility timeout extensions on lease extension. They extend by the default visibility in the queue definition. Please use the overloaded ExtendLease method");
+        }
+
+        public void ExtendLease(IQueueItem<T> queueItem)
+        {
             BrokeredMessageQueueItem<T> brokeredMessageQueueItem = queueItem as BrokeredMessageQueueItem<T>;
             if (brokeredMessageQueueItem != null)
             {
