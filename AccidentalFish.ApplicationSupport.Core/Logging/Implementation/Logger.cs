@@ -81,16 +81,19 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         public async Task Log(LogLevelEnum level, string message, Exception exception)
         {
             LogQueueItem item = CreateLogQueueItem(level, message, exception);
-            _loggerExtension.Logger(item, exception, level >= _minimumLoggingLevel);
-            if (level >= _minimumLoggingLevel)
+            bool willLog = level >= _minimumLoggingLevel;
+            if (_loggerExtension.BeforeLog(item, exception, willLog))
             {
-                try
+                if (willLog)
                 {
-                    await _queue.EnqueueAsync(item);
-                }
-                catch (Exception)
-                {
-                    Trace.TraceError("Unable to enqueue log queue item");
+                    try
+                    {
+                        await _queue.EnqueueAsync(item);
+                    }
+                    catch (Exception)
+                    {
+                        Trace.TraceError("Unable to enqueue log queue item");
+                    }
                 }
             }
         }
