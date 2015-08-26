@@ -40,8 +40,8 @@ namespace UnitOfWorkAndRepository
         {
             using (IUnitOfWorkAsync unitOfWork = _unitOfWorkFactory.CreateAsync())
             {
-                IRepositoryAsync<Book> bookRepository = await unitOfWork.GetRepositoryAsync<Book>();
-                IRepositoryAsync<Author> authorRepository = await unitOfWork.GetRepositoryAsync<Author>();
+                IRepositoryAsync<Book> bookRepository = unitOfWork.GetRepository<Book>();
+                IRepositoryAsync<Author> authorRepository = unitOfWork.GetRepository<Author>();
 
                 Author douglasAdams = new Author
                 {
@@ -86,7 +86,7 @@ namespace UnitOfWorkAndRepository
         {
             using (IUnitOfWorkAsync unitOfWork = _unitOfWorkFactory.CreateAsync())
             {
-                IRepositoryAsync<Author> authorRepository = await unitOfWork.GetRepositoryAsync<Author>();
+                IRepositoryAsync<Author> authorRepository = unitOfWork.GetRepository<Author>();
                 Author author = await authorRepository
                     .AllIncluding(x => x.Books)
                     .SingleAsync(x => x.Name == "Douglas Adams");

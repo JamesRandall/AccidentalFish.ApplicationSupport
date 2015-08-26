@@ -12,14 +12,11 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
         public EntityFrameworkRepository(DbContext context)
         {
-            if (context == null) throw new ArgumentNullException("context");
+            if (context == null) throw new ArgumentNullException(nameof(context));
             _context = context;
         }
 
-        public IQueryable<T> All
-        {
-            get { return _context.Set<T>(); }
-        }
+        public IQueryable<T> All => _context.Set<T>();
 
         public IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties)
         {

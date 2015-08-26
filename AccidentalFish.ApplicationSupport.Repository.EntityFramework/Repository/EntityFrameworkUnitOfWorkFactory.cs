@@ -15,9 +15,9 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
         public EntityFrameworkUnitOfWorkFactory(IConfiguration configuration, IDbContextFactory contextFactory, IDbConfiguration dbConfiguration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (contextFactory == null) throw new ArgumentNullException("contextFactory");
-            if (dbConfiguration == null) throw new ArgumentNullException("dbConfiguration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            if (dbConfiguration == null) throw new ArgumentNullException(nameof(dbConfiguration));
 
             _configuration = configuration;
             _contextFactory = contextFactory;
@@ -30,9 +30,9 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             string connectionString,
             IDbConfiguration dbConfiguration)
         {
-            if (String.IsNullOrWhiteSpace(contextType)) throw new ArgumentNullException("contextType");
-            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException("connectionString");
-            if (dbConfiguration == null) throw new ArgumentNullException("dbConfiguration");
+            if (String.IsNullOrWhiteSpace(contextType)) throw new ArgumentNullException(nameof(contextType));
+            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+            if (dbConfiguration == null) throw new ArgumentNullException(nameof(dbConfiguration));
 
 
             _contextType = Type.GetType(contextType);
@@ -41,7 +41,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
             if (_contextType == null)
             {
-                throw new InvalidOperationException(String.Format("Unable to locate context type {0}", _contextType));
+                throw new InvalidOperationException($"Unable to locate context type {_contextType}");
             }
         }
 

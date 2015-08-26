@@ -5,12 +5,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies.
 {
     internal class NullDatabaseConfiguration : DbConfiguration, IDbConfiguration
     {
-        public NullDatabaseConfiguration()
-        {
-            
-        }
-
-        public IDbExecutionStrategy ExecutionStrategy { get { return new DefaultExecutionStrategy();} }
+        public IDbExecutionStrategy ExecutionStrategy => new DefaultExecutionStrategy();
         public bool SuspendExecutionStrategy { get; set; }
     }
 }

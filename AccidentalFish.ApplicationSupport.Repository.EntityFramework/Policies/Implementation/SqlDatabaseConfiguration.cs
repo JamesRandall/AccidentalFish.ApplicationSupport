@@ -12,7 +12,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies.
             SetExecutionStrategy(SqlProviderServices.ProviderInvariantName, () => new SqlAzureExecutionStrategy());
         }
 
-        public IDbExecutionStrategy ExecutionStrategy { get{ return new SqlAzureExecutionStrategy();}}
+        public IDbExecutionStrategy ExecutionStrategy => new SqlAzureExecutionStrategy();
 
         public bool SuspendExecutionStrategy
         {
