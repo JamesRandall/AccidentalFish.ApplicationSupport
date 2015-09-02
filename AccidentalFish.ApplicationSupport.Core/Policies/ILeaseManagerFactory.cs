@@ -1,6 +1,4 @@
-﻿using AccidentalFish.ApplicationSupport.Core.NoSql;
-
-namespace AccidentalFish.ApplicationSupport.Core.Policies
+﻿namespace AccidentalFish.ApplicationSupport.Core.Policies
 {
     public interface ILeaseManagerFactory
     {

@@ -25,7 +25,7 @@ namespace AccidentalFish.ApplicationSupport.Email.Amazon
             _secretKey = configuration["amazon-secret-key"];
         }
 
-        public Task<string> Send(IEnumerable<string> to, IEnumerable<string> cc, string from, string title, string htmlBody, string textBody)
+        public Task<string> SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string from, string title, string htmlBody, string textBody)
         {
             AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(_accessKey, _secretKey);
             Destination destination = new Destination();

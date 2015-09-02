@@ -8,6 +8,12 @@ using AccidentalFish.ApplicationSupport.Core.Queues;
 
 namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
 {
+    /// <summary>
+    /// Base hostable component for processing items on a subscription falling away into a backoff pattern when no queue items are available.
+    /// To implement basic subscription processing simply inherit from this class and override HandleRecievedItem supplying a back off policy
+    /// and the subscription to the constructor.
+    /// </summary>
+    /// <typeparam name="T">The type of the queue item</typeparam>
     public abstract class BackoffSubscriptionProcessor<T> : IHostableComponent where T : class
     {
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
@@ -21,6 +27,11 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             public bool DidWork { get; set; }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="backoffPolicy">The back off policy to use.</param>
+        /// <param name="subscription">The subscription to be processed</param>
         protected BackoffSubscriptionProcessor(
             IAsynchronousBackoffPolicy backoffPolicy,
             IAsynchronousSubscription<T> subscription) : this(backoffPolicy, subscription, null)
@@ -28,6 +39,12 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="backoffPolicy">The back off policy to use.</param>
+        /// <param name="subscription">The suubscription to be processed</param>
+        /// <param name="logger">The logger to use for reporting issues</param>
         protected BackoffSubscriptionProcessor(
             IAsynchronousBackoffPolicy backoffPolicy,
             IAsynchronousSubscription<T> subscription,
@@ -38,15 +55,29 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             _logger = logger;
         }
 
-        protected ILogger Logger { get { return _logger; } }
+        /// <summary>
+        /// The logger the processor is configured with, may be null
+        /// </summary>
+        protected ILogger Logger => _logger;
 
-        protected IAsynchronousSubscription<T> Subscription { get {  return _subscription; } } 
+        /// <summary>
+        /// The subscription the processor is configured with
+        /// </summary>
+        protected IAsynchronousSubscription<T> Subscription => _subscription;
 
-        protected abstract Task<bool> HandleRecievedItem(T item);
+        /// <summary>
+        /// Override to process a subscription item. 
+        /// </summary>
+        /// <param name="item">The subscription item to process</param>
+        /// <returns>Return true to remove the item from the queue, false to return it to the queue.</returns>
+        protected abstract Task<bool> HandleRecievedItemAsync(T item);
 
+        /// <summary>
+        /// The component identity - required by the component host
+        /// </summary>
         public abstract IComponentIdentity ComponentIdentity { get; }
 
-        public async Task Start(CancellationToken token)
+        public async Task StartAsync(CancellationToken token)
         {
             await _backoffPolicy.Execute(AttemptDequeue, token);
         }
@@ -56,7 +87,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             try
             {
                 bool didWork = true;
-                await _subscription.Recieve(async (item) =>
+                await _subscription.Recieve(async item =>
                 {
                     ProcessResult result = await ProcessItem(item);
                     didWork = result.DidWork;
@@ -85,7 +116,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             ProcessResult result = new ProcessResult
             {
                 Complete = true,
-                DidWork = await  HandleRecievedItem((message))
+                DidWork = await  HandleRecievedItemAsync((message))
             };
 
             return result;
@@ -93,10 +124,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
 
         private void LogError(string message, Exception ex)
         {
-            if (_logger != null)
-            {
-                _logger.Error(message, ex).Wait();
-            }
+            _logger?.Error(message, ex).Wait();
         }
     }
 }

@@ -49,7 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             _logger = loggerFactory.CreateLongLivedLogger(emailComponentIdentity);
         }
 
-        protected override async Task<bool> HandleRecievedItem(IQueueItem<EmailQueueItem> queueItem)
+        protected override async Task<bool> HandleRecievedItemAsync(IQueueItem<EmailQueueItem> queueItem)
         {
             EmailQueueItem item = queueItem.Item;
             bool success;
@@ -59,11 +59,11 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                 {
                     XDocument template = await GetTemplate(item.EmailTemplateId);
                     EmailContent content = ProcessTemplate(template, item.MergeData);
-                    await _emailProvider.Send(item.To, item.Cc, item.From, content.Title, content.HtmlBody, content.TextBody);
+                    await _emailProvider.SendAsync(item.To, item.Cc, item.From, content.Title, content.HtmlBody, content.TextBody);
                 }
                 else
                 {
-                    await _emailProvider.Send(item.To, item.Cc, item.From, item.Subject, item.HtmlBody, item.TextBody);
+                    await _emailProvider.SendAsync(item.To, item.Cc, item.From, item.Subject, item.HtmlBody, item.TextBody);
                 }
                 
                 success = true;

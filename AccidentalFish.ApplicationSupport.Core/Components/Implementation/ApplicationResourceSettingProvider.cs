@@ -1,5 +1,4 @@
-﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Configuration;
+﻿using AccidentalFish.ApplicationSupport.Core.Configuration;
 
 namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 {

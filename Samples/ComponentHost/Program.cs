@@ -57,7 +57,7 @@ namespace ComponentHost
             get { return  new ComponentIdentity(FullyQualifiedName);}
         }
 
-        public Task Start(CancellationToken token)
+        public Task StartAsync(CancellationToken token)
         {
             Thread.Sleep(TimeSpan.FromSeconds(1));
             throw new Exception("Simulating an error");

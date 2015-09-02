@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
-using AccidentalFish.ApplicationSupport.Core.NoSql;
+using AccidentalFish.ApplicationSupport.Core.Policies;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace AccidentalFish.ApplicationSupport.Azure.NoSql
+namespace AccidentalFish.ApplicationSupport.Azure.Policies
 {
     internal class LeaseManager<T> : ILeaseManager<T>
     {
@@ -78,7 +78,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
 
         private static string GetLeaseName(T key)
         {
-            string leaseName = String.Format("{0}.lck", key);
+            string leaseName = $"{key}.lck";
             return leaseName;
         }
     }

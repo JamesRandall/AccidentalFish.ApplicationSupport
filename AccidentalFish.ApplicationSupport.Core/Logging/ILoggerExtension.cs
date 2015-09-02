@@ -3,6 +3,9 @@ using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging
 {
+    /// <summary>
+    /// Allows the injection of functionality into the queue logger (and any other loggers that accept an ILoggerExtension in their constructor)
+    /// </summary>
     public interface ILoggerExtension
     {
         /// <summary>

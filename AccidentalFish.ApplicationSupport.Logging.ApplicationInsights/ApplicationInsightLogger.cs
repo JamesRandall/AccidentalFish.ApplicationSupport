@@ -24,12 +24,12 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
             _minimumLogLevel = minimumLogLevel;
         }
 
-        public async Task Debug(string message)
+        public async Task DebugAsync(string message)
         {
             await Log(LogLevelEnum.Debug, message);
         }
 
-        public async Task Debug(string message, Exception exception)
+        public async Task DebugAsync(string message, Exception exception)
         {
             await Log(LogLevelEnum.Debug, message, exception);
         }

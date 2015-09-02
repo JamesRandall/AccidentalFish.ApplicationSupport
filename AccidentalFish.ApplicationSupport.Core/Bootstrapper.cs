@@ -65,11 +65,12 @@ namespace AccidentalFish.ApplicationSupport.Core
             }
             else
             {
-                container.Register<ILoggerFactory, LoggerFactory>();
+                container.Register<ILoggerFactory, QueueLoggerFactory>();
             }
 
             container.Register<IComponentHost, ComponentHost>();
-            container.Register<IEmailManager, EmailManager>();
+            container.Register<IEmailManager, EmailQueueDispatcher>();
+            container.Register<IEmailQueueDispatcher, EmailQueueDispatcher>();
             container.Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>();
             container.Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>();
             container.RegisterInstance<IConfiguration>(new DefaultConfiguration());

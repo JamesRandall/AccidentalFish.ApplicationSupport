@@ -17,6 +17,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         /// </summary>
         /// <param name="token"></param>
         /// <returns>The task the component is running in</returns>
-        Task Start(CancellationToken token);
+        Task StartAsync(CancellationToken token);
     }
 }

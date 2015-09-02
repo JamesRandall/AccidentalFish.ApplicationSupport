@@ -1,16 +1,64 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Email
 {
-    public interface IEmailManager
+    /// <summary>
+    /// Email manager
+    /// </summary>
+    public interface IEmailQueueDispatcher
     {
-        Task Send(string to, string cc, string from, string emailTemplateId, Dictionary<string, string> mergeValues);
+        /// <summary>
+        /// Send an email using a template
+        /// </summary>
+        /// <param name="to">The to address</param>
+        /// <param name="cc">The cc address</param>
+        /// <param name="from">The from address</param>
+        /// <param name="emailTemplateId">The ID of the template (the email queue processor needs access to this)</param>
+        /// <param name="mergeValues">Merge data</param>
+        /// <returns>Awaitable task</returns>
+        Task SendAsync(string to, string cc, string from, string emailTemplateId, Dictionary<string, string> mergeValues);
 
-        Task Send(IEnumerable<string> to, IEnumerable<string> cc, string from, string emailTemplateId, Dictionary<string, string> mergeValues);
+        /// <summary>
+        /// Send an email using a template
+        /// </summary>
+        /// <param name="to">The to addresses</param>
+        /// <param name="cc">The cc addresses</param>
+        /// <param name="from">The from address</param>
+        /// <param name="emailTemplateId">The ID of the template (the email queue processor needs access to this)</param>
+        /// <param name="mergeValues">Merge data</param>
+        /// <returns>Awaitable task</returns>
+        Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string from, string emailTemplateId, Dictionary<string, string> mergeValues);
 
-        Task Send(string to, string cc, string from, string subject, string htmlBody, string textBody);
+        /// <summary>
+        /// Send an email using
+        /// </summary>
+        /// <param name="to">The to address</param>
+        /// <param name="cc">The cc address</param>
+        /// <param name="from">The from address</param>
+        /// <param name="subject">The subject for the email</param>
+        /// <param name="htmlBody">The HTML formatted body</param>
+        /// <param name="textBody">The text formatted body</param>
+        /// <returns>Awaitable task</returns>
+        Task SendAsync(string to, string cc, string from, string subject, string htmlBody, string textBody);
 
-        Task Send(IEnumerable<string> to, IEnumerable<string> cc, string from, string subject, string htmlBody, string textBody);
+        /// <summary>
+        /// Send an email using
+        /// </summary>
+        /// <param name="to">The to addresses</param>
+        /// <param name="cc">The cc addresses</param>
+        /// <param name="from">The from address</param>
+        /// <param name="subject">The subject for the email</param>
+        /// <param name="htmlBody">The HTML formatted body</param>
+        /// <param name="textBody">The text formatted body</param>
+        /// <returns>Awaitable task</returns>
+        Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string from, string subject, string htmlBody, string textBody);
+    }
+
+    [Obsolete]
+    public interface IEmailManager : IEmailQueueDispatcher
+    {
+        
     }
 }

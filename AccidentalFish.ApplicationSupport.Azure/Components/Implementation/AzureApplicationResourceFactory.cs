@@ -3,7 +3,7 @@ using AccidentalFish.ApplicationSupport.Azure.Queues;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.NoSql;
+using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -83,6 +83,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
         public IAsynchronousSubscription<T> GetAsyncSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetAsyncSubscription<T>(subscriptionName, componentIdentity);
+        }
+
+        public IAsynchronousSubscription<T> GetAsyncSubscription<T>(string subscriptionName, string topicName,
+            IComponentIdentity componentIdentity) where T : class
+        {
+            return _applicationResourceFactory.GetAsyncSubscription<T>(subscriptionName, topicName, componentIdentity);
         }
 
         public IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(IComponentIdentity componentIdentity)

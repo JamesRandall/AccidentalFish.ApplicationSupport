@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace AccidentalFish.ApplicationSupport.Core.NoSql
+namespace AccidentalFish.ApplicationSupport.Core.Policies
 {
     public interface ILeaseManager<in T>
     {

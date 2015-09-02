@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Queues;
@@ -9,22 +6,22 @@ using AccidentalFish.ApplicationSupport.Core.Queues;
 namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 {
     [ComponentIdentity(FullyQualifiedName)]
-    internal class EmailManager : AbstractApplicationComponent, IEmailManager
+    internal class EmailQueueDispatcher : AbstractApplicationComponent, IEmailManager
     {
         public const string FullyQualifiedName = "com.accidental-fish.email";
         private readonly IAsynchronousQueue<EmailQueueItem> _queue; 
 
-        public EmailManager(IApplicationResourceFactory applicationResourceFactory)
+        public EmailQueueDispatcher(IApplicationResourceFactory applicationResourceFactory)
         {
             _queue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(ComponentIdentity);
         }
 
-        public Task Send(string to, string cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues)
+        public Task SendAsync(string to, string cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues)
         {
-            return Send(new[] {to}, new[] {cc}, @from, emailTemplateId, mergeValues);
+            return SendAsync(new[] {to}, new[] {cc}, @from, emailTemplateId, mergeValues);
         }
 
-        public async Task Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues)
+        public async Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues)
         {
             EmailQueueItem item = new EmailQueueItem
             {
@@ -38,12 +35,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
             await _queue.EnqueueAsync(item);
         }
 
-        public Task Send(string to, string cc, string @from, string subject, string htmlBody, string textBody)
+        public Task SendAsync(string to, string cc, string @from, string subject, string htmlBody, string textBody)
         {
-            return Send(new[] { to }, new[] { cc }, @from, subject, htmlBody, textBody);
+            return SendAsync(new[] { to }, new[] { cc }, @from, subject, htmlBody, textBody);
         }
 
-        public async Task Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string subject, string htmlBody, string textBody)
+        public async Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string @from, string subject, string htmlBody, string textBody)
         {
             EmailQueueItem item = new EmailQueueItem
             {
