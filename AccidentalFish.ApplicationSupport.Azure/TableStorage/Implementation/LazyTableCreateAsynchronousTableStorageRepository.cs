@@ -22,7 +22,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         private Task Create()
         {
             IResourceCreator resourceCreator = _repository.GetResourceCreator();
-            return resourceCreator.CreateIfNotExists();
+            return resourceCreator.CreateIfNotExistsAsync();
         }
 
 

@@ -20,7 +20,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Policies
             _container = client.GetContainerReference(leaseBlockName);
         }
 
-        public async Task<bool> CreateLeaseObjectIfNotExist(T key)
+        public async Task<bool> CreateLeaseObjectIfNotExistAsync(T key)
         {
             string leaseName = GetLeaseName(key);
             CloudBlockBlob blob = _container.GetBlockBlobReference(leaseName);
@@ -32,12 +32,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Policies
             return false;
         }
 
-        public async Task<string> Lease(T key)
+        public async Task<string> LeaseAsync(T key)
         {
-            return await Lease(key, TimeSpan.FromSeconds(30));
+            return await LeaseAsync(key, TimeSpan.FromSeconds(30));
         }
 
-        public async Task<string> Lease(T key, TimeSpan leaseTime)
+        public async Task<string> LeaseAsync(T key, TimeSpan leaseTime)
         {
             string leaseName = GetLeaseName(key);
             CloudBlockBlob blob = _container.GetBlockBlobReference(leaseName);
@@ -57,7 +57,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Policies
             
         }
 
-        public async Task Release(T key, string leaseId)
+        public async Task ReleaseAsync(T key, string leaseId)
         {
             string leaseName = GetLeaseName(key);
             CloudBlockBlob blob = _container.GetBlockBlobReference(leaseName);
@@ -67,7 +67,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Policies
             });
         }
 
-        public async Task Renew(T key, string leaseId)
+        public async Task RenewAsync(T key, string leaseId)
         {
             CloudBlockBlob blob = _container.GetBlockBlobReference(GetLeaseName(key));
             await blob.RenewLeaseAsync(new AccessCondition

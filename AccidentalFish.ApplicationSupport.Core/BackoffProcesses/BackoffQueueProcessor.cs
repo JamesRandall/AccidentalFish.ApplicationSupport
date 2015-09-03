@@ -84,7 +84,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         /// <returns>An awaitable task</returns>
         public async Task StartAsync(CancellationToken token)
         {
-            await _backoffPolicy.Execute(AttemptDequeueAsync, token);
+            await _backoffPolicy.ExecuteAsync(AttemptDequeueAsync, token);
         }
 
         private async Task<bool> AttemptDequeueAsync()

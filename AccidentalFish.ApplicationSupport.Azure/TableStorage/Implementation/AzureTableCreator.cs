@@ -13,7 +13,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
             _table = table;
         }
 
-        public Task CreateIfNotExists()
+        public Task CreateIfNotExistsAsync()
         {
             return _table.CreateIfNotExistsAsync();
         }

@@ -5,7 +5,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues
     /// <summary>
     /// Basic queue interface. This non-async version is likely to be deprecated.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Type of the queue item</typeparam>
     public interface IQueue<T> where T : class
     {
         /// <summary>

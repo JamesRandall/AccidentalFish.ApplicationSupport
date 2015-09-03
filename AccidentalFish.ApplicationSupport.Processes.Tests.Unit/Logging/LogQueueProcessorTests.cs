@@ -48,7 +48,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
             await processor.StartAsync(source.Token);
 
             // Assert
-            _asynchronousBackoffPolicy.Verify(x => x.Execute(It.IsAny<Func<Task<bool>>>(), source.Token));
+            _asynchronousBackoffPolicy.Verify(x => x.ExecuteAsync(It.IsAny<Func<Task<bool>>>(), source.Token));
         }
 
         public void NullQueueItemReturnsFalseToBackoff()

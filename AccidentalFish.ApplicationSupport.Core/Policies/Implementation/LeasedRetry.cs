@@ -5,32 +5,32 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
 {
     internal class LeasedRetry : ILeasedRetry
     {
-        public Task<bool> Retry<T>(ILeaseManager<T> leaseManager, T key, Func<Task> func)
+        public Task<bool> RetryAsync<T>(ILeaseManager<T> leaseManager, T key, Func<Task> func)
         {
-            return Retry(leaseManager, key, TimeSpan.FromSeconds(30), 10, false, func);
+            return RetryAsync(leaseManager, key, TimeSpan.FromSeconds(30), 10, false, func);
         }
 
-        public Task<bool> Retry<T>(ILeaseManager<T> leaseManager, T key, TimeSpan leaseDuration, Func<Task> func)
+        public Task<bool> RetryAsync<T>(ILeaseManager<T> leaseManager, T key, TimeSpan leaseDuration, Func<Task> func)
         {
-            return Retry(leaseManager, key, leaseDuration, 30, false, func);
+            return RetryAsync(leaseManager, key, leaseDuration, 30, false, func);
         }
 
-        public Task<bool> Retry<T>(ILeaseManager<T> leaseManager, T key, bool createLazyLeaseObject, Func<Task> func)
+        public Task<bool> RetryAsync<T>(ILeaseManager<T> leaseManager, T key, bool createLazyLeaseObject, Func<Task> func)
         {
-            return Retry(leaseManager, key, TimeSpan.FromSeconds(30), 10, createLazyLeaseObject, func);
+            return RetryAsync(leaseManager, key, TimeSpan.FromSeconds(30), 10, createLazyLeaseObject, func);
         }
 
-        public Task<bool> Retry<T>(ILeaseManager<T> leaseManager, T key, TimeSpan leaseDuration, int maxRetries, Func<Task> func)
+        public Task<bool> RetryAsync<T>(ILeaseManager<T> leaseManager, T key, TimeSpan leaseDuration, int maxRetries, Func<Task> func)
         {
-            return Retry(leaseManager, key, leaseDuration, maxRetries, false, func);
+            return RetryAsync(leaseManager, key, leaseDuration, maxRetries, false, func);
         }
 
-        public Task<bool> Retry<T>(ILeaseManager<T> leaseManager, T key, TimeSpan leaseDuration, bool createLazyLeaseObject, Func<Task> func)
+        public Task<bool> RetryAsync<T>(ILeaseManager<T> leaseManager, T key, TimeSpan leaseDuration, bool createLazyLeaseObject, Func<Task> func)
         {
-            return Retry(leaseManager, key, leaseDuration, 10, createLazyLeaseObject, func);
+            return RetryAsync(leaseManager, key, leaseDuration, 10, createLazyLeaseObject, func);
         }
 
-        public async Task<bool> Retry<T>(ILeaseManager<T> leaseManager, T key, TimeSpan leaseDuration, int maxRetries,
+        public async Task<bool> RetryAsync<T>(ILeaseManager<T> leaseManager, T key, TimeSpan leaseDuration, int maxRetries,
             bool createLazyLeaseObject, Func<Task> func)
         {
             TimeSpan retryDelay = TimeSpan.FromSeconds(leaseDuration.TotalSeconds / maxRetries);
@@ -41,7 +41,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
             {
                 try
                 {
-                    leaseId = await leaseManager.Lease(key, leaseDuration);
+                    leaseId = await leaseManager.LeaseAsync(key, leaseDuration);
                 }
                 catch (Exception)
                 {
@@ -52,7 +52,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
                 {
                     if (retry == 0)
                     {
-                        await leaseManager.CreateLeaseObjectIfNotExist(key);
+                        await leaseManager.CreateLeaseObjectIfNotExistAsync(key);
                     }
                     retry++;
                     await Task.Delay(retryDelay);
@@ -67,7 +67,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
             }
             finally
             {
-                leaseManager.Release(key, leaseId).Wait();
+                leaseManager.ReleaseAsync(key, leaseId).Wait();
             }
 
             return true;

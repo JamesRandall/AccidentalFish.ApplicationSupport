@@ -79,7 +79,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
 
         public async Task StartAsync(CancellationToken token)
         {
-            await _backoffPolicy.Execute(AttemptDequeue, token);
+            await _backoffPolicy.ExecuteAsync(AttemptDequeue, token);
         }
 
         private async Task<bool> AttemptDequeue()
@@ -87,7 +87,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             try
             {
                 bool didWork = true;
-                await _subscription.Recieve(async item =>
+                await _subscription.RecieveAsync(async item =>
                 {
                     ProcessResult result = await ProcessItem(item);
                     didWork = result.DidWork;

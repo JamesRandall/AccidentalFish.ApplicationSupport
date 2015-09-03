@@ -25,7 +25,7 @@ namespace BackoffPolicy
             {
                 try
                 {
-                    await policy.Execute(BackoffTask, cancellationTokenSource.Token);
+                    await policy.ExecuteAsync(BackoffTask, cancellationTokenSource.Token);
                 }
                 catch (Exception ex)
                 {

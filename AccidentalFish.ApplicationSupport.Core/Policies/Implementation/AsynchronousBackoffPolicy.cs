@@ -12,12 +12,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
         private int _backoffIndex = -1;
         private CancellationToken _cancellationToken;
 
-        public async Task Execute(Func<Task<bool>> function, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(Func<Task<bool>> function, CancellationToken cancellationToken)
         {
-            await Execute(function, null, cancellationToken);
+            await ExecuteAsync(function, null, cancellationToken);
         }
 
-        public async Task Execute(Func<Task<bool>> function, Action shutdownAction, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(Func<Task<bool>> function, Action shutdownAction, CancellationToken cancellationToken)
         {
             _shutdownAction = shutdownAction;
             _cancellationToken = cancellationToken;

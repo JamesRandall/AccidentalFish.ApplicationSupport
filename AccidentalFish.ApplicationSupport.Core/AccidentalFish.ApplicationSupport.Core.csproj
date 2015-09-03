@@ -88,7 +88,7 @@
     <Compile Include="Configuration\DefaultConfiguration.cs" />
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
-    <Compile Include="Email\Implementation\EmailManager.cs" />
+    <Compile Include="Email\Implementation\EmailQueueDispatcher.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Logging\ICorrelationIdProvider.cs" />
     <Compile Include="Logging\ILoggerExtension.cs" />
@@ -143,8 +143,8 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\ILoggerFactory.cs" />
     <Compile Include="Logging\ILoggerSource.cs" />
-    <Compile Include="Logging\Implementation\Logger.cs" />
-    <Compile Include="Logging\Implementation\LoggerFactory.cs" />
+    <Compile Include="Logging\Implementation\QueueLogger.cs" />
+    <Compile Include="Logging\Implementation\QueueLoggerFactory.cs" />
     <Compile Include="Logging\LoggerSource.cs" />
     <Compile Include="Logging\Model\LogQueueItem.cs" />
     <Compile Include="Mappers\AbstractMapper.cs" />
