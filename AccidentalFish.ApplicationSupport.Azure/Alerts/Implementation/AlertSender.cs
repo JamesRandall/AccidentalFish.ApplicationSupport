@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.Alerts.Model;
 using AccidentalFish.ApplicationSupport.Azure.Components;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
@@ -32,7 +33,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation
             _sourceEmailAddress = applicationResourceFactory.Setting(ComponentIdentity, "alert-from");
         }
 
-        public async void Send(string title, string message)
+        public async Task Send(string title, string message)
         {
             List<AlertSubscriber> subscribers;
             try
@@ -54,7 +55,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation
             List<string> emailAddresses = subscribers.Select(x => x.Email).ToList();
             try
             {
-                _emailProvider.Send(emailAddresses, null, _sourceEmailAddress, title, message);
+                await _emailProvider.Send(emailAddresses, null, _sourceEmailAddress, title, message, null);
             }
             catch (Exception)
             {

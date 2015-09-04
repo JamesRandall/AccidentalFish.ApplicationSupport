@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
 using AccidentalFish.ApplicationSupport.Unity;
 using Microsoft.Practices.Unity;
@@ -20,7 +17,7 @@ namespace ComponentHost
         {
             IUnityContainer container = new UnityContainer();
             UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
-            Bootstrapper.RegisterDependencies(resolver, null, Bootstrapper.LoggerTypeEnum.Console);
+            Bootstrapper.RegisterDependencies(resolver, null, Bootstrapper.LoggerTypeEnum.Console, "correlation-id");
             resolver.Register<IHostableComponent, ExampleHostableComponent>(ExampleHostableComponent.FullyQualifiedName);
 
             IComponentHost componentHost = resolver.Resolve<IComponentHost>();

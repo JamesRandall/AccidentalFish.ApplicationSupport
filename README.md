@@ -9,9 +9,7 @@ The AccidentalFish.ApplicationSupport framework is my attempt to bring solutions
 
 Different parts of the framework are at different states of maturity but moving quite quickly as since deciding to collect this code together into a consist package I'm using them in this form in two personal projects (both planned to be open source).
 
-Documentation is currently scant but that is a priority for me, the framework itself continues to evolve as I continue to learn more about Azure and as Azure itself moves forward. .
-
-I'm publishing early basically so some friends can make use of it and so that I can pull it out of my applications to manage separately, but if you have any feedback let me know. Bug fixes greatly welcomed!
+[Documentation](http://jamesrandall.github.io/AccidentalFish.ApplicationSupport/) is beginning to appear on the projects [GitHub Pages](http://jamesrandall.github.io/AccidentalFish.ApplicationSupport/) website.
 
 It's covered by the permissive MIT License so is free to use in open source and commercial applications.
 

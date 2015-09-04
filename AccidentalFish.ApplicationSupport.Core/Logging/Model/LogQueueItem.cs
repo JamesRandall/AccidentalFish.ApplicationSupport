@@ -4,6 +4,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Model
 {
     public class LogQueueItem
     {
+        public string CorrelationId { get; set; }
+
         public string Source { get; set; }
 
         public string Message { get; set; }

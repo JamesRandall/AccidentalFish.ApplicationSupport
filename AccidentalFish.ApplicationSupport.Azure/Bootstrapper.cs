@@ -25,10 +25,14 @@ namespace AccidentalFish.ApplicationSupport.Azure
     {
         public static void RegisterDependencies(IDependencyResolver dependencyResolver)
         {
-            RegisterDependencies(dependencyResolver, false, true, false);
+            RegisterDependencies(dependencyResolver, false, true, false, false);
         }
 
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver, bool forceAppConfig, bool useAzureSqlDatabaseConfiguration, bool useLegacyQueueSerializer)
+        public static void RegisterDependencies(IDependencyResolver dependencyResolver,
+            bool forceAppConfig,
+            bool useAzureSqlDatabaseConfiguration,
+            bool useLegacyQueueSerializer,
+            bool registerEmailAlertSender)
         {
             // internal
             dependencyResolver.Register<ITableStorageQueryBuilder, TableStorageQueryBuilder>();
@@ -58,7 +62,14 @@ namespace AccidentalFish.ApplicationSupport.Azure
             dependencyResolver.Register<ITableStorageConcurrencyManager, TableStorageConcurrencyManager>();
 
             // alerts
-            dependencyResolver.Register<IAlertSender, AlertSender>();
+            if (registerEmailAlertSender)
+            {
+                dependencyResolver.Register<IAlertSender, AlertSender>();
+            }
+            else
+            {
+                dependencyResolver.Register<IAlertSender, NullAlertSender>();
+            }
 
             dependencyResolver.Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>();
         }        

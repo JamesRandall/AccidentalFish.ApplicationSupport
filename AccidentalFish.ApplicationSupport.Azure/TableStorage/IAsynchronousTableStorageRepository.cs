@@ -62,11 +62,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage
         Task<IEnumerable<T>> GetAsync(string partitionKey, int take);
         Task<IEnumerable<T>> QueryAsync(string columnName, string value);
         Task<IEnumerable<T>> QueryAsync(Dictionary<string, object> columnValues);
-        Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, bool> func);
-        Task QueryFuncAsync(Dictionary<string, object> conditions, TableStorageQueryOperator op, Func<IEnumerable<T>, bool> func);
-        Task QueryFuncAsync(string column, IEnumerable<object> values , TableStorageQueryOperator op, Func<IEnumerable<T>, bool> func);
-        Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action);
-        Task AllActionAsync(Action<IEnumerable<T>> action);
+        Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, Task<bool>> func);
+        Task QueryFuncAsync(Dictionary<string, object> conditions, TableStorageQueryOperator op, Func<IEnumerable<T>, Task<bool>> func);
+        Task QueryFuncAsync(string column, IEnumerable<object> values , TableStorageQueryOperator op, Func<IEnumerable<T>, Task<bool>> func);
+        Task QueryActionAsync(string column, string value, Func<IEnumerable<T>, Task> action);
+        Task AllActionAsync(Func<IEnumerable<T>, Task> action);
 
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize);
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize, string serializedContinuationToken);

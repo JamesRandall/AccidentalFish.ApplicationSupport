@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.Components;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
@@ -27,6 +25,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
         private readonly IAsynchronousTableStorageRepository<LogTableItem> _bySeverityTable;
         private readonly IAsynchronousTableStorageRepository<LogTableItem> _byDateDescTable;
         private readonly IAsynchronousTableStorageRepository<LogTableItem> _byDateTable;
+        private readonly IAsynchronousTableStorageRepository<LogTableItem> _byCorrelationIdTable; 
 
         public LogQueueProcessor(
             IAzureApplicationResourceFactory applicationResourceFactory,
@@ -43,11 +42,32 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             string byDateDescTableName = applicationResourceFactory.Setting(componentIdentity, "logger-bydate-desc-table");
             string bySeverityTableName = applicationResourceFactory.Setting(componentIdentity, "logger-byseverity-table");
             string bySourceTableName = applicationResourceFactory.Setting(componentIdentity, "logger-bysource-table");
+            string byCorrelationIdTableName = applicationResourceFactory.Setting(componentIdentity, "logger-bycorrelationid-table");
 
-            _bySourceTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(bySourceTableName, componentIdentity);
-            _bySeverityTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(bySeverityTableName, componentIdentity);
-            _byDateTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(byDateTableName, componentIdentity);
-            _byDateDescTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(byDateDescTableName, componentIdentity);
+            if (!string.IsNullOrWhiteSpace(bySourceTableName))
+            {
+                _bySourceTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(bySourceTableName, componentIdentity);
+            }
+
+            if (!string.IsNullOrWhiteSpace(bySeverityTableName))
+            {
+                _bySeverityTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(bySeverityTableName, componentIdentity);
+            }
+
+            if (!string.IsNullOrWhiteSpace(byDateTableName))
+            {
+                _byDateTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(byDateTableName, componentIdentity);
+            }
+
+            if (!string.IsNullOrWhiteSpace(byDateDescTableName))
+            {
+                _byDateDescTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(byDateDescTableName, componentIdentity);
+            }
+
+            if (!string.IsNullOrWhiteSpace(byCorrelationIdTableName))
+            {
+                _byCorrelationIdTable = applicationResourceFactory.GetTableStorageRepository<LogTableItem>(byCorrelationIdTableName, componentIdentity);
+            }
         }
 
         protected override async Task<bool> HandleRecievedItem(IQueueItem<LogQueueItem> queueItem)
@@ -55,43 +75,51 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             LogQueueItem item = queueItem.Item;
             if (item.Level == LogLevelEnum.Error)
             {
-                _alertSender.Send(String.Format("SYSTEM ERROR: {0}", item.Source), item.Message);
+                await _alertSender.Send($"SYSTEM ERROR: {item.Source}", item.Message);
             }
 
             IMapper<LogQueueItem, LogTableItem> mapper = _mapperFactory.GetLogQueueItemLogTableItemMapper();
 
-            LogTableItem bySource = mapper.Map(item);
-            LogTableItem bySeverity = mapper.Map(item);
-            LogTableItem byDateDesc = mapper.Map(item);
-            LogTableItem byDate = mapper.Map(item);
-            bySource.SetPartitionAndRowKeyForLogBySource();
-            bySeverity.SetPartitionAndRowKeyForLogBySeverity();
-            byDateDesc.SetPartitionAndRowKeyForLogByDateDesc();
-            byDate.SetPartitionAndRowKeyForLogByDate();
-
-            Task[] tasks = new Task[4];
-            bool success = false;
-            try
+            List<Task> tasks = new List<Task>();
+            if (_bySourceTable != null)
             {
-                tasks[0] = _bySourceTable.InsertAsync(bySource);
-                tasks[1] = _bySeverityTable.InsertAsync(bySeverity);
-                tasks[2] = _byDateDescTable.InsertAsync(byDateDesc);
-                tasks[3] = _byDateTable.InsertAsync(byDate);
-
-                await Task.WhenAll(tasks);
-                success = true;
-            }
-            catch (Exception)
-            {
-                Trace.TraceError("Unable to store items in log");
+                LogTableItem bySource = mapper.Map(item);
+                bySource.SetPartitionAndRowKeyForLogBySource();
+                tasks.Add(_bySourceTable.InsertAsync(bySource));
             }
 
-            return success;
+            if (_bySeverityTable != null)
+            {
+                LogTableItem bySeverity = mapper.Map(item);
+                bySeverity.SetPartitionAndRowKeyForLogBySeverity();
+                tasks.Add(_bySeverityTable.InsertAsync(bySeverity));
+            }
+
+            if (_byDateDescTable != null)
+            {
+                LogTableItem byDateDesc = mapper.Map(item);
+                byDateDesc.SetPartitionAndRowKeyForLogByDateDesc();
+                tasks.Add(_byDateDescTable.InsertAsync(byDateDesc));
+            }
+
+            if (_byDateTable != null)
+            {
+                LogTableItem byDate = mapper.Map(item);
+                byDate.SetPartitionAndRowKeyForLogByDate();
+                tasks.Add(_byDateTable.InsertAsync(byDate));
+            }
+
+            if (_byCorrelationIdTable != null && !string.IsNullOrWhiteSpace(item.CorrelationId))
+            {
+                LogTableItem byCorrelationId = mapper.Map(item);
+                byCorrelationId.SetPartitionAndRowKeyForLogByCorrelationId();
+                tasks.Add(_byCorrelationIdTable.InsertAsync(byCorrelationId));
+            }
+            
+            await Task.WhenAll(tasks);
+            return true;
         }
 
-        public override IComponentIdentity ComponentIdentity
-        {
-            get { return new ComponentIdentity(HostableComponentNames.LogQueueProcessor); }
-        }
+        public override IComponentIdentity ComponentIdentity => new ComponentIdentity(HostableComponentNames.LogQueueProcessor);
     }
 }

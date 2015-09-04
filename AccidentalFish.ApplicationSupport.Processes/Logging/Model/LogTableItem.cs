@@ -9,28 +9,33 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging.Model
     {
         public void SetPartitionAndRowKeyForLogByDateDesc()
         {
-            PartitionKey = String.Format("{0:D4}{1:D2}{2:D2}", LoggedAt.Year, LoggedAt.Month, LoggedAt.Day);
-            RowKey = String.Format("{0:D19}{1}", DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks, Guid.NewGuid());
+            PartitionKey = $"{LoggedAt.Year:D4}{LoggedAt.Month:D2}{LoggedAt.Day:D2}";
+            RowKey = $"{DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks:D19}{Guid.NewGuid()}";
         }
 
         public void SetPartitionAndRowKeyForLogByDate()
         {
-            PartitionKey = String.Format("{0:D4}{1:D2}{2:D2}", LoggedAt.Year, LoggedAt.Month, LoggedAt.Day);
-            RowKey = String.Format("{0:D19}{1}", LoggedAt.Ticks, Guid.NewGuid());
+            PartitionKey = $"{LoggedAt.Year:D4}{LoggedAt.Month:D2}{LoggedAt.Day:D2}";
+            RowKey = $"{LoggedAt.Ticks:D19}{Guid.NewGuid()}";
         }
 
         public void SetPartitionAndRowKeyForLogBySeverity()
         {
             PartitionKey = ((int)(Enum.GetValues(typeof(LogLevelEnum)).Cast<LogLevelEnum>().Max() - Level)).ToString("D2");
-            RowKey = String.Format("{0:D19}{1}", DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks, Guid.NewGuid());
+            RowKey = $"{DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks:D19}{Guid.NewGuid()}";
         }
 
         public void SetPartitionAndRowKeyForLogBySource()
         {
             PartitionKey = Source;
-            RowKey = String.Format("{0}_{1:D19}{2}",
-                Enum.GetValues(typeof(LogLevelEnum)).Cast<LogLevelEnum>().Max() - Level,
-                DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks, Guid.NewGuid());
+            RowKey =
+                $"{Enum.GetValues(typeof (LogLevelEnum)).Cast<LogLevelEnum>().Max() - Level}_{DateTimeOffset.MaxValue.Ticks - LoggedAt.Ticks:D19}{Guid.NewGuid()}";
+        }
+
+        public void SetPartitionAndRowKeyForLogByCorrelationId()
+        {
+            PartitionKey = CorrelationId;
+            RowKey = $"{LoggedAt.Ticks:D19}{Guid.NewGuid()}";
         }
 
         public string Source { get; set; }
@@ -50,5 +55,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging.Model
         public int Level { get; set; }
 
         public DateTimeOffset LoggedAt { get; set; }
+
+        public string CorrelationId { get; set; }
     }
 }

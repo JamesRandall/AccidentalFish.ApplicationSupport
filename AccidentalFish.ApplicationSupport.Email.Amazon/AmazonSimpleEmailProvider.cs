@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Email;
@@ -24,13 +25,17 @@ namespace AccidentalFish.ApplicationSupport.Email.Amazon
             _secretKey = configuration["amazon-secret-key"];
         }
 
-        public string Send(IEnumerable<string> to, IEnumerable<string> cc, string from, string title, string body)
+        public Task<string> Send(IEnumerable<string> to, IEnumerable<string> cc, string from, string title, string htmlBody, string textBody)
         {
             AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(_accessKey, _secretKey);
             Destination destination = new Destination();
             destination.ToAddresses = to.ToList();
             Content subject = new Content(title);
-            Body bodyContent = new Body(new Content(body));
+            Body bodyContent = new Body()
+            {
+                Html = htmlBody == null ? null : new Content(htmlBody),
+                Text = textBody == null ? null : new Content(textBody)
+            };
             Message message = new Message(subject, bodyContent);
             SendEmailRequest request = new SendEmailRequest
             {
@@ -39,7 +44,7 @@ namespace AccidentalFish.ApplicationSupport.Email.Amazon
                 Message = message
             };
             SendEmailResponse response = client.SendEmail(request);
-            return response.MessageId;
+            return Task.FromResult(response.MessageId);
         }
     }
 }

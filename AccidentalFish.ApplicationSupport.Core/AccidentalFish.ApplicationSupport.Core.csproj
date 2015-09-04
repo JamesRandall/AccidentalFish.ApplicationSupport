@@ -90,9 +90,12 @@
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailManager.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Logging\ICorrelationIdProvider.cs" />
     <Compile Include="Logging\ILoggerExtension.cs" />
     <Compile Include="Logging\Implementation\ConsoleLogger.cs" />
     <Compile Include="Logging\Implementation\ConsoleLoggerFactory.cs" />
+    <Compile Include="Logging\Implementation\CallContextCorrelationIdProvider.cs" />
+    <Compile Include="Logging\Implementation\NullCorrelationIdProvider.cs" />
     <Compile Include="Logging\Implementation\NullLoggerExtension.cs" />
     <Compile Include="Mappers\AbstractBidirectionalMapper.cs" />
     <Compile Include="Mappers\IBidirectionalMapper.cs" />

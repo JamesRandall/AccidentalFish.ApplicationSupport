@@ -65,6 +65,11 @@
     <Compile Include="Repository\EntityFrameworkUnitOfWorkFactoryProvider.cs" />
     <Compile Include="Repository\IDbContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\ISqlExecuter.cs" />
+    <Compile Include="Repository\ISqlExecuterAsync.cs" />
+    <Compile Include="Repository\IUnitOfWorkExtensions.cs" />
+    <Compile Include="Repository\SqlExecuter.cs" />
+    <Compile Include="Repository\SqlExecuterAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -15,19 +15,22 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         private readonly IFullyQualifiedName _source;
         private readonly ILoggerExtension _loggerExtension;
         private readonly LogLevelEnum _minimumLoggingLevel;
+        private readonly ICorrelationIdProvider _correlationIdProvider;
 
         public Logger(
             IRuntimeEnvironment runtimeEnvironment,
             IAsynchronousQueue<LogQueueItem> queue,
             IFullyQualifiedName source,
             ILoggerExtension loggerExtension,
-            LogLevelEnum minimumLoggingLevel)
+            LogLevelEnum minimumLoggingLevel,
+            ICorrelationIdProvider correlationIdProvider)
         {
             _runtimeEnvironment = runtimeEnvironment;
             _queue = queue;
             _source = source;
             _loggerExtension = loggerExtension;
             _minimumLoggingLevel = minimumLoggingLevel;
+            _correlationIdProvider = correlationIdProvider;
         }
 
         public async Task Debug(string message)
@@ -78,7 +81,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         public async Task Log(LogLevelEnum level, string message, Exception exception)
         {
             LogQueueItem item = CreateLogQueueItem(level, message, exception);
-            _loggerExtension.Logger(item, level >= _minimumLoggingLevel);
+            _loggerExtension.Logger(item, exception, level >= _minimumLoggingLevel);
             if (level >= _minimumLoggingLevel)
             {
                 try
@@ -96,15 +99,16 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         {
             return new LogQueueItem
             {
-                ExceptionName = exception != null ? exception.GetType().FullName : null,
-                InnerExceptionName = exception != null && exception.InnerException != null ? exception.InnerException.GetType().FullName : null,
+                CorrelationId = _correlationIdProvider.CorrelationId,
+                ExceptionName = exception?.GetType().FullName,
+                InnerExceptionName = exception?.InnerException?.GetType().FullName,
                 Level = level,
                 LoggedAt = DateTimeOffset.UtcNow,
                 Message = message,
                 RoleIdentifier = _runtimeEnvironment.RoleIdentifier,
                 RoleName = _runtimeEnvironment.RoleName,
                 Source = _source.FullyQualifiedName,
-                StackTrace = exception != null ? exception.StackTrace : null
+                StackTrace = exception?.StackTrace
             };
         }
     }

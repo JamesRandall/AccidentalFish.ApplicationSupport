@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<application-configuration>
+  <!-- The system section contains your infrastructure configuration information and your deployment specifc secrets -->
+  <!-- In general these are pulled out into settings files -->
+  <infrastructure>
+    <service-bus>
+      <fqn>accidentalfish.samples.logger.servicebus</fqn>
+      <connection-string>{{service-bus-connection-string}}</connection-string>
+    </service-bus>
+    <storage-account>
+      <fqn>accidentalfish.samples.logger.storage</fqn>
+      <connection-string>{{storage-connection-string}}</connection-string>
+    </storage-account>
+  </infrastructure>
+  
+  <!-- configuration for the queue logger -->
+  <component fqn="com.accidental-fish.application-support">
+    <storage-account>accidentalfish.samples.logger.storage</storage-account>
+    <settings>
+      <logger-queue resource-type="queue">logger</logger-queue>
+    </settings>
+  </component>
+  
+  <!-- configuration for the log queue processor component -->
+  <component fqn="com.accidentalfish.log-queue-processor">
+    <storage-account>accidentalfish.samples.logger.storage</storage-account>
+    <settings>
+      <logger-queue resource-type="queue">logger</logger-queue>
+      <logger-bydate-table resource-type="table">logbydate</logger-bydate-table>
+      <logger-bydate-desc-table resource-type="table">logbydatedesc</logger-bydate-desc-table>
+      <logger-byseverity-table resource-type="table">logbyseverity</logger-byseverity-table>
+      <logger-bysource-table resource-type="table">logbysource</logger-bysource-table>
+      <logger-bycorrelationid-table resource-type="table">logbycorrelationid</logger-bycorrelationid-table>
+      <realtime-settings-table resource-type="table">realtimesettings</realtime-settings-table>
+    </settings>
+  </component>
+</application-configuration>

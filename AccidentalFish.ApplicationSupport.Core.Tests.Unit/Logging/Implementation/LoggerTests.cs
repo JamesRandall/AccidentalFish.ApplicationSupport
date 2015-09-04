@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Implementation;
@@ -21,6 +18,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
         private Mock<IFullyQualifiedName> _source;
         private Mock<IRuntimeEnvironment> _runtimeEnvironment;
         private Mock<ILoggerExtension> _extension;
+        private Mock<ICorrelationIdProvider> _correlationIdProvider;
 
         [TestInitialize]
         public void Setup()
@@ -29,111 +27,112 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
             _source = new Mock<IFullyQualifiedName>();
             _runtimeEnvironment = new Mock<IRuntimeEnvironment>();
             _extension = new Mock<ILoggerExtension>();
+            _correlationIdProvider = new Mock<ICorrelationIdProvider>();
             _source.SetupGet(x => x.FullyQualifiedName).Returns("a.name");
         }
 
         [TestMethod]
-        public void DebugLogsWhenLogLevelAtDebug()
+        public async Task DebugLogsWhenLogLevelAtDebug()
         {
             // Arrange
-            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Debug);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Debug, _correlationIdProvider.Object);
 
             // Act
-            logger.Debug("a message");
+            await logger.Debug("a message");
 
             // Assert
             _queue.Verify(x => x.EnqueueAsync(It.IsAny<LogQueueItem>()));
         }
 
         [TestMethod]
-        public void DebugDoesNotLogWhenLogLevelAtInformation()
+        public async Task DebugDoesNotLogWhenLogLevelAtInformation()
         {
             // Arrange
-            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Information);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Information, _correlationIdProvider.Object);
 
             // Act
-            logger.Debug("a message");
+            await logger.Debug("a message");
 
             // Assert
             _queue.Verify(x => x.EnqueueAsync(It.IsAny<LogQueueItem>()), Times.Never);
         }
 
         [TestMethod]
-        public void InformationLogsWhenLogLevelAtInformation()
+        public async Task InformationLogsWhenLogLevelAtInformation()
         {
             // Arrange
-            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Information);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Information, _correlationIdProvider.Object);
 
             // Act
-            logger.Information("a message");
+            await logger.Information("a message");
 
             // Assert
             _queue.Verify(x => x.EnqueueAsync(It.IsAny<LogQueueItem>()));
         }
 
         [TestMethod]
-        public void InformationDoesNotLogWhenLogLevelAtWarning()
+        public async Task InformationDoesNotLogWhenLogLevelAtWarning()
         {
             // Arrange
-            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Warning);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Warning, _correlationIdProvider.Object);
 
             // Act
-            logger.Information("a message");
+            await logger.Information("a message");
 
             // Assert
             _queue.Verify(x => x.EnqueueAsync(It.IsAny<LogQueueItem>()), Times.Never);
         }
 
         [TestMethod]
-        public void WarningLogsWhenLogLevelAtWarning()
+        public async Task WarningLogsWhenLogLevelAtWarning()
         {
             // Arrange
-            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Warning);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Warning, _correlationIdProvider.Object);
 
             // Act
-            logger.Warning("a message");
+            await logger.Warning("a message");
 
             // Assert
             _queue.Verify(x => x.EnqueueAsync(It.IsAny<LogQueueItem>()));
         }
 
         [TestMethod]
-        public void WarningDoesNotLogWhenLogLevelAtError()
+        public async Task WarningDoesNotLogWhenLogLevelAtError()
         {
             // Arrange
-            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Error);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Error, _correlationIdProvider.Object);
 
             // Act
-            logger.Warning("a message");
+            await logger.Warning("a message");
 
             // Assert
             _queue.Verify(x => x.EnqueueAsync(It.IsAny<LogQueueItem>()), Times.Never);
         }
 
         [TestMethod]
-        public void ErrorLogsWhenLogLevelAtError()
+        public async Task ErrorLogsWhenLogLevelAtError()
         {
             // Arrange
-            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Error);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Error, _correlationIdProvider.Object);
 
             // Act
-            logger.Error("a message");
+            await logger.Error("a message");
 
             // Assert
             _queue.Verify(x => x.EnqueueAsync(It.IsAny<LogQueueItem>()));
         }
 
         [TestMethod]
-        public void LogQueueItemCreated()
+        public async Task LogQueueItemCreated()
         {
             // Arrange
             LogQueueItem result = null;
             _queue.Setup(x => x.EnqueueAsync(It.IsAny<LogQueueItem>())).Callback<LogQueueItem>(p => result = p);
-            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Debug);
+            Logger logger = new Logger(_runtimeEnvironment.Object, _queue.Object, _source.Object, _extension.Object, LogLevelEnum.Debug, _correlationIdProvider.Object);
             DateTimeOffset baseline = DateTimeOffset.UtcNow;
 
             // Act
-            logger.Log(LogLevelEnum.Warning, "A message", new Exception("Some message"));
+            await logger.Log(LogLevelEnum.Warning, "A message", new Exception("Some message"));
 
             // Assert
             Assert.AreEqual("A message", result.Message);

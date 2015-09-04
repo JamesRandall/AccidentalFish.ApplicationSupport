@@ -157,7 +157,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
             return results;
         }
 
-        public async Task QueryActionAsync(string column, string value, Action<IEnumerable<T>> action)
+        public async Task QueryActionAsync(string column, string value, Func<IEnumerable<T>, Task> action)
         {
             TableQuery<T> query;
             if (!String.IsNullOrWhiteSpace(column))
@@ -174,11 +174,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
             while (querySegment == null || querySegment.ContinuationToken != null)
             {
                 querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
-                action(new List<T>(querySegment.Results));
+                await action(new List<T>(querySegment.Results));
             }
         }
 
-        public async Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, bool> func)
+        public async Task QueryFuncAsync(string column, string value, Func<IEnumerable<T>, Task<bool>> func)
         {
             TableQuery<T> query;
             if (!String.IsNullOrWhiteSpace(column))
@@ -196,12 +196,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
             while ((querySegment == null || querySegment.ContinuationToken != null) && doContinue)
             {
                 querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
-                doContinue = func(new List<T>(querySegment.Results));
+                doContinue = await func(new List<T>(querySegment.Results));
             }
         }
 
         public async Task QueryFuncAsync(string column, IEnumerable<object> values, TableStorageQueryOperator op,
-            Func<IEnumerable<T>, bool> func)
+            Func<IEnumerable<T>, Task<bool>> func)
         {
             TableQuery<T> query;
             if (!String.IsNullOrWhiteSpace(column) && values != null && values.Any())
@@ -219,11 +219,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
             while ((querySegment == null || querySegment.ContinuationToken != null) && doContinue)
             {
                 querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
-                doContinue = func(new List<T>(querySegment.Results));
+                doContinue = await func(new List<T>(querySegment.Results));
             }
         }
 
-        public async Task QueryFuncAsync(Dictionary<string, object> conditions, TableStorageQueryOperator op, Func<IEnumerable<T>, bool> func)
+        public async Task QueryFuncAsync(Dictionary<string, object> conditions, TableStorageQueryOperator op, Func<IEnumerable<T>, Task<bool>> func)
         {
             TableQuery<T> query;
             if (conditions != null)
@@ -241,13 +241,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
             while ((querySegment == null || querySegment.ContinuationToken != null) && doContinue)
             {
                 querySegment = await _table.ExecuteQuerySegmentedAsync(query, querySegment != null ? querySegment.ContinuationToken : null);
-                doContinue = func(new List<T>(querySegment.Results));
+                doContinue = await func(new List<T>(querySegment.Results));
             }
         }
 
-        public Task AllActionAsync(Action<IEnumerable<T>> action)
+        public async Task AllActionAsync(Func<IEnumerable<T>, Task> action)
         {
-            return QueryActionAsync(null, null, action);
+            await QueryActionAsync(null, null, action);
         }
 
         public Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, int pageSize)
