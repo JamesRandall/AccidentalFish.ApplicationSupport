@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
+using static System.String;
 
 namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 {
@@ -23,14 +24,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 
         public Action<Exception, int> CustomErrorHandler { get; set; }
 
-        public async Task<IEnumerable<Task>> Start(IComponentHostConfigurationProvider configurationProvider, CancellationTokenSource cancellationTokenSource)
+        public async Task<IEnumerable<Task>> StartAsync(IComponentHostConfigurationProvider configurationProvider, CancellationTokenSource cancellationTokenSource)
         {
-            IEnumerable<ComponentConfiguration> componentConfigurations = await configurationProvider.GetConfiguration();
+            IEnumerable<ComponentConfiguration> componentConfigurations = await configurationProvider.GetConfigurationAsync();
             _cancellationTokenSource = cancellationTokenSource;
             List<Task> tasks = new List<Task>();
             foreach (ComponentConfiguration componentConfiguration in componentConfigurations)
             {
-                await _logger.Information(String.Format("Starting {0} instances of {1}", componentConfiguration.Instances, componentConfiguration.ComponentIdentity));
+                await _logger.Information(
+                    $"Starting {componentConfiguration.Instances} instances of {componentConfiguration.ComponentIdentity}");
                 for (int instance = 0; instance < componentConfiguration.Instances; instance++)
                 {
                     tasks.Add(StartTask(componentConfiguration.ComponentIdentity, componentConfiguration.RestartEvaluator));
@@ -44,7 +46,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
             _cancellationTokenSource.Cancel();
         }
 
-        // TODO: Needs attention as this isn't right yet - too tired!
         private Task StartTask(IComponentIdentity componentIdentity, Func<Exception, int, bool> restartEvaluator)
         {
             return Task.Factory.StartNew(() =>
@@ -57,47 +58,45 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                     {
                         Task.Factory.StartNew(() =>
                         {
-                            _logger.Information(String.Format("Hostable component {0} is starting", componentIdentity));
+                            _logger.Information($"Hostable component {componentIdentity} is starting");
                             IHostableComponent component = _componentFactory.Create(componentIdentity);
                             component.StartAsync(_cancellationTokenSource.Token).Wait();
                             shouldRetry = false; // normal exit
-                            _logger.Information(String.Format("Hostable component {0} is exiting", componentIdentity));
+                            _logger.Information($"Hostable component {componentIdentity} is exiting");
                         }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Wait();
                         shouldRetry = false;
                     }
                     catch (Exception ex)
                     {
-
-                        if (CustomErrorHandler != null)
-                        {
-                            CustomErrorHandler(ex, retryCount);
-                        }
+                        CustomErrorHandler?.Invoke(ex, retryCount);
 
                         retryCount++;
                         shouldRetry = restartEvaluator != null && restartEvaluator(ex, retryCount);
                         if (shouldRetry)
                         {
-                            _logger.Information(String.Format("Restarting {0} for component {1}", retryCount, componentIdentity), ex);
-                            if (ex is AggregateException)
+                            _logger.Information($"Restarting {retryCount} for component {componentIdentity}", ex);
+                            AggregateException exception = ex as AggregateException;
+                            if (exception != null)
                             {
-                                foreach (Exception innerException in ((AggregateException)ex).InnerExceptions)
+                                foreach (Exception innerException in exception.InnerExceptions)
                                 {
-                                    _logger.Error(String.Format("Aggregate error for component {1} on retry {0}", retryCount, componentIdentity), innerException);
+                                    _logger.Error(Format("Aggregate error for component {1} on retry {0}", retryCount, componentIdentity), innerException);
                                 }
                             }
                         }
                         else
                         {
-                            if (ex is AggregateException)
+                            AggregateException exception = ex as AggregateException;
+                            if (exception != null)
                             {
-                                foreach (Exception innerException in ((AggregateException) ex).InnerExceptions)
+                                foreach (Exception innerException in exception.InnerExceptions)
                                 {
-                                    _logger.Error(String.Format("Component failure {0} for component {1}", retryCount, componentIdentity), innerException);
+                                    _logger.Error($"Component failure {retryCount} for component {componentIdentity}", innerException);
                                 }
                             }
                             else
                             {
-                                _logger.Error(String.Format("Component failure {0} for component {1}", retryCount, componentIdentity), ex);
+                                _logger.Error($"Component failure {retryCount} for component {componentIdentity}", ex);
                             }
                         }
                     }

@@ -17,11 +17,13 @@ namespace ComponentHost
         {
             IUnityContainer container = new UnityContainer();
             UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
-            Bootstrapper.RegisterDependencies(resolver, null, Bootstrapper.LoggerTypeEnum.Console, "correlation-id");
+
+            resolver.UseCore(loggerType:Bootstrapper.LoggerTypeEnum.Console);
+
             resolver.Register<IHostableComponent, ExampleHostableComponent>(ExampleHostableComponent.FullyQualifiedName);
 
             IComponentHost componentHost = resolver.Resolve<IComponentHost>();
-            componentHost.Start(new StaticComponentHostConfigurationProvider(new List<ComponentConfiguration>
+            componentHost.StartAsync(new StaticComponentHostConfigurationProvider(new List<ComponentConfiguration>
             {
                 new ComponentConfiguration
                 {

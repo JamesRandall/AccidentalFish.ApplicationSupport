@@ -23,7 +23,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             return includeProperties.Aggregate(All, (current, includeProperty) => current.Include(includeProperty));
         }
 
-        public T Find(int id)
+        public T Find(object id)
         {
             return _context.Set<T>().Find(id);
         }
@@ -60,6 +60,11 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
         public void Delete(int id)
         {
             T entity = Find(id);
+            _context.Set<T>().Remove(entity);
+        }
+
+        public void Delete(T entity)
+        {
             _context.Set<T>().Remove(entity);
         }
     }

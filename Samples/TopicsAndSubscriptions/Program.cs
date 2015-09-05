@@ -1,5 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Azure;
+using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Unity;
@@ -22,8 +24,10 @@ namespace TopicsAndSubscriptions
         {
             IUnityContainer container = new UnityContainer();
             UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
-            AccidentalFish.ApplicationSupport.Core.Bootstrapper.RegisterDependencies(resolver);
-            AccidentalFish.ApplicationSupport.Azure.Bootstrapper.RegisterDependencies(resolver);
+
+            resolver
+                .UseCore()
+                .UseAzure();
 
             IApplicationResourceFactory applicationResourceFactory = container.Resolve<IApplicationResourceFactory>();
             string secondSubscriptionName = applicationResourceFactory.Setting(SampleComponent, "second-subscription");

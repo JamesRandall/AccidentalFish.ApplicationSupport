@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using AccidentalFish.ApplicationSupport.Unity;
+using AccidentalFish.ApplicationSupport.Repository.EntityFramework;
 using Microsoft.Practices.Unity;
 using UnitOfWorkAndRepository.Model;
 
@@ -21,9 +22,11 @@ namespace UnitOfWorkAndRepository
         {
             IUnityContainer container = new UnityContainer();
             UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
-            Bootstrapper.RegisterDependencies(resolver);
-            AccidentalFish.ApplicationSupport.Repository.EntityFramework.Bootstrapper.RegisterDependencies(resolver);
 
+            resolver
+                .UseCore()
+                .UseEntityFramework();
+            
             IUnitOfWorkFactoryProvider provider = container.Resolve<IUnitOfWorkFactoryProvider>();
             _unitOfWorkFactory = provider.Create(
                 "UnitOfWorkAndRepository.Model.BookShopContext, UnitOfWorkAndRepository",

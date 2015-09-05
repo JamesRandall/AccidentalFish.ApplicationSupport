@@ -72,7 +72,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             return _dbConfiguration.ExecutionStrategy.ExecuteAsync(func, token);
         }
 
-        public Task<bool> OptimisticRepositoryWinsUpdateAsync(Action update)
+        public Task OptimisticRepositoryWinsUpdateAsync(Action update)
         {
             return OptimisticRepositoryWinsUpdateAsync(update, int.MaxValue);
         }

@@ -1,13 +1,21 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Email;
+﻿using System;
+using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.Email.SendGrid
 {
     public static class Bootstrapper
     {
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
+        public static IDependencyResolver UseSendGrid(this IDependencyResolver dependencyResolver)
         {
             dependencyResolver.Register<IEmailProvider, SendGridEmailProvider>();
+            return dependencyResolver;
+        }
+
+        [Obsolete]
+        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
+        {
+            UseSendGrid(dependencyResolver);
         }
     }
 }
