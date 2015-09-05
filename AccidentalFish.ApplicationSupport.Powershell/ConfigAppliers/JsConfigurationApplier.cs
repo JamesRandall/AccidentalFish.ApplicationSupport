@@ -12,7 +12,6 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
             using (StreamReader reader = new StreamReader(targetFile))
             {
                 contents = reader.ReadToEnd();
-                reader.Close();
             }
 
             foreach (KeyValuePair<string, string> setting in settings.Settings)
@@ -24,7 +23,6 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
             {
                 writer.Write(contents);
                 writer.Flush();
-                writer.Close();
             }
         }
     }

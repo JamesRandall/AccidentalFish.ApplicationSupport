@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace AccidentalFish.ApplicationSupport.Azure.TableStorage
 {
+    [Serializable]
     public class UniqueKeyViolationException : Exception
     {
         public UniqueKeyViolationException(string partitionKey, string rowKey, Exception innerException) : base("Unique key violation", innerException)
@@ -10,7 +12,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage
             RowKey = rowKey;
         }
 
-        public string PartitionKey { get; private set; }
-        public string RowKey { get; private set; }
+        public string PartitionKey { get; }
+        public string RowKey { get; }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("PartitionKey", PartitionKey);
+            info.AddValue("RowKey", RowKey);
+        }
     }
 }

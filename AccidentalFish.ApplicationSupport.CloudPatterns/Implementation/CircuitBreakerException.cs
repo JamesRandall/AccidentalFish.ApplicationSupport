@@ -2,6 +2,7 @@
 
 namespace AccidentalFish.ApplicationSupport.CloudPatterns.Implementation
 {
+    [Serializable]
     public class CircuitBreakerException : Exception
     {
         public CircuitBreakerException()
