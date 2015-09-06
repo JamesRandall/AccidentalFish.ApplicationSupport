@@ -18,6 +18,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
             _fullyQualifiedName = fullyQualifiedName;
         }
 
+        /// <summary>
+        /// Name of the component
+        /// </summary>
         public string FullyQualifiedName => _fullyQualifiedName;
     }
 }

@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Queues
 {
+    /// <summary>
+    /// Intetrface for processing subscriptions
+    /// </summary>
+    /// <typeparam name="T">Type of the subscription items</typeparam>
     public interface IAsynchronousSubscription<out T> where T : class
     {
         /// <summary>

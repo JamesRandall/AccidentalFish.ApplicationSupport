@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Repository
 {
+    /// <summary>
+    /// An asynchronous unit of work pattern implementation
+    /// </summary>
     public interface IUnitOfWorkAsync : IDisposable
     {
         /// <summary>

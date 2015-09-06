@@ -8,8 +8,14 @@ using System.Xml.XPath;
 
 namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
+    /// <summary>
+    /// Describes an applications configuration
+    /// </summary>
     public class ApplicationConfiguration
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         protected ApplicationConfiguration()
         {
             SqlServerConnectionStrings = new Dictionary<string, string>();
@@ -18,14 +24,33 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             ApplicationComponents = new List<ApplicationComponent>();
         }
 
+        /// <summary>
+        /// SQL Server connection strings in use
+        /// </summary>
         public Dictionary<string, string> SqlServerConnectionStrings { get; set; }
 
+        /// <summary>
+        /// Storage accounts in use
+        /// </summary>
         public Dictionary<string, ApplicationStorageAccount> StorageAccounts { get; set; }
 
+        /// <summary>
+        /// Service bus connection strings in use
+        /// </summary>
         public Dictionary<string, string> ServiceBusConnectionStrings { get; set; } 
 
+        /// <summary>
+        /// Application components defined
+        /// </summary>
         public List<ApplicationComponent> ApplicationComponents { get; set; }
 
+        /// <summary>
+        /// Loads the application configuration from an XML file
+        /// </summary>
+        /// <param name="filename">The filename</param>
+        /// <param name="settings">An optional settings file</param>
+        /// <param name="checkForMissingSettings">If set to true then any missing settings generate an exception</param>
+        /// <returns></returns>
         public static ApplicationConfiguration FromFile(string filename, ApplicationConfigurationSettings settings, bool checkForMissingSettings)
         {
             ApplicationConfiguration configuration = new ApplicationConfiguration();

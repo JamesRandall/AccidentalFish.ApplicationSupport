@@ -77,6 +77,11 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         /// </summary>
         public abstract IComponentIdentity ComponentIdentity { get; }
 
+        /// <summary>
+        /// Start running the back off subscription processor
+        /// </summary>
+        /// <param name="token">Token to indicate cancellation</param>
+        /// <returns>Awaitable task</returns>
         public async Task StartAsync(CancellationToken token)
         {
             await _backoffPolicy.ExecuteAsync(AttemptDequeue, token);

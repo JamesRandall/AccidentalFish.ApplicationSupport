@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace AccidentalFish.ApplicationSupport.Core.Email
 {
     /// <summary>
-    /// Email manager
+    /// Email dispatcher. Emails are initially placed into a queue and are dispatched from a hostable component available in AccidentalFish.ApplicationSupport.Processes
     /// </summary>
     public interface IEmailQueueDispatcher
     {
@@ -56,6 +56,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Email
         Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string from, string subject, string htmlBody, string textBody);
     }
 
+    /// <summary>
+    /// IEmailQueueDispatcher should now be used instead of IEmailManager
+    /// </summary>
     [Obsolete]
     public interface IEmailManager : IEmailQueueDispatcher
     {

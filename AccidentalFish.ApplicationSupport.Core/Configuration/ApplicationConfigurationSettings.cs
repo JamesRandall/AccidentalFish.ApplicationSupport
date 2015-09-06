@@ -6,15 +6,26 @@ using System.Xml.Linq;
 
 namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
+    /// <summary>
+    /// Represents an application settings file
+    /// </summary>
     public class ApplicationConfigurationSettings
     {
         private readonly Dictionary<string, string> _settings;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         protected ApplicationConfigurationSettings()
         {
             _settings = new Dictionary<string, string>();
         }
 
+        /// <summary>
+        /// Create from the given file
+        /// </summary>
+        /// <param name="filename">Filename of the settings</param>
+        /// <returns>Constructed ApplicationConfigurationSettings</returns>
         public static ApplicationConfigurationSettings FromFile(string filename)
         {
             ApplicationConfigurationSettings settings = new ApplicationConfigurationSettings();
@@ -26,6 +37,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             }
         }
 
+        /// <summary>
+        /// Create and aggregate from the set of files supplied
+        /// </summary>
+        /// <param name="filenames">Filenames</param>
+        /// <returns>Constructed ApplicationConfigurationSettings</returns>
         public static ApplicationConfigurationSettings FromFiles(string[] filenames)
         {
             ApplicationConfigurationSettings settings = new ApplicationConfigurationSettings();
@@ -40,6 +56,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             return settings;
         }
 
+        /// <summary>
+        /// Replace tokenised settings in a configuration file with actual settings from this representation
+        /// </summary>
+        /// <param name="reader">Stream reader</param>
+        /// <returns>New content</returns>
         public string Merge(StreamReader reader)
         {
             string content = reader.ReadToEnd();
@@ -47,9 +68,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             return content;
         }
 
-        public IReadOnlyDictionary<string, string> Settings
-        {
-            get {  return _settings; }
-        } 
+        /// <summary>
+        /// The settings
+        /// </summary>
+        public IReadOnlyDictionary<string, string> Settings => _settings;
     }
 }

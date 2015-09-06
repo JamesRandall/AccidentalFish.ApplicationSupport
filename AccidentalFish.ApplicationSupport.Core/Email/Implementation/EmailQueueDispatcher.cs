@@ -6,7 +6,9 @@ using AccidentalFish.ApplicationSupport.Core.Queues;
 namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 {
     [ComponentIdentity(FullyQualifiedName)]
+#pragma warning disable 612
     internal class EmailQueueDispatcher : AbstractApplicationComponent, IEmailManager
+#pragma warning restore 612
     {
         public const string FullyQualifiedName = "com.accidental-fish.email";
         private readonly IAsynchronousQueue<EmailQueueItem> _queue; 

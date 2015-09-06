@@ -2,6 +2,11 @@
 
 namespace AccidentalFish.ApplicationSupport.Core.Mappers
 {
+    /// <summary>
+    /// Interface for a uni-directional mapper
+    /// </summary>
+    /// <typeparam name="T1">Map from</typeparam>
+    /// <typeparam name="T2">Map to</typeparam>
     public interface IMapper<in T1, out T2>
     {
         /// <summary>
