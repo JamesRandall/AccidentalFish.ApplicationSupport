@@ -8,11 +8,17 @@ namespace AccidentalFish.ApplicationSupport.Processes
 {
     public static class Bootstrapper
     {
-        public static void RegisterDependencies(IDependencyResolver resolver)
+        public static IDependencyResolver UseHostableProcesses(this IDependencyResolver resolver)
         {
             resolver.Register<IMapperFactory, MapperFactory>();
             resolver.Register<IHostableComponent, LogQueueProcessor>(HostableComponentNames.LogQueueProcessor);
             resolver.Register<IHostableComponent, EmailQueueProcessor>(HostableComponentNames.EmailQueueProcessor);
+            return resolver;
+        }
+
+        public static void RegisterDependencies(IDependencyResolver resolver)
+        {
+            UseHostableProcesses(resolver);
         }
     }
 }

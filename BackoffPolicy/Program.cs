@@ -10,13 +10,14 @@ namespace BackoffPolicy
 {
     class Program
     {
-        private static int Counter = 0;
+        private static int _counter = 0;
 
         static void Main(string[] args)
         {
             IUnityContainer container = new UnityContainer();
             UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
-            Bootstrapper.RegisterDependencies(resolver);
+
+            resolver.UseCore();
 
             IAsynchronousBackoffPolicy policy = resolver.Resolve<IAsynchronousBackoffPolicy>();
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -25,7 +26,7 @@ namespace BackoffPolicy
             {
                 try
                 {
-                    await policy.Execute(BackoffTask, cancellationTokenSource.Token);
+                    await policy.ExecuteAsync(BackoffTask, cancellationTokenSource.Token);
                 }
                 catch (Exception ex)
                 {
@@ -41,14 +42,14 @@ namespace BackoffPolicy
         private static async Task<bool> BackoffTask()
         {
             await IncrementCounter();
-            Console.WriteLine(Counter);
+            Console.WriteLine(_counter);
             return true;
         }
 
         private static Task IncrementCounter()
         {
-            if (Counter > 0 && Counter % 10000 == 0) throw new Exception("Ooops");
-            return Task.FromResult(Counter++);
+            if (_counter > 0 && _counter % 10000 == 0) throw new Exception("Ooops");
+            return Task.FromResult(_counter++);
         }
     }
 }

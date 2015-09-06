@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using System.Xml;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -12,12 +13,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             if (serializedContinuationToken == null) return null;
 
             TableContinuationToken continuationToken = new TableContinuationToken();
-            using (StringReader stringReader = new StringReader(serializedContinuationToken))
+            using (XmlReader xmlReader = XmlReader.Create(new StringReader(serializedContinuationToken)))
             {
-                using (XmlReader xmlReader = XmlReader.Create(stringReader))
-                {
-                    continuationToken.ReadXml(xmlReader);
-                }
+                continuationToken.ReadXml(xmlReader);
             }
             return continuationToken;
         }
@@ -25,15 +23,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
         public string Serialize(TableContinuationToken continuationToken)
         {
             if (continuationToken == null) return null;
-
-            using (StringWriter stringWriter = new StringWriter())
+            StringBuilder sb = new StringBuilder();
+            using (XmlWriter xmlWriter = XmlWriter.Create(new StringWriter(sb)))
             {
-                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter))
-                {
-                    continuationToken.WriteXml(xmlWriter);
-                }
-                return stringWriter.ToString();
+                continuationToken.WriteXml(xmlWriter);
             }
+            return sb.ToString();
         }
     }
 }

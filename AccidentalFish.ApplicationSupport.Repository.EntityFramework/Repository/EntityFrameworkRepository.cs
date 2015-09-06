@@ -12,21 +12,18 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
         public EntityFrameworkRepository(DbContext context)
         {
-            if (context == null) throw new ArgumentNullException("context");
+            if (context == null) throw new ArgumentNullException(nameof(context));
             _context = context;
         }
 
-        public IQueryable<T> All
-        {
-            get { return _context.Set<T>(); }
-        }
+        public IQueryable<T> All => _context.Set<T>();
 
         public IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties)
         {
             return includeProperties.Aggregate(All, (current, includeProperty) => current.Include(includeProperty));
         }
 
-        public T Find(int id)
+        public T Find(object id)
         {
             return _context.Set<T>().Find(id);
         }
@@ -63,6 +60,11 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
         public void Delete(int id)
         {
             T entity = Find(id);
+            _context.Set<T>().Remove(entity);
+        }
+
+        public void Delete(T entity)
+        {
             _context.Set<T>().Remove(entity);
         }
     }

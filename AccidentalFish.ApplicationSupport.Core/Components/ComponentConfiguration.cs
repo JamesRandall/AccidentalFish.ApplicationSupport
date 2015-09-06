@@ -2,10 +2,19 @@
 
 namespace AccidentalFish.ApplicationSupport.Core.Components
 {
+    /// <summary>
+    /// Describes the configuration of a component in the component host
+    /// </summary>
     public class ComponentConfiguration
     {
+        /// <summary>
+        /// Name of the component (used to instantiate it using the IComponentFactory)
+        /// </summary>
         public IComponentIdentity ComponentIdentity { get; set; }
 
+        /// <summary>
+        /// Number of instances to run in parallel
+        /// </summary>
         public int Instances { get; set; }
 
         /// <summary>

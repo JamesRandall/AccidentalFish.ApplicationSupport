@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AccidentalFish.ApplicationSupport.Core.NoSql;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation

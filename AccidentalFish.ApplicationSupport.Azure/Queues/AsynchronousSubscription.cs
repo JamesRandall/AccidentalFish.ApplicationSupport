@@ -16,7 +16,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             _client = SubscriptionClient.CreateFromConnectionString(connectionString, topicName, subscriptionName, ReceiveMode.PeekLock);
         }
 
-        public async Task<bool> Recieve(Func<T, Task<bool>> process)
+        public async Task<bool> RecieveAsync(Func<T, Task<bool>> process)
         {
             BrokeredMessage message = await _client.ReceiveAsync();
             if (message != null)

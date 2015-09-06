@@ -1,4 +1,5 @@
-﻿using AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation;
+﻿using System;
+using AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation;
 using AccidentalFish.ApplicationSupport.Azure.Blobs;
 using AccidentalFish.ApplicationSupport.Azure.Components;
 using AccidentalFish.ApplicationSupport.Azure.Components.Implementation;
@@ -23,12 +24,12 @@ namespace AccidentalFish.ApplicationSupport.Azure
     /// </summary>
     public static class Bootstrapper
     {
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
+        public static IDependencyResolver UseAzure(this IDependencyResolver dependencyResolver)
         {
-            RegisterDependencies(dependencyResolver, false, true, false, false);
+            return UseAzure(dependencyResolver, false, true, false, false);
         }
 
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver,
+        public static IDependencyResolver UseAzure(this IDependencyResolver dependencyResolver,
             bool forceAppConfig,
             bool useAzureSqlDatabaseConfiguration,
             bool useLegacyQueueSerializer,
@@ -54,12 +55,13 @@ namespace AccidentalFish.ApplicationSupport.Azure
 
             // runtime
             dependencyResolver.Register<IRuntimeEnvironment, RuntimeEnvironment>();
-            
+
             // repositories and data storage
             dependencyResolver.Register<IQueueFactory, QueueFactory>();
             dependencyResolver.Register<IBlobRepositoryFactory, BlobRepositoryFactory>();
             dependencyResolver.Register<ITableStorageRepositoryFactory, TableStorageRepositoryFactory>();
             dependencyResolver.Register<ITableStorageConcurrencyManager, TableStorageConcurrencyManager>();
+            dependencyResolver.Register<IAzureQueueFactory, AzureQueueFactory>();
 
             // alerts
             if (registerEmailAlertSender)
@@ -72,6 +74,23 @@ namespace AccidentalFish.ApplicationSupport.Azure
             }
 
             dependencyResolver.Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>();
+            return dependencyResolver;
+        }
+
+        [Obsolete]
+        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
+        {
+            UseAzure(dependencyResolver, false, true, false, false);
+        }
+
+        [Obsolete]
+        public static void RegisterDependencies(IDependencyResolver dependencyResolver,
+            bool forceAppConfig,
+            bool useAzureSqlDatabaseConfiguration,
+            bool useLegacyQueueSerializer,
+            bool registerEmailAlertSender)
+        {
+            UseAzure(dependencyResolver, forceAppConfig, useAzureSqlDatabaseConfiguration, useLegacyQueueSerializer, registerEmailAlertSender);
         }        
     }
 }

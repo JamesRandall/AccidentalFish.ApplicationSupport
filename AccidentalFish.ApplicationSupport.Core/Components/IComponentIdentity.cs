@@ -7,6 +7,9 @@ using AccidentalFish.ApplicationSupport.Core.Naming;
 
 namespace AccidentalFish.ApplicationSupport.Core.Components
 {
+    /// <summary>
+    /// Identifies a component
+    /// </summary>
     public interface IComponentIdentity : IFullyQualifiedName
     {
     }

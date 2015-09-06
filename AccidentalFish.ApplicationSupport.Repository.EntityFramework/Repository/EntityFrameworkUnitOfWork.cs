@@ -13,9 +13,9 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
         public EntityFrameworkUnitOfWork(IConfiguration configuration, IDbContextFactory dbContextFactory, IDbConfiguration dbConfiguration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (dbContextFactory == null) throw new ArgumentNullException("dbContextFactory");
-            if (dbConfiguration == null) throw new ArgumentNullException("dbConfiguration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (dbContextFactory == null) throw new ArgumentNullException(nameof(dbContextFactory));
+            if (dbConfiguration == null) throw new ArgumentNullException(nameof(dbConfiguration));
             
             _context = dbContextFactory.CreateContext(configuration.SqlConnectionString);
             _dbConfiguration = dbConfiguration;
@@ -23,9 +23,9 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
         public EntityFrameworkUnitOfWork(Type contextType, string connectionString, IDbConfiguration dbConfiguration)
         {
-            if (contextType == null) throw new ArgumentNullException("contextType");
-            if (dbConfiguration == null) throw new ArgumentNullException("dbConfiguration");
-            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException("connectionString");
+            if (contextType == null) throw new ArgumentNullException(nameof(contextType));
+            if (dbConfiguration == null) throw new ArgumentNullException(nameof(dbConfiguration));
+            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
 
             _context = (DbContext) Activator.CreateInstance(contextType, connectionString);
             _dbConfiguration = dbConfiguration;

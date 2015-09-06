@@ -70,12 +70,12 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             }
         }
 
-        protected override async Task<bool> HandleRecievedItem(IQueueItem<LogQueueItem> queueItem)
+        protected override async Task<bool> HandleRecievedItemAsync(IQueueItem<LogQueueItem> queueItem)
         {
             LogQueueItem item = queueItem.Item;
             if (item.Level == LogLevelEnum.Error)
             {
-                await _alertSender.Send($"SYSTEM ERROR: {item.Source}", item.Message);
+                await _alertSender.SendAsync($"SYSTEM ERROR: {item.Source}", item.Message);
             }
 
             IMapper<LogQueueItem, LogTableItem> mapper = _mapperFactory.GetLogQueueItemLogTableItemMapper();

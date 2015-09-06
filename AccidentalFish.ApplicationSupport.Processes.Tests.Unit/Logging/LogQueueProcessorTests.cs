@@ -45,10 +45,10 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
             LogQueueProcessor processor = new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object, _alertSender.Object);
 
             // Act
-            await processor.Start(source.Token);
+            await processor.StartAsync(source.Token);
 
             // Assert
-            _asynchronousBackoffPolicy.Verify(x => x.Execute(It.IsAny<Func<Task<bool>>>(), source.Token));
+            _asynchronousBackoffPolicy.Verify(x => x.ExecuteAsync(It.IsAny<Func<Task<bool>>>(), source.Token));
         }
 
         public void NullQueueItemReturnsFalseToBackoff()

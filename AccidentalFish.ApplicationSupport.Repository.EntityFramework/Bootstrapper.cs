@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
@@ -15,12 +16,12 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework
             Lan
         }
 
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
+        public static IDependencyResolver UseEntityFramework(this IDependencyResolver dependencyResolver)
         {
-            RegisterDependencies(dependencyResolver, SqlDatabaseTypeEnum.Azure);
+            return UseEntityFramework(dependencyResolver, SqlDatabaseTypeEnum.Azure);
         }
 
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver, SqlDatabaseTypeEnum databaseType)
+        public static IDependencyResolver UseEntityFramework(this IDependencyResolver dependencyResolver, SqlDatabaseTypeEnum databaseType)
         {
             dependencyResolver.Register<IUnitOfWorkFactory, EntityFrameworkUnitOfWorkFactory>();
 
@@ -36,6 +37,19 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework
             }
 
             dependencyResolver.Register<IUnitOfWorkFactoryProvider, EntityFrameworkUnitOfWorkFactoryProvider>();
+            return dependencyResolver;
+        }
+
+        [Obsolete]
+        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
+        {
+            UseEntityFramework(dependencyResolver);
+        }
+
+        [Obsolete]
+        public static void RegisterDependencies(IDependencyResolver dependencyResolver, SqlDatabaseTypeEnum databaseType)
+        {
+            UseEntityFramework(dependencyResolver, databaseType);
         }
     }
 }

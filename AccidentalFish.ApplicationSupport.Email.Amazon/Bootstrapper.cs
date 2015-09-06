@@ -1,13 +1,21 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Email;
+﻿using System;
+using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.Email.Amazon
 {
     public static class Bootstrapper
     {
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
+        public static IDependencyResolver UseAmazonSimpleEmailService(this IDependencyResolver dependencyResolver)
         {
             dependencyResolver.Register<IEmailProvider, AmazonSimpleEmailProvider>();
+            return dependencyResolver;
+        }
+
+        [Obsolete]
+        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
+        {
+            UseAmazonSimpleEmailService(dependencyResolver);
         }
     }
 }

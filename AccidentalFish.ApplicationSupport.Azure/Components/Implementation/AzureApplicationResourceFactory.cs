@@ -1,7 +1,9 @@
-﻿using AccidentalFish.ApplicationSupport.Azure.TableStorage;
+﻿using System;
+using AccidentalFish.ApplicationSupport.Azure.Queues;
+using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.NoSql;
+using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -13,14 +15,17 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
         private readonly IApplicationResourceFactory _applicationResourceFactory;
         private readonly IApplicationResourceSettingProvider _applicationResourceSettingProvider;
         private readonly ITableStorageRepositoryFactory _tableStorageRepositoryFactory;
+        private readonly IAzureQueueFactory _queueFactory;
 
         public AzureApplicationResourceFactory(IApplicationResourceFactory applicationResourceFactory,
             IApplicationResourceSettingProvider applicationResourceSettingProvider,
-            ITableStorageRepositoryFactory tableStorageRepositoryFactory)
+            ITableStorageRepositoryFactory tableStorageRepositoryFactory,
+            IAzureQueueFactory queueFactory)
         {
             _applicationResourceFactory = applicationResourceFactory;
             _applicationResourceSettingProvider = applicationResourceSettingProvider;
             _tableStorageRepositoryFactory = tableStorageRepositoryFactory;
+            _queueFactory = queueFactory;
         }
 
         #region Decorated methods
@@ -50,16 +55,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
             return _applicationResourceFactory.GetAsyncQueue<T>(queuename, componentIdentity);
         }
 
-        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
-        {
-            return _applicationResourceFactory.GetAsyncBrokeredMessageQueue<T>(componentIdentity);
-        }
-
-        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
-        {
-            return _applicationResourceFactory.GetAsyncBrokeredMessageQueue<T>(queuename, componentIdentity);
-        }
-
         public IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetQueue<T>(componentIdentity);
@@ -68,16 +63,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
         public IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetQueue<T>(queuename, componentIdentity);
-        }
-
-        public IQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
-        {
-            return _applicationResourceFactory.GetBrokeredMessageQueue<T>(componentIdentity);
-        }
-
-        public IQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
-        {
-            return _applicationResourceFactory.GetBrokeredMessageQueue<T>(queuename, componentIdentity);
         }
 
         public IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class
@@ -98,6 +83,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
         public IAsynchronousSubscription<T> GetAsyncSubscription<T>(string subscriptionName, IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetAsyncSubscription<T>(subscriptionName, componentIdentity);
+        }
+
+        public IAsynchronousSubscription<T> GetAsyncSubscription<T>(string subscriptionName, string topicName,
+            IComponentIdentity componentIdentity) where T : class
+        {
+            return _applicationResourceFactory.GetAsyncSubscription<T>(subscriptionName, topicName, componentIdentity);
         }
 
         public IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(IComponentIdentity componentIdentity)
@@ -145,6 +136,42 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
         {
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _tableStorageRepositoryFactory.CreateAsynchronousNoSqlRepository<T>(storageAccountConnectionString, tablename, lazyCreateTable);
+        }
+
+        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
+
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            string defaultQueueName = _applicationResourceSettingProvider.DefaultBrokeredMessageQueueName(componentIdentity);
+            return _queueFactory.CreateAsynchronousBrokeredMessageQueue<T>(serviceBusConnectionString, defaultQueueName);
+        }
+
+        public IAsynchronousQueue<T> GetAsyncBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        {
+            if (String.IsNullOrWhiteSpace(queuename)) throw new ArgumentNullException("queuename");
+            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
+
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            return _queueFactory.CreateAsynchronousBrokeredMessageQueue<T>(serviceBusConnectionString, queuename);
+        }
+
+        public IQueue<T> GetBrokeredMessageQueue<T>(IComponentIdentity componentIdentity) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
+
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            string defaultQueueName = _applicationResourceSettingProvider.DefaultBrokeredMessageQueueName(componentIdentity);
+            return _queueFactory.CreateBrokeredMessageQueue<T>(serviceBusConnectionString, defaultQueueName);
+        }
+
+        public IQueue<T> GetBrokeredMessageQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
+        {
+            if (String.IsNullOrWhiteSpace(queuename)) throw new ArgumentNullException("queuename");
+            if (componentIdentity == null) throw new ArgumentNullException("componentIdentity");
+
+            string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
+            return _queueFactory.CreateBrokeredMessageQueue<T>(serviceBusConnectionString, queuename);
         }
     }
 }

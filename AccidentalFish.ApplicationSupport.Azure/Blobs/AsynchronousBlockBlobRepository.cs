@@ -5,6 +5,7 @@ using AccidentalFish.ApplicationSupport.Core.Blobs;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
+using static System.String;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Blobs
 {
@@ -15,18 +16,18 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
         
         public AsynchronousBlockBlobRepository(string storageAccountConnectionString, string containerName)
         {
-            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentNullException("containerName");
-            if (String.IsNullOrWhiteSpace(storageAccountConnectionString)) throw new ArgumentNullException("storageAccountConnectionString");
+            if (IsNullOrWhiteSpace(containerName)) throw new ArgumentNullException(nameof(containerName));
+            if (IsNullOrWhiteSpace(storageAccountConnectionString)) throw new ArgumentNullException(nameof(storageAccountConnectionString));
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
             CloudBlobClient client = storageAccount.CreateCloudBlobClient();
             client.DefaultRequestOptions.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
             _container = client.GetContainerReference(containerName);
 
-            _endpoint = String.Format("{0}{1}", client.BaseUri, containerName);
+            _endpoint = $"{client.BaseUri}{containerName}";
         }
 
-        internal CloudBlobContainer CloudBlobContainer { get {  return _container; } }
+        internal CloudBlobContainer CloudBlobContainer => _container;
 
         public Task<IBlob> UploadAsync(string name, Stream stream)
         {
@@ -43,17 +44,17 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
             Upload(name,stream, null, null);
         }
 
-        public async void Upload(string name, Stream stream, Action<string> success, Action<string, Exception> failure)
+        public void Upload(string name, Stream stream, Action<string> success, Action<string, Exception> failure)
         {
             try
             {
                 CloudBlockBlob blob = _container.GetBlockBlobReference(name);
-                await blob.UploadFromStreamAsync(stream);
-                if (success != null) success(name);
+                blob.UploadFromStream(stream);
+                success?.Invoke(name);
             }
             catch (Exception ex)
             {
-                if (failure != null) failure(name, ex);
+                failure?.Invoke(name, ex);
             }
         }
 
@@ -63,9 +64,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
             return new BlockBlob(blob);
         }
 
-        public string Endpoint
-        {
-            get { return _endpoint; }
-        }
+        public string Endpoint => _endpoint;
     }
 }

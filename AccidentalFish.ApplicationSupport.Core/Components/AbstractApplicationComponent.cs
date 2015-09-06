@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Components
 {
+    /// <summary>
+    /// Abstract class for describing a component. Implementations of this class should be annotated with the
+    /// ComponentIdentityAttribute.
+    /// </summary>
     public abstract class AbstractApplicationComponent : IApplicationComponent
     {
         private readonly IComponentIdentity _componentIdentity;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         protected AbstractApplicationComponent()
         {
             try
@@ -23,6 +26,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
             
         }
 
-        public IComponentIdentity ComponentIdentity { get { return _componentIdentity; }}
+        /// <summary>
+        /// The name of the component
+        /// </summary>
+        public IComponentIdentity ComponentIdentity => _componentIdentity;
     }
 }

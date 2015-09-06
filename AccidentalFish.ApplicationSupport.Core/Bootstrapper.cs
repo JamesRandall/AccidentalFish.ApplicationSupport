@@ -25,22 +25,32 @@ namespace AccidentalFish.ApplicationSupport.Core
     /// </summary>
     public static class Bootstrapper
     {
+        /// <summary>
+        /// The logger type to use
+        /// </summary>
         public enum LoggerTypeEnum
         {
+            /// <summary>
+            /// A queue based logger
+            /// </summary>
             Queue,
+            /// <summary>
+            /// A console based logger
+            /// </summary>
             Console
         }
 
-        public static void RegisterDependencies(IDependencyResolver container)
-        {
-            RegisterDependencies(container, null, LoggerTypeEnum.Queue, "correlation-id");
-        }
-
-        public static void RegisterDependencies(
-            IDependencyResolver container,
-            Type loggerExtension,
-            LoggerTypeEnum loggerType,
-            string correlationIdKey)
+        /// <summary>
+        /// Register the dependencies in a container
+        /// </summary>
+        /// <param name="container">The container to use</param>
+        /// <param name="loggerExtension">The log extension, if any, to use. Defaults to null - no extension</param>
+        /// <param name="loggerType">The type of logger to start. Defaults to a queue based logger (which requires a queue implementation such as Azure)</param>
+        /// <param name="correlationIdKey">The correlation ID key. Defaults to correlation-id</param>
+        public static IDependencyResolver UseCore(this IDependencyResolver container,
+            Type loggerExtension = null,
+            LoggerTypeEnum loggerType = LoggerTypeEnum.Queue,
+            string correlationIdKey = "correlation-id")
         {
             container.Register<IBackoffPolicy, BackoffPolicy>();
             container.Register<ILeasedRetry, LeasedRetry>();
@@ -65,11 +75,14 @@ namespace AccidentalFish.ApplicationSupport.Core
             }
             else
             {
-                container.Register<ILoggerFactory, LoggerFactory>();
+                container.Register<ILoggerFactory, QueueLoggerFactory>();
             }
 
             container.Register<IComponentHost, ComponentHost>();
-            container.Register<IEmailManager, EmailManager>();
+#pragma warning disable 612
+            container.Register<IEmailManager, EmailQueueDispatcher>();
+#pragma warning restore 612
+            container.Register<IEmailQueueDispatcher, EmailQueueDispatcher>();
             container.Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>();
             container.Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>();
             container.RegisterInstance<IConfiguration>(new DefaultConfiguration());
@@ -83,6 +96,39 @@ namespace AccidentalFish.ApplicationSupport.Core
                 container.Register(typeof(ILoggerExtension), loggerExtension);
             }
             container.RegisterInstance<IComponentFactory>(new ComponentFactory(container));
+
+            return container;
+        }
+
+        /// <summary>
+        /// Register the dependencies in a container. The system is configured with:
+        ///     * No log extension
+        ///     * A queue based logger (a queue implementation is required such as Azure)
+        ///     * A correlation ID of correlation-id
+        /// </summary>
+        /// <param name="container">The container to use</param>
+        /// <returns>The container so a fluent API style of configuration can be used</returns>
+        [Obsolete]
+        public static void RegisterDependencies(IDependencyResolver container)
+        {
+            RegisterDependencies(container, null, LoggerTypeEnum.Queue, "correlation-id");
+        }
+
+        /// <summary>
+        /// Register the dependencies in a container
+        /// </summary>
+        /// <param name="container">The container to use</param>
+        /// <param name="loggerExtension">The log extension, if any, to use</param>
+        /// <param name="loggerType">The type of logger to start</param>
+        /// <param name="correlationIdKey">The correlation ID key</param>
+        [Obsolete]
+        public static void RegisterDependencies(
+            IDependencyResolver container,
+            Type loggerExtension,
+            LoggerTypeEnum loggerType,
+            string correlationIdKey)
+        {
+            container.UseCore(loggerExtension, loggerType, correlationIdKey);
         }
     }
 }

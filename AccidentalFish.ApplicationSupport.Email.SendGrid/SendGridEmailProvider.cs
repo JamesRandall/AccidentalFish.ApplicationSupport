@@ -24,7 +24,7 @@ namespace AccidentalFish.ApplicationSupport.Email.SendGrid
             _sendgridPassword = applicationResourceFactory.Setting(ComponentIdentity, "password");
         }
 
-        public async Task<string> Send(IEnumerable<string> to, IEnumerable<string> cc, string @from, string title, string htmlBody, string textBody)
+        public async Task<string> SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string @from, string title, string htmlBody, string textBody)
         {
             SendGridMessage message = new SendGridMessage();
             message.From = new MailAddress(@from);

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Management.Automation;
-using System.Net;
 using System.Xml.Linq;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
-using Microsoft.SqlServer.Server;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -23,6 +20,9 @@ namespace AccidentalFish.ApplicationSupport.Powershell
         [Parameter(HelpMessage = "The application configuration file", Mandatory = true)]
         public string Configuration { get; set; }
 
+        [Parameter(HelpMessage = "Defaults to false, if set to true then an exception will be thrown if a setting is required in a configuration file but not supplied", Mandatory = false)]
+        public bool CheckForMissingSettings { get; set; }
+
         [Parameter(HelpMessage = "Optional settings file. If more than one file is specified they are combined.", Mandatory = false)]
         public string[] Settings { get; set; }
 
@@ -35,7 +35,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
             }
 
             ApplicationConfigurationSettings settings = Settings != null && Settings.Length > 0 ? ApplicationConfigurationSettings.FromFiles(Settings) : null;
-            ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings);
+            ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings, CheckForMissingSettings);
 
             ApplyCorsRules(configuration);
 

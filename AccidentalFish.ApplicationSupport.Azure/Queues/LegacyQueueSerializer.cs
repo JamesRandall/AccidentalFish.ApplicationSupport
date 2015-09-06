@@ -22,7 +22,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             using (MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(item)))
             {
                 var serializer = new DataContractJsonSerializer(typeof(T));
-                serializer.WriteObject(memoryStream, item);
                 return (T)serializer.ReadObject(memoryStream);
             }
         }

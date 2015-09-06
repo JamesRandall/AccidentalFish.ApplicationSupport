@@ -1,24 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Repository
 {
+    /// <summary>
+    /// An asynchronous unit of work pattern implementation
+    /// </summary>
     public interface IUnitOfWorkAsync : IDisposable
     {
+        /// <summary>
+        /// Retrieve a repository that acts within the unit of work
+        /// </summary>
+        /// <typeparam name="T">The type of the entities represented by the repository</typeparam>
+        /// <returns>A repository</returns>
+        [Obsolete("There is no reason for this method to utilise a task and therefore this will be removed in the next major version. Use GetRepository<T> instead.")]
         Task<IRepositoryAsync<T>> GetRepositoryAsync<T>() where T : class;
+        /// <summary>
+        /// Retrieve a repository that acts within the unit of work
+        /// </summary>
+        /// <typeparam name="T">The type of the entities represented by the repository</typeparam>
+        /// <returns>A repository</returns>
+        IRepositoryAsync<T> GetRepository<T>() where T : class;
+        /// <summary>
+        /// Save the changes made within the unit of work
+        /// </summary>
+        /// <returns>The number of objects written to the underlying database</returns>
         Task<int> SaveAsync();
-        Task ExecuteAsync(Func<Task> func);
-        Task ExecuteAsync(Func<Task> func, CancellationToken token);
-        Task<T2> ExecuteAsync<T2>(Func<Task<T2>> func);
-        Task<T2> ExecuteAsync<T2>(Func<Task<T2>> func, CancellationToken token);
+        /// <summary>
+        /// Using an optimistic concurrency approach attempt to perform the supplied actions within the unit of work saving the changes.
+        /// This will retry until it succeeds.
+        /// (Concurrency issues are detected via the DbUpdateConcurrencyException exception).
+        /// </summary>
+        /// <param name="update">The actions to perform</param>
+        /// <returns>An awaitable task</returns>
+        Task OptimisticRepositoryWinsUpdateAsync(Action update);
 
-        Task<bool> OptimisticRepositoryWinsUpdate(Action update);
-        Task<bool> OptimisticRepositoryWinsUpdate(Action update, int maxRetries);
-
-        bool SuspendExecutionPolicy { get; set; }
+        /// <summary>
+        /// Using an optimistic concurrency approach attempt to perform the supplied actions within the unit of work saving the changes.
+        /// This will retry maxRetries times.
+        /// (Concurrency issues are detected via the DbUpdateConcurrencyException exception).
+        /// </summary>
+        /// <param name="update">The actions to perform</param>
+        /// <param name="maxRetries">The number of times to retry</param>
+        /// <returns>An awaitable task</returns>
+        Task<bool> OptimisticRepositoryWinsUpdateAsync(Action update, int maxRetries);
     }
 }
