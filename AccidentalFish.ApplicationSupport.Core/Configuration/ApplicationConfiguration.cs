@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -25,7 +26,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
 
         public List<ApplicationComponent> ApplicationComponents { get; set; }
 
-        public static ApplicationConfiguration FromFile(string filename, ApplicationConfigurationSettings settings)
+        public static ApplicationConfiguration FromFile(string filename, ApplicationConfigurationSettings settings, bool checkForMissingSettings)
         {
             ApplicationConfiguration configuration = new ApplicationConfiguration();
             XDocument document;
@@ -34,6 +35,16 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 if (settings != null)
                 {
                     string processedXml = settings.Merge(reader);
+
+                    if (checkForMissingSettings)
+                    {
+                        Regex settingPattern = new Regex(@"(?<!\{)\{\{(?!\{).*(?<!\})\}\}(?!\})");
+                        if (settingPattern.Match(processedXml).Success)
+                        {
+                            throw new MissingSettingException();
+                        }
+                    }
+
                     document = XDocument.Parse(processedXml);
                 }
                 else
@@ -42,9 +53,17 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 }
             }
 
+            if (document.Root == null) return null;
+            
             document.Root.XPathSelectElements("infrastructure/sql-server").ToList().ForEach(element =>
             {
-                configuration.SqlServerConnectionStrings.Add(element.Element("fqn").Value, element.Element("connection-string").Value);
+                var xfqn = element.Element("fqn");
+                if (xfqn != null)
+                {
+                    var xconnectionstring = element.Element("connection-string");
+                    if (xconnectionstring != null)
+                        configuration.SqlServerConnectionStrings.Add(xfqn.Value, xconnectionstring.Value);
+                }
             });
             document.Root.XPathSelectElements("infrastructure/storage-account").ToList().ForEach(element =>
             {
@@ -53,7 +72,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
             });
             document.Root.XPathSelectElements("infrastructure/service-bus").ToList().ForEach(element =>
             {
-                configuration.ServiceBusConnectionStrings.Add(element.Element("fqn").Value, element.Element("connection-string").Value);
+                var xfqn = element.Element("fqn");
+                if (xfqn != null)
+                {
+                    var xconnectionstring = element.Element("connection-string");
+                    if (xconnectionstring != null)
+                        configuration.ServiceBusConnectionStrings.Add(xfqn.Value, xconnectionstring.Value);
+                }
             });
 
             document.Root.Elements("component").ToList().ForEach(element =>

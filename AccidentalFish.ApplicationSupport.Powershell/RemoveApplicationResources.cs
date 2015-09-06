@@ -23,6 +23,9 @@ namespace AccidentalFish.ApplicationSupport.Powershell
         [Parameter(HelpMessage = "Optional settings file", Mandatory = false)]
         public string[] Settings { get; set; }
 
+        [Parameter(HelpMessage = "Defaults to false, if set to true then an exception will be thrown if a setting is required in a configuration file but not supplied", Mandatory = false)]
+        public bool CheckForMissingSettings { get; set; }
+
         protected override void ProcessRecord()
         {
             WriteVerbose(String.Format("Processing configuration file {0}", Configuration));
@@ -32,7 +35,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
             }
 
             ApplicationConfigurationSettings settings = Settings != null && Settings.Length > 0 ? ApplicationConfigurationSettings.FromFiles(Settings) : null;
-            ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings);
+            ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings, CheckForMissingSettings);
 
             foreach (ApplicationComponent component in configuration.ApplicationComponents)
             {

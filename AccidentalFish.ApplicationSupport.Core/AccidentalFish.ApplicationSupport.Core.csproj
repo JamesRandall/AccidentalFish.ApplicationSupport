@@ -86,6 +86,7 @@
     <Compile Include="Configuration\ApplicationStorageAccount.cs" />
     <Compile Include="Configuration\BlobContainerPublicAccessTypeEnum.cs" />
     <Compile Include="Configuration\DefaultConfiguration.cs" />
+    <Compile Include="Configuration\MissingSettingException.cs" />
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailQueueDispatcher.cs" />
