@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Core", "AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj", "{578E1681-F5F4-4CBA-BEC3-7F1D8A765254}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Core", "Source\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj", "{578E1681-F5F4-4CBA-BEC3-7F1D8A765254}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Azure", "AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.csproj", "{F4F8B4B5-4519-4669-8D30-CD7866CC6B33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Azure", "Source\AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.csproj", "{F4F8B4B5-4519-4669-8D30-CD7866CC6B33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Powershell", "AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.csproj", "{F07F76F1-C7AD-49CA-AA86-F2898073B20F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Powershell", "Source\AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.csproj", "{F07F76F1-C7AD-49CA-AA86-F2898073B20F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Core.Tests.Unit", "AccidentalFish.ApplicationSupport.Core.Tests.Unit\AccidentalFish.ApplicationSupport.Core.Tests.Unit.csproj", "{F6A4199C-708E-4B1A-B62E-185AFB1DB51A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Core.Tests.Unit", "Source\AccidentalFish.ApplicationSupport.Core.Tests.Unit\AccidentalFish.ApplicationSupport.Core.Tests.Unit.csproj", "{F6A4199C-708E-4B1A-B62E-185AFB1DB51A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.Helpers.Test", "AccidentalFish.Helpers.Test\AccidentalFish.Helpers.Test.csproj", "{120C9550-5A83-4E1C-A5B5-1C336E1FCC49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.Helpers.Test", "Source\AccidentalFish.Helpers.Test\AccidentalFish.Helpers.Test.csproj", "{120C9550-5A83-4E1C-A5B5-1C336E1FCC49}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F127F13B-CB27-49FA-B201-E57630D8CCD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Processes", "AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj", "{2020EF8C-4D77-4DEC-A287-11D877F2685F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Processes", "Source\AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj", "{2020EF8C-4D77-4DEC-A287-11D877F2685F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Processes.Tests.Unit", "AccidentalFish.ApplicationSupport.Processes.Tests.Unit\AccidentalFish.ApplicationSupport.Processes.Tests.Unit.csproj", "{97192BD5-BFC5-4F58-BEC1-F47A460E46FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Processes.Tests.Unit", "Source\AccidentalFish.ApplicationSupport.Processes.Tests.Unit\AccidentalFish.ApplicationSupport.Processes.Tests.Unit.csproj", "{97192BD5-BFC5-4F58-BEC1-F47A460E46FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NugetPackaging", "NugetPackaging", "{6C431FDC-56A3-4222-A99D-11E35069035A}"
 	ProjectSection(SolutionItems) = preProject
@@ -40,25 +40,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C721
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopicsAndSubscriptions", "Samples\TopicsAndSubscriptions\TopicsAndSubscriptions.csproj", "{B0EF8F56-C9B3-4C1D-80C6-DD65B3C00F5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Email.SendGrid", "AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.csproj", "{1FAB02F3-6930-4FF3-96BE-E23F2D428325}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Email.SendGrid", "Source\AccidentalFish.ApplicationSupport.Email.SendGrid\AccidentalFish.ApplicationSupport.Email.SendGrid.csproj", "{1FAB02F3-6930-4FF3-96BE-E23F2D428325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Email.Amazon", "AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.csproj", "{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Email.Amazon", "Source\AccidentalFish.ApplicationSupport.Email.Amazon\AccidentalFish.ApplicationSupport.Email.Amazon.csproj", "{8759A93A-7CC7-43E4-9238-ACE15FE6FD78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Repository.EntityFramework", "AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.csproj", "{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Repository.EntityFramework", "Source\AccidentalFish.ApplicationSupport.Repository.EntityFramework\AccidentalFish.ApplicationSupport.Repository.EntityFramework.csproj", "{62D4B06E-503F-40E2-9667-B7DA1C5EAAC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Unity", "AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj", "{09C4344B-A00B-4404-BEA0-F0B5521FAA99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Unity", "Source\AccidentalFish.ApplicationSupport.Unity\AccidentalFish.ApplicationSupport.Unity.csproj", "{09C4344B-A00B-4404-BEA0-F0B5521FAA99}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitOfWorkAndRepository", "Samples\UnitOfWorkAndRepository\UnitOfWorkAndRepository.csproj", "{0D6F0331-7BD5-4E74-A1B8-2430CAE35478}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.CloudPatterns", "AccidentalFish.ApplicationSupport.CloudPatterns\AccidentalFish.ApplicationSupport.CloudPatterns.csproj", "{82B25A63-C543-4807-933F-6ED6530DB291}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.CloudPatterns", "Source\AccidentalFish.ApplicationSupport.CloudPatterns\AccidentalFish.ApplicationSupport.CloudPatterns.csproj", "{82B25A63-C543-4807-933F-6ED6530DB291}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.DependencyResolver", "AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.csproj", "{18671945-CD5C-4CE6-8C02-CD7C8B0CC68E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.DependencyResolver", "Source\AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.csproj", "{18671945-CD5C-4CE6-8C02-CD7C8B0CC68E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackoffPolicy", "BackoffPolicy\BackoffPolicy.csproj", "{1317DE04-F3DA-47AA-BD6E-B7F4BC81E85F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackoffPolicy", "Samples\BackoffPolicy\BackoffPolicy.csproj", "{1317DE04-F3DA-47AA-BD6E-B7F4BC81E85F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComponentHost", "Samples\ComponentHost\ComponentHost.csproj", "{FF473D27-77E7-4592-A1EC-8E52B8A190C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Logging.ApplicationInsights", "AccidentalFish.ApplicationSupport.Logging.ApplicationInsights\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.csproj", "{D9B998A8-F054-422D-AE5A-05DF51B3648B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Logging.ApplicationInsights", "Source\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.csproj", "{D9B998A8-F054-422D-AE5A-05DF51B3648B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Samples\Logger\Logger.csproj", "{1C6678C8-3804-4CE3-AE22-4BA20A0A0584}"
 EndProject
@@ -67,9 +67,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReleaseNotes", "ReleaseNote
 		v2.0.0.md = v2.0.0.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Ninject", "AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj", "{14E9E435-B14A-4D85-B03F-F997854FD0D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Ninject", "Source\AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj", "{14E9E435-B14A-4D85-B03F-F997854FD0D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerWithNinject", "LoggerWithNinject\LoggerWithNinject.csproj", "{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerWithNinject", "Samples\LoggerWithNinject\LoggerWithNinject.csproj", "{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

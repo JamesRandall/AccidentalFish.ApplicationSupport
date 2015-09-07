@@ -4,7 +4,7 @@ $settings = $location.tostring() + "\settings.xml"
 
 $appconfig = $location.tostring() + ".\app.config"
 
-Import-Module ..\AccidentalFish.ApplicationSupport.Powershell\bin\debug\AccidentalFish.ApplicationSupport.Powershell.dll
+Import-Module ..\..\AccidentalFish.ApplicationSupport.Powershell\bin\debug\AccidentalFish.ApplicationSupport.Powershell.dll
 
 Set-ApplicationConfiguration -Configuration $configuration -Target $appconfig -Settings $settings -CheckForMissingSettings $TRUE
 

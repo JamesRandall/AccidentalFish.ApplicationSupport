@@ -84,23 +84,23 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.csproj">
+    <ProjectReference Include="..\..\Source\AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.csproj">
       <Project>{f4f8b4b5-4519-4669-8d30-cd7866cc6b33}</Project>
       <Name>AccidentalFish.ApplicationSupport.Azure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj">
+    <ProjectReference Include="..\..\Source\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj">
       <Project>{578E1681-F5F4-4CBA-BEC3-7F1D8A765254}</Project>
       <Name>AccidentalFish.ApplicationSupport.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.csproj">
+    <ProjectReference Include="..\..\Source\AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.csproj">
       <Project>{18671945-cd5c-4ce6-8c02-cd7c8b0cc68e}</Project>
       <Name>AccidentalFish.ApplicationSupport.DependencyResolver</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj">
+    <ProjectReference Include="..\..\Source\AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj">
       <Project>{14e9e435-b14a-4d85-b03f-f997854fd0d1}</Project>
       <Name>AccidentalFish.ApplicationSupport.Ninject</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj">
+    <ProjectReference Include="..\..\Source\AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj">
       <Project>{2020EF8C-4D77-4DEC-A287-11D877F2685F}</Project>
       <Name>AccidentalFish.ApplicationSupport.Processes</Name>
     </ProjectReference>
