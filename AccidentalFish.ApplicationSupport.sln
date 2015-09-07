@@ -67,6 +67,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReleaseNotes", "ReleaseNote
 		v2.0.0.md = v2.0.0.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Ninject", "AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj", "{14E9E435-B14A-4D85-B03F-F997854FD0D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerWithNinject", "LoggerWithNinject\LoggerWithNinject.csproj", "{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -197,6 +201,22 @@ Global
 		{1C6678C8-3804-4CE3-AE22-4BA20A0A0584}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1C6678C8-3804-4CE3-AE22-4BA20A0A0584}.Release|x64.ActiveCfg = Release|Any CPU
 		{1C6678C8-3804-4CE3-AE22-4BA20A0A0584}.Release|x64.Build.0 = Release|Any CPU
+		{14E9E435-B14A-4D85-B03F-F997854FD0D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14E9E435-B14A-4D85-B03F-F997854FD0D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14E9E435-B14A-4D85-B03F-F997854FD0D1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{14E9E435-B14A-4D85-B03F-F997854FD0D1}.Debug|x64.Build.0 = Debug|Any CPU
+		{14E9E435-B14A-4D85-B03F-F997854FD0D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14E9E435-B14A-4D85-B03F-F997854FD0D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14E9E435-B14A-4D85-B03F-F997854FD0D1}.Release|x64.ActiveCfg = Release|Any CPU
+		{14E9E435-B14A-4D85-B03F-F997854FD0D1}.Release|x64.Build.0 = Release|Any CPU
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}.Debug|x64.Build.0 = Debug|Any CPU
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}.Release|x64.ActiveCfg = Release|Any CPU
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -210,9 +230,10 @@ Global
 		{1317DE04-F3DA-47AA-BD6E-B7F4BC81E85F} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 		{FF473D27-77E7-4592-A1EC-8E52B8A190C9} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 		{1C6678C8-3804-4CE3-AE22-4BA20A0A0584} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
+		{B1C853D2-2AC2-46CB-A75E-8B8D1D1B5560} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
 	EndGlobalSection
 EndGlobal
