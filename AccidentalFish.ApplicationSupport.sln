@@ -9,15 +9,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Powershell", "Source\AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.csproj", "{F07F76F1-C7AD-49CA-AA86-F2898073B20F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Core.Tests.Unit", "Source\AccidentalFish.ApplicationSupport.Core.Tests.Unit\AccidentalFish.ApplicationSupport.Core.Tests.Unit.csproj", "{F6A4199C-708E-4B1A-B62E-185AFB1DB51A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Core.Tests.Unit", "Tests\AccidentalFish.ApplicationSupport.Core.Tests.Unit\AccidentalFish.ApplicationSupport.Core.Tests.Unit.csproj", "{F6A4199C-708E-4B1A-B62E-185AFB1DB51A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.Helpers.Test", "Source\AccidentalFish.Helpers.Test\AccidentalFish.Helpers.Test.csproj", "{120C9550-5A83-4E1C-A5B5-1C336E1FCC49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.Helpers.Test", "Tests\AccidentalFish.Helpers.Test\AccidentalFish.Helpers.Test.csproj", "{120C9550-5A83-4E1C-A5B5-1C336E1FCC49}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F127F13B-CB27-49FA-B201-E57630D8CCD8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Processes", "Source\AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj", "{2020EF8C-4D77-4DEC-A287-11D877F2685F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Processes.Tests.Unit", "Source\AccidentalFish.ApplicationSupport.Processes.Tests.Unit\AccidentalFish.ApplicationSupport.Processes.Tests.Unit.csproj", "{97192BD5-BFC5-4F58-BEC1-F47A460E46FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Processes.Tests.Unit", "Tests\AccidentalFish.ApplicationSupport.Processes.Tests.Unit\AccidentalFish.ApplicationSupport.Processes.Tests.Unit.csproj", "{97192BD5-BFC5-4F58-BEC1-F47A460E46FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NugetPackaging", "NugetPackaging", "{6C431FDC-56A3-4222-A99D-11E35069035A}"
 	ProjectSection(SolutionItems) = preProject
