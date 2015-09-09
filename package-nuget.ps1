@@ -28,6 +28,7 @@ cp .\Source\AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.Applicat
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj -IncludeReferencedProjects
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.csproj -IncludeReferencedProjects
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj -IncludeReferencedProjects
+.\nuget pack .\Source\AccidentalFish.ApplicationSupport.Autofac\AccidentalFish.ApplicationSupport.Autofac.csproj -IncludeReferencedProjects
 
 if ($pushLocal)
 {
