@@ -80,5 +80,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             }
             await _queue.UpdateMessageAsync(queueItemImpl.CloudQueueMessage, TimeSpan.FromSeconds(30), MessageUpdateFields.Visibility);
         }
+
+        internal CloudQueue UnderlyingQueue => _queue;
     }
 }

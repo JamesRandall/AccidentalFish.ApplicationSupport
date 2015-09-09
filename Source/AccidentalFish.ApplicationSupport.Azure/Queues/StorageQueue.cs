@@ -13,9 +13,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 
         public StorageQueue(IQueueSerializer queueSerializer, string connectionString, string queueName)
         {
-            if (queueSerializer == null) throw new ArgumentNullException("queueSerializer");
-            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException("connectionString");
-            if (String.IsNullOrWhiteSpace(queueName)) throw new ArgumentNullException("queueName");
+            if (queueSerializer == null) throw new ArgumentNullException(nameof(queueSerializer));
+            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+            if (String.IsNullOrWhiteSpace(queueName)) throw new ArgumentNullException(nameof(queueName));
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
@@ -30,11 +30,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             {
                 CloudQueueMessage message = new CloudQueueMessage(_serializer.Serialize(item));
                 await _queue.AddMessageAsync(message);
-                if (success != null) success(item);
+                success?.Invoke(item);
             }
             catch (Exception ex)
             {
-                if (failure != null) failure(item, ex);
+                failure?.Invoke(item, ex);
             }
         }
 
@@ -56,9 +56,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                         await _queue.DeleteMessageAsync(message);
                     }
                 }
-                else if (noMessageAction != null)
+                else
                 {
-                    noMessageAction();
+                    noMessageAction?.Invoke();
                 }
             }
             catch (Exception ex)
@@ -86,5 +86,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             }
             _queue.UpdateMessage(queueItemImpl.CloudQueueMessage, TimeSpan.FromSeconds(30), MessageUpdateFields.Visibility);
         }
+
+        internal CloudQueue UnderlyingQueue => _queue;
     }
 }

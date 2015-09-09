@@ -7,6 +7,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     internal class BrokeredMessageQueue<T> : IQueue<T> where T : class
     {
         private readonly IQueueSerializer _queueSerializer;
+        private readonly string _connectionString;
         private readonly QueueClient _client;
 
         public BrokeredMessageQueue(
@@ -15,6 +16,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             string queueName)
         {
             _queueSerializer = queueSerializer;
+            _connectionString = connectionString;
             _client = QueueClient.CreateFromConnectionString(connectionString, queueName);
         }
 
@@ -112,5 +114,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 throw new InvalidOperationException("Not a brokered message queue item");
             }
         }
+
+        internal string ConnectionString => _connectionString;
+
+        internal QueueClient UnderlyingQueue => _client;
     }
 }
