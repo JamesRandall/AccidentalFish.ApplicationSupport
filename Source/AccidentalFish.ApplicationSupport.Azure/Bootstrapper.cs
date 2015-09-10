@@ -3,6 +3,7 @@ using AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation;
 using AccidentalFish.ApplicationSupport.Azure.Blobs;
 using AccidentalFish.ApplicationSupport.Azure.Components;
 using AccidentalFish.ApplicationSupport.Azure.Components.Implementation;
+using AccidentalFish.ApplicationSupport.Azure.Implementation;
 using AccidentalFish.ApplicationSupport.Azure.NoSql;
 using AccidentalFish.ApplicationSupport.Azure.Policies;
 using AccidentalFish.ApplicationSupport.Azure.Queues;
@@ -73,6 +74,7 @@ namespace AccidentalFish.ApplicationSupport.Azure
                 dependencyResolver.Register<IAlertSender, NullAlertSender>();
             }
 
+            dependencyResolver.Register<IAzureResourceManager, AzureResourceManager>();
             dependencyResolver.Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>();
             return dependencyResolver;
         }

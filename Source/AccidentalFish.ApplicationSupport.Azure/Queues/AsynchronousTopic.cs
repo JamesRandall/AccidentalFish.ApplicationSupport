@@ -7,11 +7,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     internal class AsynchronousTopic<T> : IAsynchronousTopic<T> where T : class
     {
         private readonly IQueueSerializer _queueSerializer;
+        private readonly string _connectionString;
         private readonly TopicClient _client;
 
         public AsynchronousTopic(IQueueSerializer queueSerializer, string connectionString, string topicName)
         {
             _queueSerializer = queueSerializer;
+            _connectionString = connectionString;
             _client = TopicClient.CreateFromConnectionString(connectionString, topicName);
         }
 
@@ -28,5 +30,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             BrokeredMessage message = new BrokeredMessage(value);
             await _client.SendAsync(message);
         }
+
+        internal string ConnectionString => _connectionString;
+
+        internal TopicClient UnderlyingTopic => _client;
     }
 }

@@ -14,8 +14,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         public StorageQueue(IQueueSerializer queueSerializer, string connectionString, string queueName)
         {
             if (queueSerializer == null) throw new ArgumentNullException(nameof(queueSerializer));
-            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
-            if (String.IsNullOrWhiteSpace(queueName)) throw new ArgumentNullException(nameof(queueName));
+            if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+            if (string.IsNullOrWhiteSpace(queueName)) throw new ArgumentNullException(nameof(queueName));
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
@@ -24,7 +24,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             _serializer = queueSerializer;
         }
 
-        public async void Enqueue(T item, Action<T> success, Action<T, Exception> failure)
+        public async void Enqueue(T item, Action<T> success = null, Action<T, Exception> failure = null)
         {
             try
             {
@@ -35,10 +35,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             catch (Exception ex)
             {
                 failure?.Invoke(item, ex);
+                if (failure == null)
+                {
+                    throw;
+                }
             }
         }
 
-        public void Dequeue(Func<IQueueItem<T>, bool> success, Action<Exception> failure)
+        public void Dequeue(Func<IQueueItem<T>, bool> success, Action<Exception> failure = null)
         {
             Dequeue(success, null, failure);
         }
@@ -63,6 +67,10 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             }
             catch (Exception ex)
             {
+                if (failure == null)
+                {
+                    throw;
+                }
                 failure(ex);
             }
         }

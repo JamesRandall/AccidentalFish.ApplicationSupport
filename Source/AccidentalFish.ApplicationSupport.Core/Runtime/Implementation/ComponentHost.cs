@@ -12,13 +12,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
     internal class ComponentHost : AbstractApplicationComponent, IComponentHost
     {
         private readonly IComponentFactory _componentFactory;
+        private readonly IComponentHostRestartHandler _componentHostRestartHandler;
         public const string FullyQualifiedName = "com.accidentalfish.application-support.component-host";
         private CancellationTokenSource _cancellationTokenSource;
         private readonly ILogger _logger;
 
-        public ComponentHost(IComponentFactory componentFactory, ILoggerFactory loggerFactory)
+        public ComponentHost(IComponentFactory componentFactory, ILoggerFactory loggerFactory, IComponentHostRestartHandler componentHostRestartHandler)
         {
             _componentFactory = componentFactory;
+            _componentHostRestartHandler = componentHostRestartHandler;
             _logger = loggerFactory.CreateLongLivedLogger(ComponentIdentity);
         }
 
@@ -48,7 +50,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 
         private Task StartTask(IComponentIdentity componentIdentity, Func<Exception, int, bool> restartEvaluator)
         {
-            return Task.Factory.StartNew(() =>
+            return Task.Run(async () =>
             {
                 int retryCount = 0;
                 bool shouldRetry = true;
@@ -56,14 +58,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                 {
                     try
                     {
-                        Task.Factory.StartNew(() =>
+                        await Task.Run(async () =>
                         {
-                            _logger.Information($"Hostable component {componentIdentity} is starting");
+                            await _logger.Information($"Hostable component {componentIdentity} is starting");
                             IHostableComponent component = _componentFactory.Create(componentIdentity);
                             component.StartAsync(_cancellationTokenSource.Token).Wait();
                             shouldRetry = false; // normal exit
-                            _logger.Information($"Hostable component {componentIdentity} is exiting");
-                        }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Wait();
+                            await _logger.Information($"Hostable component {componentIdentity} is exiting");
+                        }, _cancellationTokenSource.Token);
                         shouldRetry = false;
                     }
                     catch (Exception ex)
@@ -71,16 +73,24 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                         CustomErrorHandler?.Invoke(ex, retryCount);
 
                         retryCount++;
+                        if (restartEvaluator != null)
+                        {
+                            shouldRetry = restartEvaluator(ex, retryCount);
+                        }
+                        else
+                        {
+                            shouldRetry = await _componentHostRestartHandler.HandleRestart(ex, retryCount, _logger, componentIdentity);
+                        }
                         shouldRetry = restartEvaluator != null && restartEvaluator(ex, retryCount);
                         if (shouldRetry)
                         {
-                            _logger.Information($"Restarting {retryCount} for component {componentIdentity}", ex);
+                            await _logger.Information($"Restarting {retryCount} for component {componentIdentity}", ex);
                             AggregateException exception = ex as AggregateException;
                             if (exception != null)
                             {
                                 foreach (Exception innerException in exception.InnerExceptions)
                                 {
-                                    _logger.Error(Format("Aggregate error for component {1} on retry {0}", retryCount, componentIdentity), innerException);
+                                    await _logger.Error(Format("Aggregate error for component {1} on retry {0}", retryCount, componentIdentity), innerException);
                                 }
                             }
                         }
@@ -91,18 +101,18 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                             {
                                 foreach (Exception innerException in exception.InnerExceptions)
                                 {
-                                    _logger.Error($"Component failure {retryCount} for component {componentIdentity}", innerException);
+                                    await _logger.Error($"Component failure {retryCount} for component {componentIdentity}", innerException);
                                 }
                             }
                             else
                             {
-                                _logger.Error($"Component failure {retryCount} for component {componentIdentity}", ex);
+                                await _logger.Error($"Component failure {retryCount} for component {componentIdentity}", ex);
                             }
                         }
                     }
                 }
                 
-            }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            }, _cancellationTokenSource.Token);
         }
     }
 }

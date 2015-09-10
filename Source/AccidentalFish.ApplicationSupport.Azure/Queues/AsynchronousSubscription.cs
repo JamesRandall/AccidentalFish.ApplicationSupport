@@ -8,11 +8,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     internal class AsynchronousSubscription<T> : IAsynchronousSubscription<T> where T : class
     {
         private readonly IQueueSerializer _queueSerializer;
+        private readonly string _connectionString;
         private readonly SubscriptionClient _client;
 
         public AsynchronousSubscription(IQueueSerializer queueSerializer, string connectionString, string topicName, string subscriptionName)
         {
             _queueSerializer = queueSerializer;
+            _connectionString = connectionString;
             _client = SubscriptionClient.CreateFromConnectionString(connectionString, topicName, subscriptionName, ReceiveMode.PeekLock);
         }
 
@@ -47,5 +49,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             }
             return message != null;
         }
+
+        internal string ConnectionString => _connectionString;
+
+        internal SubscriptionClient UnderlyingSubscription => _client;
     }
 }

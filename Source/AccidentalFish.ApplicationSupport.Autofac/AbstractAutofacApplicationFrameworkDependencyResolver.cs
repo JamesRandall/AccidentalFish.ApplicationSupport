@@ -5,19 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 using Autofac;
-using Autofac.Builder;
 
 namespace AccidentalFish.ApplicationSupport.Autofac
 {
-    public class AutofacApplicationFrameworkDependencyResolver : IDependencyResolver
+    public abstract class AbstractAutofacApplicationFrameworkDependencyResolver : IDependencyResolver
     {
         private readonly ContainerBuilder _builder;
-        private IContainer _container;
 
-        public AutofacApplicationFrameworkDependencyResolver(ContainerBuilder builder)
+        protected AbstractAutofacApplicationFrameworkDependencyResolver(ContainerBuilder builder)
         {
             _builder = builder;
         }
+
+        protected ContainerBuilder Builder => _builder;
 
         public void Register<T1, T2>() where T2 : T1
         {
@@ -39,25 +39,10 @@ namespace AccidentalFish.ApplicationSupport.Autofac
             _builder.Register<T>(c => instance);
         }
 
-        public bool IsRegistered<T>()
-        {
-            return _container.IsRegistered<T>();
-        }
+        public abstract bool IsRegistered<T>();
 
-        public T Resolve<T>()
-        {
-            return _container.Resolve<T>();
-        }
+        public abstract T Resolve<T>();
 
-        public T Resolve<T>(string name)
-        {
-            return _container.ResolveNamed<T>(name);
-        }
-
-        public IContainer Build(ContainerBuildOptions options = ContainerBuildOptions.None)
-        {
-            _container = _builder.Build(options);
-            return _container;
-        }
+        public abstract T Resolve<T>(string name);
     }
 }

@@ -21,6 +21,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         /// Function to determins if the component should be restarted. Passed the exception that caused the
         /// failure, the number of times the component has been restarted previously, and should return true
         /// for restart false if not.
+        /// 
+        /// If null then the default restart handler will be used. This will log the error and restart the
+        /// component pausing for 30 seconds on every fifth error.
         /// </summary>
         public Func<Exception, int, bool> RestartEvaluator { get; set; } 
     }

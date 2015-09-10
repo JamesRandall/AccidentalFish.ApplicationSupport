@@ -119,8 +119,10 @@
     <Compile Include="Runtime\IComponentHost.cs" />
     <Compile Include="Runtime\IComponentHostConfigurationProvider.cs" />
     <Compile Include="Components\IHostableComponent.cs" />
+    <Compile Include="Runtime\IComponentHostRestartHandler.cs" />
     <Compile Include="Runtime\Implementation\ComponentFactory.cs" />
     <Compile Include="Runtime\Implementation\ComponentHost.cs" />
+    <Compile Include="Runtime\Implementation\DefaultComponentHostRestartHandler.cs" />
     <Compile Include="Runtime\Implementation\DefaultRuntimeEnvironment.cs" />
     <Compile Include="Runtime\IRuntimeEnvironment.cs" />
     <Compile Include="Runtime\StaticComponentHostConfigurationProvider.cs" />

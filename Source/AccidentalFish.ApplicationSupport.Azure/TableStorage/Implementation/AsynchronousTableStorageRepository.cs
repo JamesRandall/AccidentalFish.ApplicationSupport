@@ -305,9 +305,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
 
         #endregion
 
+
         public IResourceCreator GetResourceCreator()
         {
             return new AzureTableCreator(_table);
         }
+
+        internal CloudTable Table => _table;
     }
 }

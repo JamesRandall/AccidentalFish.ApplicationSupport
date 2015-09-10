@@ -18,14 +18,12 @@ namespace LoggerWithAutofac
         static void Main(string[] args)
         {
             ContainerBuilder builder = new ContainerBuilder();
-            var dependencyResolver = new AutofacApplicationFrameworkDependencyResolver(builder);
+            var dependencyResolver = new LazyAutofacApplicationFrameworkDependencyResolver(builder);
 
             dependencyResolver
                 .UseCore()
                 .UseAzure()
                 .UseHostableProcesses();
-
-            dependencyResolver.Build();
 
             IComponentHost componentHost = dependencyResolver.Resolve<IComponentHost>();
             ILoggerFactory loggerFactory = dependencyResolver.Resolve<ILoggerFactory>();

@@ -96,6 +96,7 @@ namespace AccidentalFish.ApplicationSupport.Core
                 container.Register(typeof(ILoggerExtension), loggerExtension);
             }
             container.RegisterInstance<IComponentFactory>(new ComponentFactory(container));
+            container.Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>();
 
             return container;
         }
