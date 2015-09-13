@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 using Ninject;
 
@@ -24,6 +21,12 @@ namespace AccidentalFish.ApplicationSupport.Ninject
 
         public void Register<T1, T2>(string name) where T2 : T1
         {
+            var bindings = _kernel.GetBindings(typeof (T1));
+            var binding = bindings.SingleOrDefault(x => x.Metadata.Name == name);
+            if (binding != null)
+            {
+                _kernel.RemoveBinding(binding);
+            }
             _kernel.Bind<T1>().To<T2>().Named(name);
         }
 

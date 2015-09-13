@@ -50,25 +50,5 @@ namespace AccidentalFish.ApplicationSupport.Processes.Tests.Unit.Logging
             // Assert
             _asynchronousBackoffPolicy.Verify(x => x.ExecuteAsync(It.IsAny<Func<Task<bool>>>(), source.Token));
         }
-
-        public void NullQueueItemReturnsFalseToBackoff()
-        {
-            // Arrange
-            /*_asynchronousBackoffPolicy.Setup(
-                x => x.Execute(It.IsAny<Action<Action<bool>>>(), It.IsAny<CancellationToken>()))
-                .Callback<Action<Action<bool>>>((action) =>
-                {
-                    action()
-                });
-            CancellationTokenSource source = new CancellationTokenSource();
-            LogQueueProcessor processor = new LogQueueProcessor(_applicationResourceFactory.Object, _asynchronousBackoffPolicy.Object, _mapperFactory.Object, _alertSender.Object);
-
-            // Act
-            processor.Start(source.Token);
-
-            // Assert
-            _asynchronousBackoffPolicy.Verify(x => x.Execute(It.IsAny<Action<Action<bool>>>(), source.Token));
-             * */
-        }
     }
 }

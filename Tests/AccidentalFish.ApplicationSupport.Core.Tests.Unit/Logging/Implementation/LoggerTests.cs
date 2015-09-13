@@ -27,6 +27,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Logging.Implementati
             _source = new Mock<IFullyQualifiedName>();
             _runtimeEnvironment = new Mock<IRuntimeEnvironment>();
             _extension = new Mock<ILoggerExtension>();
+            _extension.Setup(x => x.BeforeLog(It.IsAny<LogQueueItem>(), It.IsAny<Exception>(), It.IsAny<bool>())).Returns(true);
             _correlationIdProvider = new Mock<ICorrelationIdProvider>();
             _source.SetupGet(x => x.FullyQualifiedName).Returns("a.name");
         }
