@@ -20,7 +20,11 @@ namespace AccidentalFish.ApplicationSupport.Autofac
 
         public override bool IsRegistered<T>()
         {
-            return _container.IsRegistered<T>();
+            if (_container != null)
+            {
+                return _container.IsRegistered<T>();
+            }
+            return RegisteredTypes.Contains(typeof(T));
         }
 
         public override T Resolve<T>()

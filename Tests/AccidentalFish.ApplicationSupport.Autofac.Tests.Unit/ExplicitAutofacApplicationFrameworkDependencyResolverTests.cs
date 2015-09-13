@@ -1,26 +1,27 @@
-﻿using AccidentalFish.ApplicationSupport.DependencyResolver;
+﻿using System;
+using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Ninject;
 
-namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
+namespace AccidentalFish.ApplicationSupport.Autofac.Tests.Unit
 {
     [TestClass]
-    public class DependecyResolverTests
+    public class ExplicitAutofacApplicationFrameworkDependencyResolverTests
     {
-        private IKernel _kernel;
-        private IDependencyResolver _resolver;
+        private ContainerBuilder _container;
+        private ExplicitAutofacApplicationFrameworkDependencyResolver _resolver;
 
         [TestInitialize]
         public void Setup()
         {
-            _kernel = new StandardKernel();
-            _resolver = new NinjectApplicationFrameworkDependencyResolver(_kernel);
+            _container = new ContainerBuilder();
+            _resolver = new ExplicitAutofacApplicationFrameworkDependencyResolver(_container);
         }
 
         [TestMethod]
         public void RegisterAndResolveInstanceWithInferredType()
         {
             _resolver.RegisterInstance(new TestObject());
+            _resolver.Build();
             TestObject result = _resolver.Resolve<TestObject>();
             Assert.IsNotNull(result);
         }
@@ -29,6 +30,7 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         public void RegisterAndResolveInstanceWithSpecifiedType()
         {
             _resolver.RegisterInstance<ITestObject>(new TestObject());
+            _resolver.Build();
             ITestObject result = _resolver.Resolve<ITestObject>();
             Assert.IsInstanceOfType(result, typeof(TestObject));
         }
@@ -37,6 +39,7 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         public void GenericCanResolveRegisteredInterface()
         {
             _resolver.Register<ITestObject, TestObject>();
+            _resolver.Build();
             ITestObject result = _resolver.Resolve<ITestObject>();
             Assert.IsInstanceOfType(result, typeof(TestObject));
         }
@@ -46,6 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         {
             _resolver.Register<ITestObject, TestObject>();
             _resolver.Register<ITestObject, SecondTestObject>();
+            _resolver.Build();
             ITestObject result = _resolver.Resolve<ITestObject>();
             Assert.IsInstanceOfType(result, typeof(SecondTestObject));
         }
@@ -54,6 +58,7 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         public void TypeCanResolveRegisteredInterface()
         {
             _resolver.Register(typeof(ITestObject), typeof(TestObject));
+            _resolver.Build();
             ITestObject result = _resolver.Resolve<ITestObject>();
             Assert.IsInstanceOfType(result, typeof(TestObject));
         }
@@ -63,6 +68,7 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         {
             _resolver.Register(typeof(ITestObject), typeof(TestObject));
             _resolver.Register(typeof(ITestObject), typeof(SecondTestObject));
+            _resolver.Build();
             ITestObject result = _resolver.Resolve<ITestObject>();
             Assert.IsInstanceOfType(result, typeof(SecondTestObject));
         }
@@ -86,6 +92,7 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         public void NamedRegistrationResovles()
         {
             _resolver.Register<ITestObject, SecondTestObject>("something");
+            _resolver.Build();
             ITestObject result = _resolver.Resolve<ITestObject>("something");
             Assert.IsInstanceOfType(result, typeof(SecondTestObject));
         }
@@ -95,6 +102,7 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         {
             _resolver.Register<ITestObject, TestObject>("something");
             _resolver.Register<ITestObject, SecondTestObject>("something");
+            _resolver.Build();
             ITestObject result = _resolver.Resolve<ITestObject>("something");
             Assert.IsInstanceOfType(result, typeof(SecondTestObject));
         }
@@ -104,10 +112,19 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         {
             _resolver.Register<ITestObject, TestObject>("something.else");
             _resolver.Register<ITestObject, SecondTestObject>("something");
+            _resolver.Build();
             ITestObject result = _resolver.Resolve<ITestObject>("something");
             ITestObject result2 = _resolver.Resolve<ITestObject>("something.else");
             Assert.IsInstanceOfType(result, typeof(SecondTestObject));
             Assert.IsInstanceOfType(result2, typeof(TestObject));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ResolveBeforeBuildErrors()
+        {
+            _resolver.Register<ITestObject, TestObject>();
+            _resolver.Resolve<ITestObject>();
         }
     }
 }

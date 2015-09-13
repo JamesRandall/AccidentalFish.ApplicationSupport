@@ -34,7 +34,7 @@ namespace AccidentalFish.ApplicationSupport.Autofac
             {
                 return _container.Value.IsRegistered<T>();
             }
-            return false;
+            return RegisteredTypes.Contains(typeof (T));
         }
 
         /// <summary>
