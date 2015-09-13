@@ -82,6 +82,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Autofac.Tests.Unit", "Tests\AccidentalFish.ApplicationSupport.Autofac.Tests.Unit\AccidentalFish.ApplicationSupport.Autofac.Tests.Unit.csproj", "{62BAFDB5-0F75-49C6-8DC3-8EE34B0C2B21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureResources", "Samples\AzureResources\AzureResources.csproj", "{05D1761A-CBF5-4927-B900-C8F9A17C44F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -260,6 +262,14 @@ Global
 		{62BAFDB5-0F75-49C6-8DC3-8EE34B0C2B21}.Release|Any CPU.Build.0 = Release|Any CPU
 		{62BAFDB5-0F75-49C6-8DC3-8EE34B0C2B21}.Release|x64.ActiveCfg = Release|Any CPU
 		{62BAFDB5-0F75-49C6-8DC3-8EE34B0C2B21}.Release|x64.Build.0 = Release|Any CPU
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6}.Debug|x64.Build.0 = Debug|Any CPU
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6}.Release|x64.ActiveCfg = Release|Any CPU
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -277,9 +287,10 @@ Global
 		{FBD328D0-E5E5-41EE-900A-5661BE17A70B} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 		{C5261168-A100-4201-8F60-00795310A98A} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
 		{62BAFDB5-0F75-49C6-8DC3-8EE34B0C2B21} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
+		{05D1761A-CBF5-4927-B900-C8F9A17C44F6} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
 	EndGlobalSection
 EndGlobal

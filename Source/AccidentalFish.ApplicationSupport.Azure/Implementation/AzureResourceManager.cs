@@ -11,13 +11,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
 {
     internal class AzureResourceManager : IAzureResourceManager
     {
-        public async Task CreateIfNotExistsAsync<T>(IAsynchronousQueue<T> abstractQueue) where T : class
+        public async Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousQueue<T> abstractQueue) where T : class
         {
             AsynchronousQueue<T> storageQueue = abstractQueue as AsynchronousQueue<T>;
             if (storageQueue != null)
             {
-                await storageQueue.UnderlyingQueue.CreateIfNotExistsAsync();
-                return;
+                return (await storageQueue.UnderlyingQueue.CreateIfNotExistsAsync());
             }
             AsynchronousBrokeredMessageQueue<T> serviceBusQueue = abstractQueue as AsynchronousBrokeredMessageQueue<T>;
             if (serviceBusQueue != null)
@@ -26,20 +25,20 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 if (!(await namespaceManager.QueueExistsAsync(serviceBusQueue.UnderlyingQueue.Path)))
                 {
                     await namespaceManager.CreateQueueAsync(serviceBusQueue.UnderlyingQueue.Path);
+                    return true;
                 }
-                return;
+                return false;
             }
 
             throw new ArgumentException($"The queue type {abstractQueue.GetType().FullName} is not supported for resource management");
         }
 
-        public async Task DeleteIfExistsAsync<T>(IAsynchronousQueue<T> abstractQueue) where T : class
+        public async Task<bool> DeleteIfExistsAsync<T>(IAsynchronousQueue<T> abstractQueue) where T : class
         {
             AsynchronousQueue<T> storageQueue = abstractQueue as AsynchronousQueue<T>;
             if (storageQueue != null)
             {
-                await storageQueue.UnderlyingQueue.DeleteIfExistsAsync();
-                return;
+                return (await storageQueue.UnderlyingQueue.DeleteIfExistsAsync());
             }
             AsynchronousBrokeredMessageQueue<T> serviceBusQueue = abstractQueue as AsynchronousBrokeredMessageQueue<T>;
             if (serviceBusQueue != null)
@@ -48,20 +47,20 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 if ((await namespaceManager.QueueExistsAsync(serviceBusQueue.UnderlyingQueue.Path)))
                 {
                     await namespaceManager.DeleteQueueAsync(serviceBusQueue.UnderlyingQueue.Path);
+                    return true;
                 }
-                return;
+                return false;
             }
 
             throw new ArgumentException($"The queue type {abstractQueue.GetType().FullName} is not supported for resource management");
         }
 
-        public void CreateIfNotExists<T>(IQueue<T> abstractQueue) where T : class
+        public bool CreateIfNotExists<T>(IQueue<T> abstractQueue) where T : class
         {
             StorageQueue<T> storageQueue = abstractQueue as StorageQueue<T>;
             if (storageQueue != null)
             {
-                storageQueue.UnderlyingQueue.CreateIfNotExists();
-                return;
+                return storageQueue.UnderlyingQueue.CreateIfNotExists();
             }
             BrokeredMessageQueue<T> serviceBusQueue = abstractQueue as BrokeredMessageQueue<T>;
             if (serviceBusQueue != null)
@@ -70,19 +69,19 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 if (!namespaceManager.QueueExists(serviceBusQueue.UnderlyingQueue.Path))
                 {
                     namespaceManager.CreateQueue(serviceBusQueue.UnderlyingQueue.Path);
+                    return true;
                 }
-                return;
+                return false;
             }
             throw new ArgumentException($"The queue type {abstractQueue.GetType().FullName} is not supported for resource management");
         }
 
-        public void DeleteIfExists<T>(IQueue<T> abstractQueue) where T : class
+        public bool DeleteIfExists<T>(IQueue<T> abstractQueue) where T : class
         {
             StorageQueue<T> storageQueue = abstractQueue as StorageQueue<T>;
             if (storageQueue != null)
             {
-                storageQueue.UnderlyingQueue.DeleteIfExists();
-                return;
+                return storageQueue.UnderlyingQueue.DeleteIfExists();
             }
             BrokeredMessageQueue<T> serviceBusQueue = abstractQueue as BrokeredMessageQueue<T>;
             if (serviceBusQueue != null)
@@ -91,13 +90,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 if (namespaceManager.QueueExists(serviceBusQueue.UnderlyingQueue.Path))
                 {
                     namespaceManager.DeleteQueue(serviceBusQueue.UnderlyingQueue.Path);
+                    return true;
                 }
-                return;
+                return false;
             }
             throw new ArgumentException($"The queue type {abstractQueue.GetType().FullName} is not supported for resource management");
         }
 
-        public async Task CreateIfNotExistsAsync<T>(IAsynchronousTopic<T> abstractTopic) where T : class
+        public async Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousTopic<T> abstractTopic) where T : class
         {
             AsynchronousTopic<T> topic = abstractTopic as AsynchronousTopic<T>;
             if (topic != null)
@@ -106,13 +106,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 if (!(await namespaceManager.QueueExistsAsync(topic.UnderlyingTopic.Path)))
                 {
                     await namespaceManager.CreateTopicAsync(topic.UnderlyingTopic.Path);
+                    return true;
                 }
-                return;
+                return false;
             }
             throw new ArgumentException($"The topic type {abstractTopic.GetType().FullName} is not supported for resource management");
         }
 
-        public async Task DeleteIfExistsAsync<T>(IAsynchronousTopic<T> abstractTopic) where T : class
+        public async Task<bool> DeleteIfExistsAsync<T>(IAsynchronousTopic<T> abstractTopic) where T : class
         {
             AsynchronousTopic<T> topic = abstractTopic as AsynchronousTopic<T>;
             if (topic != null)
@@ -121,13 +122,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 if ((await namespaceManager.QueueExistsAsync(topic.UnderlyingTopic.Path)))
                 {
                     await namespaceManager.DeleteTopicAsync(topic.UnderlyingTopic.Path);
+                    return true;
                 }
-                return;
+                return false;
             }
             throw new ArgumentException($"The topic type {abstractTopic.GetType().FullName} is not supported for resource management");
         }
 
-        public async Task CreateIfNotExistsAsync<T>(IAsynchronousSubscription<T> abstractSubscription) where T : class
+        public async Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousSubscription<T> abstractSubscription) where T : class
         {
             AsynchronousSubscription<T> subscription = abstractSubscription as AsynchronousSubscription<T>;
             if (subscription != null)
@@ -136,13 +138,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 if (!(await namespaceManager.QueueExistsAsync(subscription.UnderlyingSubscription.Name)))
                 {
                     await namespaceManager.CreateSubscriptionAsync(subscription.UnderlyingSubscription.TopicPath, subscription.UnderlyingSubscription.Name);
+                    return true;
                 }
-                return;
+                return false;
             }
             throw new ArgumentException($"The topic type {abstractSubscription.GetType().FullName} is not supported for resource management");
         }
 
-        public async Task DeleteIfExistsAsync<T>(IAsynchronousSubscription<T> abstractSubscription) where T : class
+        public async Task<bool> DeleteIfExistsAsync<T>(IAsynchronousSubscription<T> abstractSubscription) where T : class
         {
             AsynchronousSubscription<T> subscription = abstractSubscription as AsynchronousSubscription<T>;
             if (subscription != null)
@@ -151,30 +154,29 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 if ((await namespaceManager.QueueExistsAsync(subscription.UnderlyingSubscription.Name)))
                 {
                     await namespaceManager.DeleteSubscriptionAsync(subscription.UnderlyingSubscription.TopicPath, subscription.UnderlyingSubscription.Name);
+                    return true;
                 }
-                return;
+                return false;
             }
             throw new ArgumentException($"The topic type {abstractSubscription.GetType().FullName} is not supported for resource management");
         }
 
-        public async Task CreateIfNotExistsAsync<T>(IAsynchronousTableStorageRepository<T> abstractTable) where T : ITableEntity, new()
+        public async Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousTableStorageRepository<T> abstractTable) where T : ITableEntity, new()
         {
             AsynchronousTableStorageRepository<T> table = abstractTable as AsynchronousTableStorageRepository<T>;
             if (table != null)
             {
-                await table.Table.CreateIfNotExistsAsync();
-                return;
+                return await table.Table.CreateIfNotExistsAsync();
             }
             throw new ArgumentException($"The table type {abstractTable.GetType().FullName} is not supported for resource management");
         }
 
-        public async Task DeleteIfExistsAsync<T>(IAsynchronousTableStorageRepository<T> abstractTable) where T : ITableEntity, new()
+        public async Task<bool> DeleteIfExistsAsync<T>(IAsynchronousTableStorageRepository<T> abstractTable) where T : ITableEntity, new()
         {
             AsynchronousTableStorageRepository<T> table = abstractTable as AsynchronousTableStorageRepository<T>;
             if (table != null)
             {
-                await table.Table.DeleteIfExistsAsync();
-                return;
+                return (await table.Table.DeleteIfExistsAsync());
             }
             throw new ArgumentException($"The table type {abstractTable.GetType().FullName} is not supported for resource management");
         }
