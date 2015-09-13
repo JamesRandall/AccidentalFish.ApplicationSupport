@@ -4,4 +4,4 @@ layout: article
 ---
 ### Tutorials
 
-[Getting Started](/tutorials/gettingStarted.html)|High level overview to getting started with links off to deeper dives
+[Step 1 - Hello World](/tutorials/helloWorld.html)|Demonstrates a simple way to use queues and the logger to create a hello world type application
