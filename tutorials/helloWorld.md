@@ -12,6 +12,8 @@ As a prerequisite for the below you'll need an Azure Storage Account and the con
 
 As with many tutorials the code samples focus on simplicity and clarity as opposed to being of production quality.
 
+Full source code for this sample is [available here](https://github.com/JamesRandall/AccidentalFish.ApplicationSupport-Tutorials/tree/master/Step%201%20-%20Hello%20World).
+
 #### Setting Up The Project
 
 Open Visual Studio and create a new console application based on .Net 4.5.1 or higher. After the solution has been created you should have the usual empty template for a console application:
