@@ -1,4 +1,5 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Components;
+﻿using System;
+using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
@@ -14,7 +15,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 
         public IHostableComponent Create(IComponentIdentity componentIdentity)
         {
-            return _container.Resolve<IHostableComponent>(componentIdentity.ToString());
+            try
+            {
+                return _container.Resolve<IHostableComponent>(componentIdentity.ToString());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
