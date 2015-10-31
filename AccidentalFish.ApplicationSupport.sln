@@ -68,6 +68,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReleaseNotes", "ReleaseNote
 	ProjectSection(SolutionItems) = preProject
 		ReleaseNotes\v2.0.0.md = ReleaseNotes\v2.0.0.md
 		ReleaseNotes\v2.1.0.md = ReleaseNotes\v2.1.0.md
+		ReleaseNotes\v2.2.0.md = ReleaseNotes\v2.2.0.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Ninject", "Source\AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj", "{14E9E435-B14A-4D85-B03F-F997854FD0D1}"

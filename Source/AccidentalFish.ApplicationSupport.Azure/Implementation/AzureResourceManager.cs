@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Azure.Blobs;
 using AccidentalFish.ApplicationSupport.Azure.Queues;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation;
+using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.ServiceBus;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Implementation
@@ -179,6 +182,26 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
                 return (await table.Table.DeleteIfExistsAsync());
             }
             throw new ArgumentException($"The table type {abstractTable.GetType().FullName} is not supported for resource management");
+        }
+
+        public async Task<bool> CreateIfNotExistsAsync(IAsynchronousBlockBlobRepository abstractRepository)
+        {
+            AsynchronousBlockBlobRepository repository = abstractRepository as AsynchronousBlockBlobRepository;
+            if (repository != null)
+            {
+                return await repository.Container.CreateIfNotExistsAsync();
+            }
+            throw new ArgumentException($"The blob container type {abstractRepository.GetType().FullName} is not supported for resource management");
+        }
+
+        public async Task<bool> DeleteIfExistsAsync(IAsynchronousBlockBlobRepository abstractRepository)
+        {
+            AsynchronousBlockBlobRepository repository = abstractRepository as AsynchronousBlockBlobRepository;
+            if (repository != null)
+            {
+                return await repository.Container.DeleteIfExistsAsync();
+            }
+            throw new ArgumentException($"The blob container type {abstractRepository.GetType().FullName} is not supported for resource management");
         }
     }
 }

@@ -11,7 +11,7 @@
     <iconUrl>http://www.accidentalfish.com/nugetidentity.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>See v2.0.0.md for release details</releaseNotes>
+    <releaseNotes>See v2.2.0.md for release details</releaseNotes>
     <copyright>Copyright 2015 Accidental Fish Ltd.</copyright>
     <tags>azure paas application framework table sql queue deployment configuration</tags>
   </metadata>

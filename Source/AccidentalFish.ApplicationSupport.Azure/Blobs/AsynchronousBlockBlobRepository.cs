@@ -65,5 +65,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
         }
 
         public string Endpoint => _endpoint;
+
+        internal CloudBlobContainer Container => _container;
     }
 }

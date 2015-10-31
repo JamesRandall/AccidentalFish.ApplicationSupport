@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
+using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -21,5 +22,8 @@ namespace AccidentalFish.ApplicationSupport.Azure
 
         Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousTableStorageRepository<T> table) where T : ITableEntity, new();
         Task<bool> DeleteIfExistsAsync<T>(IAsynchronousTableStorageRepository<T> table) where T : ITableEntity, new();
+
+        Task<bool> CreateIfNotExistsAsync(IAsynchronousBlockBlobRepository repository);
+        Task<bool> DeleteIfExistsAsync(IAsynchronousBlockBlobRepository repository);
     }
 }
