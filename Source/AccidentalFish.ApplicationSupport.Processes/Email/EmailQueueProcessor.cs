@@ -10,7 +10,7 @@ using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
-using RazorEngine;
+using AccidentalFish.ApplicationSupport.Core.Templating;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Email
 {
@@ -28,6 +28,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
         private const string EmailFullyQualifiedName = "com.accidental-fish.email";
         private readonly IEmailProvider _emailProvider;
+        private readonly ITemplateEngineFactory _templateEngineFactory;
         private readonly IAsynchronousQueue<EmailQueueItem> _poisonQueue; 
         private readonly IAsynchronousBlockBlobRepository _blobRepository;
         private readonly ILogger _logger;
@@ -36,11 +37,13 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
         public EmailQueueProcessor(IApplicationResourceFactory applicationResourceFactory,
             IAsynchronousBackoffPolicy backoffPolicy,
             ILoggerFactory loggerFactory,
-            IEmailProvider emailProvider)
+            IEmailProvider emailProvider,
+            ITemplateEngineFactory templateEngineFactory)
             : base(backoffPolicy, applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(new ComponentIdentity(EmailFullyQualifiedName)))
         {
             IComponentIdentity emailComponentIdentity = new ComponentIdentity(EmailFullyQualifiedName);
             _emailProvider = emailProvider;
+            _templateEngineFactory = templateEngineFactory;
 
             string poisonQueueName = applicationResourceFactory.Setting(emailComponentIdentity, "email-poison-queue");
 
@@ -58,7 +61,10 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
                 if (!String.IsNullOrWhiteSpace(item.EmailTemplateId))
                 {
                     XDocument template = await GetTemplate(item.EmailTemplateId);
-                    EmailContent content = ProcessTemplate(template, item.MergeData);
+                    EmailContent content = ProcessTemplate(
+                        item.TemplateSyntax ?? TemplateSyntaxEnum.Razor,
+                        template,
+                        item.MergeData);
                     await _emailProvider.SendAsync(item.To, item.Cc, item.From, content.Title, content.HtmlBody, content.TextBody);
                 }
                 else
@@ -94,7 +100,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
         {
             if (!Path.HasExtension(emailTemplateId))
             {
-                emailTemplateId = String.Format("{0}.xml", emailTemplateId);
+                emailTemplateId = $"{emailTemplateId}.xml";
             }
             IBlob blob = _blobRepository.Get(emailTemplateId);
             string template = await blob.DownloadStringAsync();
@@ -102,28 +108,20 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             return xdoc;
         }
 
-        private string TitleTemplateCacheName(string emailTemplateId)
+        private EmailContent ProcessTemplate(TemplateSyntaxEnum syntax, XDocument template, Dictionary<string, string> mergeData)
         {
-            return String.Format("{0}-title", emailTemplateId);
-        }
-
-        private string BodyTemplateCacheName(string emailTemplateId)
-        {
-            return String.Format("{0}-body", emailTemplateId);
-        }
-
-        private EmailContent ProcessTemplate(XDocument template, Dictionary<string, string> mergeData)
-        {
-            var titleTemplate = template.Root.Element("title");
-            var htmlBodyTemplate = template.Root.Element("body") ?? template.Root.Element("html");
-            var textBodyTemplate = template.Root.Element("text");
+            var titleTemplate = template?.Root?.Element("title");
+            var htmlBodyTemplate = template?.Root?.Element("body") ?? template?.Root?.Element("html");
+            var textBodyTemplate = template?.Root?.Element("text");
             string title;
             string htmlBody;
             string textBody;
 
+            ITemplateEngine templateEngine = _templateEngineFactory.Create(syntax);
+
             try
             {
-                title = titleTemplate == null ? null : Razor.Parse(titleTemplate.Value, mergeData);
+                title = titleTemplate == null ? null : templateEngine.Execute(titleTemplate.Value, mergeData);
             }
             catch (Exception ex)
             {
@@ -133,7 +131,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
             try
             {
-                htmlBody = htmlBodyTemplate == null ? null : Razor.Parse(htmlBodyTemplate.Value, mergeData);
+                htmlBody = htmlBodyTemplate == null ? null : templateEngine.Execute(htmlBodyTemplate.Value, mergeData);
             }
             catch (Exception ex)
             {
@@ -143,7 +141,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
             try
             {
-                textBody = textBodyTemplate == null ? null : Razor.Parse(textBodyTemplate.Value, mergeData);
+                textBody = textBodyTemplate == null ? null : templateEngine.Execute(textBodyTemplate.Value, mergeData);
             }
             catch (Exception ex)
             {
@@ -159,9 +157,6 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             };
         }
 
-        public override IComponentIdentity ComponentIdentity
-        {
-            get { return new ComponentIdentity(HostableComponentNames.EmailQueueProcessor); }
-        }
+        public override IComponentIdentity ComponentIdentity => new ComponentIdentity(HostableComponentNames.EmailQueueProcessor);
     }
 }

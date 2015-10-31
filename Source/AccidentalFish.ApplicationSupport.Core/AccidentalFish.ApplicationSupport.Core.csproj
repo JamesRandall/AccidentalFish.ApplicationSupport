@@ -91,6 +91,7 @@
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailQueueDispatcher.cs" />
+    <Compile Include="Templating\TemplateSyntaxEnum.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Logging\ICorrelationIdProvider.cs" />
     <Compile Include="Logging\ILoggerExtension.cs" />

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Queues;
+using AccidentalFish.ApplicationSupport.Core.Templating;
 
 namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 {
@@ -18,12 +19,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
             _queue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(ComponentIdentity);
         }
 
-        public Task SendAsync(string to, string cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues)
+        public Task SendAsync(string to, string cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues, TemplateSyntaxEnum templateSyntax = TemplateSyntaxEnum.Razor)
         {
             return SendAsync(new[] {to}, new[] {cc}, @from, emailTemplateId, mergeValues);
         }
 
-        public async Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues)
+        public async Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues, TemplateSyntaxEnum templateSyntax = TemplateSyntaxEnum.Razor)
         {
             EmailQueueItem item = new EmailQueueItem
             {
@@ -31,7 +32,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
                 EmailTemplateId = emailTemplateId,
                 From = from,
                 MergeData = mergeValues,
-                To = new List<string>(to)
+                To = new List<string>(to),
+                TemplateSyntax = templateSyntax
             };
 
             await _queue.EnqueueAsync(item);

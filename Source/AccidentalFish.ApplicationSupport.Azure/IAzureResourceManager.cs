@@ -2,6 +2,7 @@
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Queues;
+using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AccidentalFish.ApplicationSupport.Azure
@@ -18,6 +19,7 @@ namespace AccidentalFish.ApplicationSupport.Azure
         Task<bool> DeleteIfExistsAsync<T>(IAsynchronousTopic<T> topic) where T : class;
 
         Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousSubscription<T> subscription) where T : class;
+        Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousSubscription<T> subscription, Filter filter) where T : class;
         Task<bool> DeleteIfExistsAsync<T>(IAsynchronousSubscription<T> subscription) where T : class;
 
         Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousTableStorageRepository<T> table) where T : ITableEntity, new();

@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Handlebars, Version=1.0.0.0, Culture=neutral, PublicKeyToken=22225d0bf33cd661, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Handlebars.Net.1.4.4\lib\Handlebars.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
       <Private>True</Private>
@@ -94,6 +98,11 @@
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Email\EmailQueueProcessor.cs" />
+    <Compile Include="Email\HandlebarsTemplateEngine.cs" />
+    <Compile Include="Email\ITemplateEngine.cs" />
+    <Compile Include="Email\ITemplateEngineFactory.cs" />
+    <Compile Include="Email\RazorTemplateEngine.cs" />
+    <Compile Include="Email\TemplateEngineFactory.cs" />
     <Compile Include="HostableComponentIdentities.cs" />
     <Compile Include="HostableComponentNames.cs" />
     <Compile Include="Logging\LogQueueProcessor.cs" />

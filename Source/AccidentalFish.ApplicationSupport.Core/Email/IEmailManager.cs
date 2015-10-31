@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Templating;
 
 namespace AccidentalFish.ApplicationSupport.Core.Email
 {
@@ -17,8 +18,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Email
         /// <param name="from">The from address</param>
         /// <param name="emailTemplateId">The ID of the template (the email queue processor needs access to this)</param>
         /// <param name="mergeValues">Merge data</param>
+        /// <param name="templateSyntax">Syntax of the template. Defaults to Razor in the v2.x series for backwards compatibility but this will be changed to Handlebars from v3.x onwards</param>
         /// <returns>Awaitable task</returns>
-        Task SendAsync(string to, string cc, string from, string emailTemplateId, Dictionary<string, string> mergeValues);
+        Task SendAsync(string to, string cc, string from, string emailTemplateId, Dictionary<string, string> mergeValues, TemplateSyntaxEnum templateSyntax = TemplateSyntaxEnum.Razor);
 
         /// <summary>
         /// Send an email using a template
@@ -28,8 +30,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Email
         /// <param name="from">The from address</param>
         /// <param name="emailTemplateId">The ID of the template (the email queue processor needs access to this)</param>
         /// <param name="mergeValues">Merge data</param>
+        /// <param name="templateSyntax">Syntax of the template. Defaults to Razor in the v2.x series for backwards compatibility but this will be changed to Handlebars from v3.x onwards</param>
         /// <returns>Awaitable task</returns>
-        Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string from, string emailTemplateId, Dictionary<string, string> mergeValues);
+        Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string from, string emailTemplateId, Dictionary<string, string> mergeValues, TemplateSyntaxEnum templateSyntax = TemplateSyntaxEnum.Razor);
 
         /// <summary>
         /// Send an email using

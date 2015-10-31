@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AccidentalFish.ApplicationSupport.Core.Templating;
 
 namespace AccidentalFish.ApplicationSupport.Core.Email
 {
@@ -47,5 +48,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Email
         /// Plain text body for the email
         /// </summary>
         public string TextBody { get; set; }
+
+        /// <summary>
+        /// Email template syntax
+        /// </summary>
+        public TemplateSyntaxEnum? TemplateSyntax { get; set; }
     }
 }
