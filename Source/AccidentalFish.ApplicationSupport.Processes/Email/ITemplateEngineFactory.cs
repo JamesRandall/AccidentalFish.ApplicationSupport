@@ -1,5 +1,4 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Email;
-using AccidentalFish.ApplicationSupport.Core.Templating;
+﻿using AccidentalFish.ApplicationSupport.Core.Templating;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Email
 {

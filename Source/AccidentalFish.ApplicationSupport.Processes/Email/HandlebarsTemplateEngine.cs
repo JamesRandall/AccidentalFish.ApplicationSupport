@@ -11,7 +11,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
         public string Execute(string template, Dictionary<string, string> mergeData)
         {
-            int hashCode = template.GetHashCode();
+            int hashCode = template.GetHashCode(); // collison possible but extremely unlikley in the intended usage scenarios
             Func<object, string> compiledTemplate = _compiledTemplates.GetOrAdd(hashCode, key => Handlebars.Compile(template));
             string result = compiledTemplate(mergeData);
             return result;
