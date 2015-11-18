@@ -1,6 +1,5 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Logging.Model;
-using AccidentalFish.ApplicationSupport.Core.Mappers;
-using AccidentalFish.ApplicationSupport.Processes.Logging.Model;
+﻿using AccidentalFish.ApplicationSupport.Core.Mappers;
+using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Mappers
 {

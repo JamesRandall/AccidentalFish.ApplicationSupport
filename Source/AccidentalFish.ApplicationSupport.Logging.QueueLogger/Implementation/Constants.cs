@@ -1,5 +1,5 @@
-﻿// ReSharper disable once CheckNamespace
-namespace AccidentalFish.ApplicationSupport.Private
+﻿
+namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
 {
     internal class Constants
     {

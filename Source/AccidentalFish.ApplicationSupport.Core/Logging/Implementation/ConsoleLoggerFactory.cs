@@ -1,29 +1,17 @@
-﻿using AccidentalFish.ApplicationSupport.Core.Logging.Model;
-using AccidentalFish.ApplicationSupport.Core.Naming;
-using AccidentalFish.ApplicationSupport.Core.Queues;
+﻿using AccidentalFish.ApplicationSupport.Core.Naming;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 {
     internal class ConsoleLoggerFactory : ILoggerFactory
     {
-        public ILogger CreateShortLivedLogger(IFullyQualifiedName source)
+        public ILogger CreateLogger(LogLevelEnum minimumLogLevel = LogLevelEnum.Warning)
         {
-            return new ConsoleLogger();
+            return new ConsoleLogger(null, minimumLogLevel);
         }
 
-        public ILogger CreateShortLivedLogger(IAsynchronousQueue<LogQueueItem> queue, IFullyQualifiedName source, LogLevelEnum minimumLogLevel)
+        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum minimumLogLevel = LogLevelEnum.Warning)
         {
-            return new ConsoleLogger();
-        }
-
-        public ILogger CreateLongLivedLogger(IFullyQualifiedName source)
-        {
-            return new ConsoleLogger();
-        }
-
-        public ILogger CreateLongLivedLogger(IAsynchronousQueue<LogQueueItem> queue, IFullyQualifiedName source, LogLevelEnum minimumLogLevel)
-        {
-            return new ConsoleLogger();
+            return new ConsoleLogger(source, minimumLogLevel);
         }
     }
 }

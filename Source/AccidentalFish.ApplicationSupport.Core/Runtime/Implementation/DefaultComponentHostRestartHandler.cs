@@ -16,13 +16,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                 if (doDelay)
                 {
                     await
-                        logger.Warning(
+                        logger.WarningAsync(
                             $"Error occurred in component {component.FullyQualifiedName}. Restarting in 30 seconds.", ex);
                     await Task.Delay(TimeSpan.FromSeconds(30));
                 }
                 else
                 {
-                    await logger.Warning($"Error occurred in component {component.FullyQualifiedName}. Restarting immediately.", ex);
+                    await logger.WarningAsync($"Error occurred in component {component.FullyQualifiedName}. Restarting immediately.", ex);
                 }
             }
             catch (Exception)

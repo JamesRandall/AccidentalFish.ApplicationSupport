@@ -27,11 +27,11 @@ namespace LoggerWithAutofac
 
             IComponentHost componentHost = dependencyResolver.Resolve<IComponentHost>();
             ILoggerFactory loggerFactory = dependencyResolver.Resolve<ILoggerFactory>();
-            ILogger logger = loggerFactory.CreateShortLivedLogger(new ComponentIdentity("com.accidental-fish.application-support"));
+            ILogger logger = loggerFactory.CreateLogger(new ComponentIdentity("com.accidental-fish.application-support"));
             CancellationTokenSource source = new CancellationTokenSource();
 
             StartComponentHost(componentHost, logger, source);
-            logger.Information("Something to log");
+            logger.InformationAsync("Something to log");
             Console.ReadLine();
             source.Cancel();
             Thread.Sleep(500);
@@ -60,13 +60,13 @@ namespace LoggerWithAutofac
                 if (doDelay)
                 {
                     await
-                        logger.Warning(
+                        logger.WarningAsync(
                             $"Error occurred in component {component.FullyQualifiedName}. Restarting in 30 seconds.", ex);
                     await Task.Delay(TimeSpan.FromSeconds(30));
                 }
                 else
                 {
-                    await logger.Warning($"Error occurred in component {component.FullyQualifiedName}. Restarting immediately.", ex);
+                    await logger.WarningAsync($"Error occurred in component {component.FullyQualifiedName}. Restarting immediately.", ex);
                 }
             }
             catch (Exception)

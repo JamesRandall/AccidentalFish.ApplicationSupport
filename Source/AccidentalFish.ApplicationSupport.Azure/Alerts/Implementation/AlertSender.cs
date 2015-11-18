@@ -29,7 +29,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation
         {
             _emailProvider = emailProvider;
             _table = applicationResourceFactory.GetTableStorageRepository<AlertSubscriber>(ComponentIdentity);
-            _logger = loggerFactory.CreateShortLivedLogger(ComponentIdentity);
+            _logger = loggerFactory.CreateLogger(ComponentIdentity);
             _sourceEmailAddress = applicationResourceFactory.Setting(ComponentIdentity, "alert-from");
         }
 
@@ -42,13 +42,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation
             }
             catch (Exception ex)
             {
-                _logger.Warning("Unable to retrieve alert subscribers", ex).Wait();
+                await _logger.WarningAsync("Unable to retrieve alert subscribers", ex);
                 return;
             }
 
             if (!subscribers.Any())
             {
-                _logger.Information("No alert subscribers are configured").Wait();
+                await _logger.InformationAsync("No alert subscribers are configured");
                 return;
             }
 
@@ -61,7 +61,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation
             {
                 // send a warning and not an error as a warning will just cause another alert to be sent, then another etc.
                 // and if alerts can't be received...
-                _logger.Warning("Unable to send email alert").Wait();
+                await _logger.WarningAsync("Unable to send email alert");
             }
             
         }

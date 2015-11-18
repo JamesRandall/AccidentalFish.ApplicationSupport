@@ -49,7 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
             _poisonQueue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(poisonQueueName, emailComponentIdentity);
             _blobRepository = applicationResourceFactory.GetAsyncBlockBlobRepository(emailComponentIdentity);
-            _logger = loggerFactory.CreateLongLivedLogger(emailComponentIdentity);
+            _logger = loggerFactory.CreateLogger(emailComponentIdentity);
         }
 
         protected override async Task<bool> HandleRecievedItemAsync(IQueueItem<EmailQueueItem> queueItem)
@@ -76,7 +76,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             }
             catch (Exception ex)
             {
-                _logger.Error("Error sending email", ex).Wait();
+                _logger.ErrorAsync("Error sending email", ex).Wait();
                 success = false;
             }
 
@@ -125,7 +125,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             }
             catch (Exception ex)
             {
-                _logger.Error("Error processing title template", ex);
+                _logger.ErrorAsync("Error processing title template", ex);
                 throw;
             }
 
@@ -135,7 +135,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             }
             catch (Exception ex)
             {
-                _logger.Error("Error processing body template", ex);
+                _logger.ErrorAsync("Error processing body template", ex);
                 throw;
             }
 
@@ -145,7 +145,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
             }
             catch (Exception ex)
             {
-                _logger.Error("Error processing text template", ex);
+                _logger.ErrorAsync("Error processing text template", ex);
                 throw;
             }
 

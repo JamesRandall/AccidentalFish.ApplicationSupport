@@ -16,11 +16,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
             get
             {
                 object correlationId = CallContext.LogicalGetData(_callContextKey);
-                if (correlationId == null)
-                {
-                    return null;
-                }
-                return (string)correlationId;
+                return (string) correlationId;
             }
             set
             {

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.Components;
 using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Processes.Logging;
 using AccidentalFish.ApplicationSupport.Processes.Mappers;

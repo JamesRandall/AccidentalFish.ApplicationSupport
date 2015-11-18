@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Core.Logging.Model;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
+using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
 
-namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
+namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
 {
     internal class QueueLogger : ILogger
     {
         private readonly IRuntimeEnvironment _runtimeEnvironment;
         private readonly IAsynchronousQueue<LogQueueItem> _queue;
         private readonly IFullyQualifiedName _source;
-        private readonly ILoggerExtension _loggerExtension;
+        private readonly IQueueLoggerExtension _queueLoggerExtension;
         private readonly LogLevelEnum _minimumLoggingLevel;
         private readonly ICorrelationIdProvider _correlationIdProvider;
 
@@ -21,68 +22,88 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
             IRuntimeEnvironment runtimeEnvironment,
             IAsynchronousQueue<LogQueueItem> queue,
             IFullyQualifiedName source,
-            ILoggerExtension loggerExtension,
+            IQueueLoggerExtension queueLoggerExtension,
             LogLevelEnum minimumLoggingLevel,
             ICorrelationIdProvider correlationIdProvider)
         {
             _runtimeEnvironment = runtimeEnvironment;
             _queue = queue;
             _source = source;
-            _loggerExtension = loggerExtension;
+            _queueLoggerExtension = queueLoggerExtension;
             _minimumLoggingLevel = minimumLoggingLevel;
             _correlationIdProvider = correlationIdProvider;
         }
 
+        public async Task VerboseAsync(string message)
+        {
+            await LogAsync(LogLevelEnum.Verbose, message);
+        }
+
+        public async Task VerboseAsync(string message, Exception exception)
+        {
+            await LogAsync(LogLevelEnum.Verbose, message, exception);
+        }
+
         public async Task DebugAsync(string message)
         {
-            await Log(LogLevelEnum.Debug, message);
+            await LogAsync(LogLevelEnum.Debug, message);
         }
 
         public async Task DebugAsync(string message, Exception exception)
         {
-            await Log(LogLevelEnum.Debug, message, exception);
+            await LogAsync(LogLevelEnum.Debug, message, exception);
         }
 
-        public async Task Information(string message)
+        public async Task InformationAsync(string message)
         {
-            await Log(LogLevelEnum.Information, message);
+            await LogAsync(LogLevelEnum.Information, message);
         }
 
-        public async Task Information(string message, Exception exception)
+        public async Task InformationAsync(string message, Exception exception)
         {
-            await Log(LogLevelEnum.Information, message, exception);
+            await LogAsync(LogLevelEnum.Information, message, exception);
         }
 
-        public async Task Warning(string message)
+        public async Task WarningAsync(string message)
         {
-            await Log(LogLevelEnum.Warning, message);
+            await LogAsync(LogLevelEnum.Warning, message);
         }
 
-        public async Task Warning(string message, Exception exception)
+        public async Task WarningAsync(string message, Exception exception)
         {
-            await Log(LogLevelEnum.Warning, message, exception);
+            await LogAsync(LogLevelEnum.Warning, message, exception);
         }
 
-        public async Task Error(string message)
+        public async Task ErrorAsync(string message)
         {
-            await Log(LogLevelEnum.Error, message);
+            await LogAsync(LogLevelEnum.Error, message);
         }
 
-        public async Task Error(string message, Exception exception)
+        public async Task ErrorAsync(string message, Exception exception)
         {
-            await Log(LogLevelEnum.Error, message, exception);
+            await LogAsync(LogLevelEnum.Error, message, exception);
         }
 
-        public async Task Log(LogLevelEnum level, string message)
+        public async Task FatalAsync(string message)
         {
-            await Log(level, message, null);
+            await LogAsync(LogLevelEnum.Fatal, message);
         }
 
-        public async Task Log(LogLevelEnum level, string message, Exception exception)
+        public async Task FatalAsync(string message, Exception exception)
+        {
+            await LogAsync(LogLevelEnum.Fatal, message, exception);
+        }
+
+        public async Task LogAsync(LogLevelEnum level, string message)
+        {
+            await LogAsync(level, message, null);
+        }
+
+        public async Task LogAsync(LogLevelEnum level, string message, Exception exception)
         {
             LogQueueItem item = CreateLogQueueItem(level, message, exception);
             bool willLog = level >= _minimumLoggingLevel;
-            if (_loggerExtension.BeforeLog(item, exception, willLog))
+            if (_queueLoggerExtension.BeforeLog(item, exception, willLog))
             {
                 if (willLog)
                 {

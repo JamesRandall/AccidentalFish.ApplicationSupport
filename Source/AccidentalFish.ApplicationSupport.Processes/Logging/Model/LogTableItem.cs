@@ -3,7 +3,7 @@ using System.Linq;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace AccidentalFish.ApplicationSupport.Processes.Logging.Model
+namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model
 {
     internal class LogTableItem : TableEntity
     {

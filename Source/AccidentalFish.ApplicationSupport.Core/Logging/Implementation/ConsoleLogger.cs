@@ -1,62 +1,99 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Naming;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 {
     internal class ConsoleLogger : ILogger
     {
+        private readonly IFullyQualifiedName _source;
+        private readonly LogLevelEnum _minimumLogLevel;
+
+        public ConsoleLogger(IFullyQualifiedName source, LogLevelEnum minimumLogLevel)
+        {
+            _source = source;
+            _minimumLogLevel = minimumLogLevel;
+        }
+
+
+        public async Task VerboseAsync(string message)
+        {
+            await LogAsync(LogLevelEnum.Verbose, message);
+        }
+
+        public async Task VerboseAsync(string message, Exception exception)
+        {
+            await LogAsync(LogLevelEnum.Verbose, message, exception);
+        }
+
         public async Task DebugAsync(string message)
         {
-            await Log(LogLevelEnum.Debug, message);
+            await LogAsync(LogLevelEnum.Debug, message);
         }
 
         public async Task DebugAsync(string message, Exception exception)
         {
-            await Log(LogLevelEnum.Debug, message, exception);
+            await LogAsync(LogLevelEnum.Debug, message, exception);
         }
 
-        public async Task Information(string message)
+        public async Task InformationAsync(string message)
         {
-            await Log(LogLevelEnum.Information, message);
+            await LogAsync(LogLevelEnum.Information, message);
         }
 
-        public async Task Information(string message, Exception exception)
+        public async Task InformationAsync(string message, Exception exception)
         {
-            await Log(LogLevelEnum.Information, message, exception);
+            await LogAsync(LogLevelEnum.Information, message, exception);
         }
 
-        public async Task Warning(string message)
+        public async Task WarningAsync(string message)
         {
-            await Log(LogLevelEnum.Warning, message);
+            await LogAsync(LogLevelEnum.Warning, message);
         }
 
-        public async Task Warning(string message, Exception exception)
+        public async Task WarningAsync(string message, Exception exception)
         {
-            await Log(LogLevelEnum.Warning, message, exception);
+            await LogAsync(LogLevelEnum.Warning, message, exception);
         }
 
-        public async Task Error(string message)
+        public async Task ErrorAsync(string message)
         {
-            await Log(LogLevelEnum.Error, message);
+            await LogAsync(LogLevelEnum.Error, message);
         }
 
-        public async Task Error(string message, Exception exception)
+        public async Task ErrorAsync(string message, Exception exception)
         {
-            await Log(LogLevelEnum.Error, message, exception);
+            await LogAsync(LogLevelEnum.Error, message, exception);
         }
 
-        public Task Log(LogLevelEnum level, string message)
+        public async Task FatalAsync(string message)
         {
-            Console.WriteLine("{0}: {1}", level.ToString().ToUpper(), message);
+            await LogAsync(LogLevelEnum.Fatal, message);
+        }
+
+        public async Task FatalAsync(string message, Exception exception)
+        {
+            await LogAsync(LogLevelEnum.Fatal, message, exception);
+        }
+
+        public Task LogAsync(LogLevelEnum level, string message)
+        {
+            if (level >= _minimumLogLevel)
+            {
+                string source = _source?.FullyQualifiedName ?? "default";
+                Console.WriteLine($"{source} - {level.ToString().ToUpper()} : {message}");
+            }
             return Task.FromResult(0);
         }
 
-        public Task Log(LogLevelEnum level, string message, Exception exception)
+        public Task LogAsync(LogLevelEnum level, string message, Exception exception)
         {
-            Console.WriteLine("{0} {1}: {2}", level.ToString().ToUpper(), exception.GetType().Name, message);
+            if (level >= _minimumLogLevel)
+            {
+                string source = _source?.FullyQualifiedName ?? "default";
+                Console.WriteLine($"{source} - {level.ToString().ToUpper()} : {exception.GetType().Name} - {message}");
+            }
+            
             return Task.FromResult(0);
         }
     }

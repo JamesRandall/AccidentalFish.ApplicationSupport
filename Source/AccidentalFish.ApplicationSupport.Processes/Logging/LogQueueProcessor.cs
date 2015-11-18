@@ -6,12 +6,11 @@ using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.BackoffProcesses;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
-using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Mappers;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
-using AccidentalFish.ApplicationSupport.Private;
-using AccidentalFish.ApplicationSupport.Processes.Logging.Model;
+using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation;
+using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
 using AccidentalFish.ApplicationSupport.Processes.Mappers;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Logging

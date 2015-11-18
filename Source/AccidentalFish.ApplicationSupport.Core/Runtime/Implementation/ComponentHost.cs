@@ -21,7 +21,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
         {
             _componentFactory = componentFactory;
             _componentHostRestartHandler = componentHostRestartHandler;
-            _logger = loggerFactory.CreateLongLivedLogger(ComponentIdentity);
+            _logger = loggerFactory.CreateLogger(ComponentIdentity);
         }
 
         public Action<Exception, int> CustomErrorHandler { get; set; }
@@ -33,7 +33,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
             List<Task> tasks = new List<Task>();
             foreach (ComponentConfiguration componentConfiguration in componentConfigurations)
             {
-                await _logger.Information(
+                await _logger.InformationAsync(
                     $"Starting {componentConfiguration.Instances} instances of {componentConfiguration.ComponentIdentity}");
                 for (int instance = 0; instance < componentConfiguration.Instances; instance++)
                 {
@@ -60,11 +60,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                     {
                         await Task.Run(async () =>
                         {
-                            await _logger.Information($"Hostable component {componentIdentity} is starting");
+                            await _logger.InformationAsync($"Hostable component {componentIdentity} is starting");
                             IHostableComponent component = _componentFactory.Create(componentIdentity);
                             component.StartAsync(_cancellationTokenSource.Token).Wait();
                             shouldRetry = false; // normal exit
-                            await _logger.Information($"Hostable component {componentIdentity} is exiting");
+                            await _logger.InformationAsync($"Hostable component {componentIdentity} is exiting");
                         }, _cancellationTokenSource.Token);
                         shouldRetry = false;
                     }
@@ -84,13 +84,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                         shouldRetry = restartEvaluator != null && restartEvaluator(ex, retryCount);
                         if (shouldRetry)
                         {
-                            await _logger.Information($"Restarting {retryCount} for component {componentIdentity}", ex);
+                            await _logger.InformationAsync($"Restarting {retryCount} for component {componentIdentity}", ex);
                             AggregateException exception = ex as AggregateException;
                             if (exception != null)
                             {
                                 foreach (Exception innerException in exception.InnerExceptions)
                                 {
-                                    await _logger.Error(Format("Aggregate error for component {1} on retry {0}", retryCount, componentIdentity), innerException);
+                                    await _logger.ErrorAsync(Format("Aggregate error for component {1} on retry {0}", retryCount, componentIdentity), innerException);
                                 }
                             }
                         }
@@ -101,12 +101,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                             {
                                 foreach (Exception innerException in exception.InnerExceptions)
                                 {
-                                    await _logger.Error($"Component failure {retryCount} for component {componentIdentity}", innerException);
+                                    await _logger.ErrorAsync($"Component failure {retryCount} for component {componentIdentity}", innerException);
                                 }
                             }
                             else
                             {
-                                await _logger.Error($"Component failure {retryCount} for component {componentIdentity}", ex);
+                                await _logger.ErrorAsync($"Component failure {retryCount} for component {componentIdentity}", ex);
                             }
                         }
                     }

@@ -1,9 +1,8 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.Logging.Model;
 using AccidentalFish.ApplicationSupport.Core.Queues;
+using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
 
-// ReSharper disable once CheckNamespace
-namespace AccidentalFish.ApplicationSupport.Private
+namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
 {
     internal static class ApplicationResourceFactoryExtensions
     {

@@ -129,7 +129,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
 
         private void LogError(string message, Exception ex)
         {
-            _logger?.Error(message, ex).Wait();
+            _logger?.ErrorAsync(message, ex).Wait();
         }
     }
 }

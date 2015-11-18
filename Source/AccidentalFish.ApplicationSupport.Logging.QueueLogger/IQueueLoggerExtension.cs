@@ -1,12 +1,12 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Logging.Model;
+using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
 
-namespace AccidentalFish.ApplicationSupport.Core.Logging
+namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger
 {
     /// <summary>
     /// Allows the injection of functionality into the queue logger (and any other loggers that accept an ILoggerExtension in their constructor)
     /// </summary>
-    public interface ILoggerExtension
+    public interface IQueueLoggerExtension
     {
         /// <summary>
         /// Called before the logger actually logs the item giving the extension a view of the item,

@@ -18,7 +18,7 @@ namespace ComponentHost
             IUnityContainer container = new UnityContainer();
             UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
 
-            resolver.UseCore(loggerType:Bootstrapper.LoggerTypeEnum.Console);
+            resolver.UseCore();
 
             resolver.Register<IHostableComponent, ExampleHostableComponent>(ExampleHostableComponent.FullyQualifiedName);
 

@@ -79,6 +79,7 @@
     <Compile Include="Blobs\IAsynchronousBlockBlobRepository.cs" />
     <Compile Include="Blobs\IBlob.cs" />
     <Compile Include="Blobs\IBlobRepositoryFactory.cs" />
+    <Compile Include="Blobs\Implementation\NotSupportedBlobRepositoryFactory.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
@@ -91,15 +92,15 @@
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailQueueDispatcher.cs" />
+    <Compile Include="Policies\Implementation\NotSupportedLeaseManagerFactory.cs" />
+    <Compile Include="Queues\Implementation\NotSupportedQueueFactory.cs" />
     <Compile Include="Templating\TemplateSyntaxEnum.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Logging\ICorrelationIdProvider.cs" />
-    <Compile Include="Logging\ILoggerExtension.cs" />
     <Compile Include="Logging\Implementation\ConsoleLogger.cs" />
     <Compile Include="Logging\Implementation\ConsoleLoggerFactory.cs" />
     <Compile Include="Logging\Implementation\CallContextCorrelationIdProvider.cs" />
     <Compile Include="Logging\Implementation\NullCorrelationIdProvider.cs" />
-    <Compile Include="Logging\Implementation\NullLoggerExtension.cs" />
     <Compile Include="Mappers\AbstractBidirectionalMapper.cs" />
     <Compile Include="Mappers\IBidirectionalMapper.cs" />
     <Compile Include="Naming\FullyQualifiedName.cs" />
@@ -142,16 +143,11 @@
     <Compile Include="Configuration\ApplicationComponent.cs" />
     <Compile Include="Configuration\ApplicationConfiguration.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
-    <Compile Include="Private\ApplicationResourceFactoryExtensions.cs" />
-    <Compile Include="Private\Constants.cs" />
     <Compile Include="Email\IEmailProvider.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\ILoggerFactory.cs" />
     <Compile Include="Logging\ILoggerSource.cs" />
-    <Compile Include="Logging\Implementation\QueueLogger.cs" />
-    <Compile Include="Logging\Implementation\QueueLoggerFactory.cs" />
     <Compile Include="Logging\LoggerSource.cs" />
-    <Compile Include="Logging\Model\LogQueueItem.cs" />
     <Compile Include="Mappers\AbstractMapper.cs" />
     <Compile Include="Mappers\AbstractMapperWithContext.cs" />
     <Compile Include="Mappers\IMapper.cs" />
@@ -180,6 +176,7 @@
       <Name>AccidentalFish.ApplicationSupport.DependencyResolver</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
