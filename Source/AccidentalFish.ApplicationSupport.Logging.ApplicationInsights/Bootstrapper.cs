@@ -5,9 +5,11 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
 {
     public static class Bootstrapper
     {
-        public static IDependencyResolver UseAzureApplicationInsightsLogger(this IDependencyResolver dependencyResolver)
+        public static IDependencyResolver UseAzureApplicationInsightsLogger(this IDependencyResolver dependencyResolver,
+            LogLevelEnum defaultMinimumLogLevel = LogLevelEnum.Warning)
         {
-            dependencyResolver.Register<ILoggerFactory, ApplicationInsightLoggerFactory>();
+            ILoggerFactory loggerFactory = new ApplicationInsightLoggerFactory(defaultMinimumLogLevel);
+            dependencyResolver.RegisterInstance(loggerFactory);
             return dependencyResolver;
         }
     }

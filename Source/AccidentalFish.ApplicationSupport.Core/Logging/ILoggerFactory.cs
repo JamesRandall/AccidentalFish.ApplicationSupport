@@ -10,16 +10,16 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging
         /// <summary>
         /// Creates a logger
         /// </summary>
-        /// <param name="minimumLogLevel">The minimum log level for the logger</param>
+        /// <param name="minimumLogLevel">The minimum log level for the logger. If null then the default log level for the implementation will be used.</param>
         /// <returns></returns>
-        ILogger CreateLogger(LogLevelEnum minimumLogLevel = LogLevelEnum.Warning);
+        ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null);
 
         /// <summary>
         /// Creates a logger
         /// </summary>
         /// <param name="source">The component source for the log items</param>
-        /// <param name="minimumLogLevel">The minimum log level for the logger</param>
+        /// <param name="minimumLogLevel">The minimum log level for the logger. If null then the default log level for the implementation will be used.</param>
         /// <returns></returns>
-        ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum minimumLogLevel = LogLevelEnum.Warning);
+        ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null);
     }
 }

@@ -94,6 +94,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DependencyResolution", "Dep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Logging.Serilog", "Source\AccidentalFish.ApplicationSupport.Logging.Serilog\AccidentalFish.ApplicationSupport.Logging.Serilog.csproj", "{0359DC68-A97B-42B2-BA0C-1BF8366133DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerilogSample", "Samples\SerilogSample\SerilogSample.csproj", "{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -296,6 +298,14 @@ Global
 		{0359DC68-A97B-42B2-BA0C-1BF8366133DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0359DC68-A97B-42B2-BA0C-1BF8366133DF}.Release|x64.ActiveCfg = Release|Any CPU
 		{0359DC68-A97B-42B2-BA0C-1BF8366133DF}.Release|x64.Build.0 = Release|Any CPU
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}.Debug|x64.Build.0 = Debug|Any CPU
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}.Release|x64.ActiveCfg = Release|Any CPU
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -321,6 +331,7 @@ Global
 		{05D1761A-CBF5-4927-B900-C8F9A17C44F6} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 		{1E2566A4-4685-470F-9175-8D65A388FD66} = {CA5A38CF-EBF1-4F10-B4B3-351AE9F857EE}
 		{0359DC68-A97B-42B2-BA0C-1BF8366133DF} = {CA5A38CF-EBF1-4F10-B4B3-351AE9F857EE}
+		{987FDD95-D7B2-4FBE-8FBD-60AC831DE3A3} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45

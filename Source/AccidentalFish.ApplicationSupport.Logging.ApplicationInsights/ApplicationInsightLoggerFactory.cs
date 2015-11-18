@@ -5,14 +5,26 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
 {
     internal class ApplicationInsightLoggerFactory : ILoggerFactory
     {
-        public ILogger CreateLogger(LogLevelEnum minimumLogLevel = LogLevelEnum.Warning)
+        private readonly LogLevelEnum _defaultMinimumLogLevel;
+
+        public ApplicationInsightLoggerFactory(LogLevelEnum defaultMinimumLogLevel)
         {
-            return new ApplicationInsightLogger(null, minimumLogLevel);
+            _defaultMinimumLogLevel = defaultMinimumLogLevel;
         }
 
-        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum minimumLogLevel = LogLevelEnum.Warning)
+        public ILogger CreateLogger(LogLevelEnum? minimumLogLevel)
         {
-            return new ApplicationInsightLogger(source, minimumLogLevel);
+            return new ApplicationInsightLogger(null, GetMinimumLogLevel(minimumLogLevel));
+        }
+
+        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
+        {
+            return new ApplicationInsightLogger(source, GetMinimumLogLevel(minimumLogLevel));
+        }
+
+        public LogLevelEnum GetMinimumLogLevel(LogLevelEnum? minimumLogLevel)
+        {
+            return minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel);
         }
     }
 }

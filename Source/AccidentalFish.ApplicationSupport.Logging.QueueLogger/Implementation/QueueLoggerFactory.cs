@@ -23,14 +23,19 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public ILogger CreateLogger(LogLevelEnum minimuLogLevel = LogLevelEnum.Warning)
+        public ILogger CreateLogger(LogLevelEnum? minimuLogLevel)
         {
-            return CreateLogger(new LoggerSource("default"), minimuLogLevel);
+            return CreateLogger(new LoggerSource("default"), minimuLogLevel.GetValueOrDefault(LogLevelEnum.Warning));
         }
 
-        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum minimuLogLevel = LogLevelEnum.Warning)
+        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimuLogLevel)
         {
-            return new Logging.QueueLogger.Implementation.QueueLogger(_runtimeEnvironment, _applicationResourceFactory.GetLoggerQueue(), source, _queueLoggerExtension, minimuLogLevel, _correlationIdProvider);
+            return new Logging.QueueLogger.Implementation.QueueLogger(_runtimeEnvironment,
+                _applicationResourceFactory.GetLoggerQueue(),
+                source,
+                _queueLoggerExtension,
+                minimuLogLevel.GetValueOrDefault(LogLevelEnum.Warning),
+                _correlationIdProvider);
         }
     }
 }
