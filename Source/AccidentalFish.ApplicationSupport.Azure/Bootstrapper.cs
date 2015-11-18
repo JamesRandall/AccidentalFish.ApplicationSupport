@@ -77,22 +77,6 @@ namespace AccidentalFish.ApplicationSupport.Azure
             dependencyResolver.Register<IAzureResourceManager, AzureResourceManager>();
             dependencyResolver.Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>();
             return dependencyResolver;
-        }
-
-        [Obsolete]
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
-        {
-            UseAzure(dependencyResolver, false, true, false, false);
-        }
-
-        [Obsolete]
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver,
-            bool forceAppConfig,
-            bool useAzureSqlDatabaseConfiguration,
-            bool useLegacyQueueSerializer,
-            bool registerEmailAlertSender)
-        {
-            UseAzure(dependencyResolver, forceAppConfig, useAzureSqlDatabaseConfiguration, useLegacyQueueSerializer, registerEmailAlertSender);
-        }        
+        }     
     }
 }

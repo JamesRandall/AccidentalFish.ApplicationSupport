@@ -72,8 +72,5 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, TableStorageQueryOperator op, int pageSize);
         Task<PagedResultSegment<T>> PagedQueryAsync(Dictionary<string, object> columnValues, TableStorageQueryOperator op, int pageSize, string serializedContinuationToken);
         Task<PagedResultSegment<T>> PagedQueryAsync(string filter, int pageSize, string serializedContinuationToken);
-
-        [Obsolete]
-        IResourceCreator GetResourceCreator();
     }
 }

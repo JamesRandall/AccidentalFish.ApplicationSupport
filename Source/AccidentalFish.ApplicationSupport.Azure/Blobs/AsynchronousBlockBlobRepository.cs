@@ -39,25 +39,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
             });
         }
 
-        public void Upload(string name, Stream stream)
-        {
-            Upload(name,stream, null, null);
-        }
-
-        public void Upload(string name, Stream stream, Action<string> success, Action<string, Exception> failure)
-        {
-            try
-            {
-                CloudBlockBlob blob = _container.GetBlockBlobReference(name);
-                blob.UploadFromStream(stream);
-                success?.Invoke(name);
-            }
-            catch (Exception ex)
-            {
-                failure?.Invoke(name, ex);
-            }
-        }
-
         public IBlob Get(string name)
         {
             CloudBlockBlob blob = _container.GetBlockBlobReference(name);

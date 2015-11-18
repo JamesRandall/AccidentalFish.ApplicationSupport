@@ -39,17 +39,5 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework
             dependencyResolver.Register<IUnitOfWorkFactoryProvider, EntityFrameworkUnitOfWorkFactoryProvider>();
             return dependencyResolver;
         }
-
-        [Obsolete]
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
-        {
-            UseEntityFramework(dependencyResolver);
-        }
-
-        [Obsolete]
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver, SqlDatabaseTypeEnum databaseType)
-        {
-            UseEntityFramework(dependencyResolver, databaseType);
-        }
     }
 }

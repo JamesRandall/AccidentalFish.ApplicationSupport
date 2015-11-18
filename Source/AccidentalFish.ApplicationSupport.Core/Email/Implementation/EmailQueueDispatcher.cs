@@ -8,7 +8,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 {
     [ComponentIdentity(FullyQualifiedName)]
 #pragma warning disable 612
-    internal class EmailQueueDispatcher : AbstractApplicationComponent, IEmailManager
+    internal class EmailQueueDispatcher : AbstractApplicationComponent, IEmailQueueDispatcher
 #pragma warning restore 612
     {
         public const string FullyQualifiedName = "com.accidental-fish.email";

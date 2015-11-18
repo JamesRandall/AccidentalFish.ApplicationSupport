@@ -60,9 +60,6 @@ namespace AccidentalFish.ApplicationSupport.Core
             container.Register<ILoggerFactory, ConsoleLoggerFactory>();
             
             container.Register<IComponentHost, ComponentHost>();
-#pragma warning disable 612
-            container.Register<IEmailManager, EmailQueueDispatcher>();
-#pragma warning restore 612
             container.Register<IEmailQueueDispatcher, EmailQueueDispatcher>();
             container.Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>();
             container.Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>();

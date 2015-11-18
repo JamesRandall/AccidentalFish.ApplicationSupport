@@ -11,11 +11,5 @@ namespace AccidentalFish.ApplicationSupport.Email.SendGrid
             dependencyResolver.Register<IEmailProvider, SendGridEmailProvider>();
             return dependencyResolver;
         }
-
-        [Obsolete]
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
-        {
-            UseSendGrid(dependencyResolver);
-        }
     }
 }

@@ -11,11 +11,5 @@ namespace AccidentalFish.ApplicationSupport.CloudPatterns
             dependencyResolver.RegisterInstance<ICircuitBreakerFactory>(new CircuitBreakerFactory());
             return dependencyResolver;
         }
-
-        [Obsolete]
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
-        {
-            UseCloudPatterns(dependencyResolver);
-        }
     }
 }

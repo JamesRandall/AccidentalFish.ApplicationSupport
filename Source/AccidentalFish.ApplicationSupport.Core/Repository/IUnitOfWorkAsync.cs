@@ -14,13 +14,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Repository
         /// </summary>
         /// <typeparam name="T">The type of the entities represented by the repository</typeparam>
         /// <returns>A repository</returns>
-        [Obsolete("There is no reason for this method to utilise a task and therefore this will be removed in the next major version. Use GetRepository<T> instead.")]
-        Task<IRepositoryAsync<T>> GetRepositoryAsync<T>() where T : class;
-        /// <summary>
-        /// Retrieve a repository that acts within the unit of work
-        /// </summary>
-        /// <typeparam name="T">The type of the entities represented by the repository</typeparam>
-        /// <returns>A repository</returns>
         IRepositoryAsync<T> GetRepository<T>() where T : class;
         /// <summary>
         /// Save the changes made within the unit of work

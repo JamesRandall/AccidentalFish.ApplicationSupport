@@ -11,11 +11,5 @@ namespace AccidentalFish.ApplicationSupport.Email.Amazon
             dependencyResolver.Register<IEmailProvider, AmazonSimpleEmailProvider>();
             return dependencyResolver;
         }
-
-        [Obsolete]
-        public static void RegisterDependencies(IDependencyResolver dependencyResolver)
-        {
-            UseAmazonSimpleEmailService(dependencyResolver);
-        }
     }
 }

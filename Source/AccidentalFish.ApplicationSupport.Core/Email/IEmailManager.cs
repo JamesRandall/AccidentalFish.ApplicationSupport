@@ -58,13 +58,4 @@ namespace AccidentalFish.ApplicationSupport.Core.Email
         /// <returns>Awaitable task</returns>
         Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string from, string subject, string htmlBody, string textBody);
     }
-
-    /// <summary>
-    /// IEmailQueueDispatcher should now be used instead of IEmailManager
-    /// </summary>
-    [Obsolete]
-    public interface IEmailManager : IEmailQueueDispatcher
-    {
-        
-    }
 }

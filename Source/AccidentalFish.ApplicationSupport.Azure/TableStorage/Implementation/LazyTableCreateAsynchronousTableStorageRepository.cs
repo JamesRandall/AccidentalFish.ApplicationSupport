@@ -1,30 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Azure.TableStorage;
-using AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation;
-using AccidentalFish.ApplicationSupport.Core.Policies;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace AccidentalFish.ApplicationSupport.Azure.NoSql
+namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
 {
     internal class LazyTableCreateAsynchronousTableStorageRepository<T> : IAsynchronousTableStorageRepository<T> where T : ITableEntity, new()
     {
         private const int HttpNotFound = 404;
         private readonly AsynchronousTableStorageRepository<T> _repository;
+        private readonly IAzureResourceManager _azureResourceManager;
 
-        public LazyTableCreateAsynchronousTableStorageRepository(AsynchronousTableStorageRepository<T> repository)
+        public LazyTableCreateAsynchronousTableStorageRepository(AsynchronousTableStorageRepository<T> repository, IAzureResourceManager azureResourceManager)
         {
             _repository = repository;
+            _azureResourceManager = azureResourceManager;
         }
 
         private Task Create()
         {
-            IResourceCreator resourceCreator = _repository.GetResourceCreator();
-            return resourceCreator.CreateIfNotExistsAsync();
+            return _azureResourceManager.CreateIfNotExistsAsync(_repository);
         }
-
 
         public async Task InsertAsync(T item)
         {
@@ -409,11 +406,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.NoSql
             }
             await Create();
             return await _repository.PagedQueryAsync(filter, pageSize, serializedContinuationToken);
-        }
-
-        public IResourceCreator GetResourceCreator()
-        {
-            return _repository.GetResourceCreator();
         }
     }
 }

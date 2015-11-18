@@ -35,11 +35,6 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             _dbConfiguration = dbConfiguration;
         }
 
-        public Task<IRepositoryAsync<T>> GetRepositoryAsync<T>() where T : class
-        {
-            return Task.FromResult<IRepositoryAsync<T>>(new EntityFrameworkRepositoryAsync<T>(_context));
-        }
-
         public IRepositoryAsync<T> GetRepository<T>() where T : class
         {
             return new EntityFrameworkRepositoryAsync<T>(_context);

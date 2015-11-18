@@ -18,11 +18,5 @@ namespace AccidentalFish.ApplicationSupport.Processes
             resolver.RegisterInstance(templateEngineFactory);
             return resolver;
         }
-
-        [Obsolete]
-        public static void RegisterDependencies(IDependencyResolver resolver)
-        {
-            UseHostableProcesses(resolver);
-        }
     }
 }
