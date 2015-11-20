@@ -1,7 +1,8 @@
 ﻿using System;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 
-namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
+namespace AccidentalFish.ApplicationSupport.Logging.ConsoleLogger.Implementation
 {
     internal class ConsoleLogger : ILogger
     {

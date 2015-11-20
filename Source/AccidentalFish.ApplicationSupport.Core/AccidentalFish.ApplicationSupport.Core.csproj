@@ -93,7 +93,6 @@
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailQueueDispatcher.cs" />
     <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\Implementation\ConsoleLogger.cs" />
     <Compile Include="Logging\Implementation\TraceAsynchronousLogger.cs" />
     <Compile Include="Logging\Implementation\TraceLogger.cs" />
     <Compile Include="Logging\Implementation\TraceLoggerFactory.cs" />
@@ -102,8 +101,6 @@
     <Compile Include="Templating\TemplateSyntaxEnum.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Logging\ICorrelationIdProvider.cs" />
-    <Compile Include="Logging\Implementation\ConsoleAsynchronousLogger.cs" />
-    <Compile Include="Logging\Implementation\ConsoleLoggerFactory.cs" />
     <Compile Include="Logging\Implementation\CallContextCorrelationIdProvider.cs" />
     <Compile Include="Logging\Implementation\NullCorrelationIdProvider.cs" />
     <Compile Include="Mappers\AbstractBidirectionalMapper.cs" />
