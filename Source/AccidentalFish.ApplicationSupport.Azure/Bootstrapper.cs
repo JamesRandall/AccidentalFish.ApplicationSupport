@@ -36,47 +36,26 @@ namespace AccidentalFish.ApplicationSupport.Azure
             bool useLegacyQueueSerializer,
             bool registerEmailAlertSender)
         {
-            // internal
-            dependencyResolver.Register<ITableStorageQueryBuilder, TableStorageQueryBuilder>();
-            dependencyResolver.Register<ITableContinuationTokenSerializer, TableContinuationTokenSerializer>();
-            if (useLegacyQueueSerializer)
-            {
-                dependencyResolver.Register<IQueueSerializer, LegacyQueueSerializer>();
-            }
-            else
-            {
-                dependencyResolver.Register<IQueueSerializer, QueueSerializer>();
-            }
-
-            // configuration
-            dependencyResolver.RegisterInstance<IConfiguration>(new Configuration.Configuration(forceAppConfig));
-
-            // policies            
-            dependencyResolver.Register<ILeaseManagerFactory, LeaseManagerFactory>();
-
-            // runtime
-            dependencyResolver.Register<IRuntimeEnvironment, RuntimeEnvironment>();
-
-            // repositories and data storage
-            dependencyResolver.Register<IQueueFactory, QueueFactory>();
-            dependencyResolver.Register<IBlobRepositoryFactory, BlobRepositoryFactory>();
-            dependencyResolver.Register<ITableStorageRepositoryFactory, TableStorageRepositoryFactory>();
-            dependencyResolver.Register<ITableStorageConcurrencyManager, TableStorageConcurrencyManager>();
-            dependencyResolver.Register<IAzureQueueFactory, AzureQueueFactory>();
-
-            // alerts
-            if (registerEmailAlertSender)
-            {
-                dependencyResolver.Register<IAlertSender, AlertSender>();
-            }
-            else
-            {
-                dependencyResolver.Register<IAlertSender, NullAlertSender>();
-            }
-
-            dependencyResolver.Register<IAzureResourceManager, AzureResourceManager>();
-            dependencyResolver.Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>();
-            return dependencyResolver;
+            return dependencyResolver
+                .Register<ITableStorageQueryBuilder, TableStorageQueryBuilder>()
+                .Register<ITableContinuationTokenSerializer, TableContinuationTokenSerializer>()
+                .Register(typeof(IQueueSerializer), useLegacyQueueSerializer ? typeof(LegacyQueueSerializer) : typeof(QueueSerializer))
+                .Register<IConfiguration>(() => new Configuration.Configuration(forceAppConfig))
+                // policies            
+                .Register<ILeaseManagerFactory, LeaseManagerFactory>()
+                // runtime
+                .Register<IRuntimeEnvironment, RuntimeEnvironment>()
+                // repositories and data storage
+                .Register<IQueueFactory, QueueFactory>()
+                .Register<IBlobRepositoryFactory, BlobRepositoryFactory>()
+                .Register<ITableStorageRepositoryFactory, TableStorageRepositoryFactory>()
+                .Register<ITableStorageConcurrencyManager, TableStorageConcurrencyManager>()
+                .Register<IAzureQueueFactory, AzureQueueFactory>()
+                // alerts
+                .Register(typeof(IAlertSender), registerEmailAlertSender ? typeof(AlertSender) : typeof(NullAlertSender))
+                // azure
+                .Register<IAzureResourceManager, AzureResourceManager>()
+                .Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>();
         }     
     }
 }

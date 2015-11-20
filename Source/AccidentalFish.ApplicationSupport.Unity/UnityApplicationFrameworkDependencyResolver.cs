@@ -13,24 +13,34 @@ namespace AccidentalFish.ApplicationSupport.Unity
             _container = container;
         }
 
-        public void Register<T1, T2>() where T2 : T1
+        public IDependencyResolver Register<T1, T2>() where T2 : T1
         {
             _container.RegisterType<T1, T2>();
+            return this;
         }
 
-        public void Register<T1, T2>(string name) where T2 : T1
+        public IDependencyResolver Register<T1>(Func<T1> creator)
+        {
+            _container.RegisterType<T1>(new InjectionFactory(context => creator()));
+            return this;
+        }
+
+        public IDependencyResolver Register<T1, T2>(string name) where T2 : T1
         {
             _container.RegisterType<T1, T2>(name);
+            return this;
         }
 
-        public void Register(Type type1, Type type2)
+        public IDependencyResolver Register(Type type1, Type type2)
         {
             _container.RegisterType(type1, type2);
+            return this;
         }
 
-        public void RegisterInstance<T>(T instance)
+        public IDependencyResolver RegisterInstance<T>(T instance)
         {
             _container.RegisterInstance(instance);
+            return this;
         }
 
         public bool IsRegistered<T>()

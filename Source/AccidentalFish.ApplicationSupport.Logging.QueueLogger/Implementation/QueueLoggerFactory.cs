@@ -11,21 +11,24 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
         private readonly IApplicationResourceFactory _applicationResourceFactory;
         private readonly IQueueLoggerExtension _queueLoggerExtension;
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly LogLevelEnum _defaultMinimumLogLevel;
 
         public QueueLoggerFactory(IRuntimeEnvironment runtimeEnvironment,
             IApplicationResourceFactory applicationResourceFactory,
             IQueueLoggerExtension queueLoggerExtension,
-            ICorrelationIdProvider correlationIdProvider)
+            ICorrelationIdProvider correlationIdProvider,
+            LogLevelEnum defaultMinimumLogLevel)
         {
             _runtimeEnvironment = runtimeEnvironment;
             _applicationResourceFactory = applicationResourceFactory;
             _queueLoggerExtension = queueLoggerExtension;
             _correlationIdProvider = correlationIdProvider;
+            _defaultMinimumLogLevel = defaultMinimumLogLevel;
         }
 
         public ILogger CreateLogger(LogLevelEnum? minimuLogLevel)
         {
-            return CreateLogger(new LoggerSource("default"), minimuLogLevel.GetValueOrDefault(LogLevelEnum.Warning));
+            return CreateLogger(new LoggerSource("default"), minimuLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
         }
 
         public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimuLogLevel)
@@ -34,7 +37,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
                 _applicationResourceFactory.GetLoggerQueue(),
                 source,
                 _queueLoggerExtension,
-                minimuLogLevel.GetValueOrDefault(LogLevelEnum.Warning),
+                minimuLogLevel.GetValueOrDefault(_defaultMinimumLogLevel),
                 _correlationIdProvider);
         }
     }

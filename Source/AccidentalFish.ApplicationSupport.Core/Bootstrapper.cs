@@ -34,41 +34,42 @@ namespace AccidentalFish.ApplicationSupport.Core
         /// </summary>
         /// <param name="container">The container to use</param>
         /// <param name="correlationIdKey">The correlation ID key. Defaults to correlation-id</param>
-        public static IDependencyResolver UseCore(this IDependencyResolver container,
-            string correlationIdKey = "correlation-id")
+        /// <param name="defaultTraceLoggerMinimumLogLevel"></param>
+        public static IDependencyResolver UseCore(
+            this IDependencyResolver container,
+            string correlationIdKey = "correlation-id",
+            LogLevelEnum defaultTraceLoggerMinimumLogLevel = LogLevelEnum.Verbose)
         {
-            container.Register<IBackoffPolicy, BackoffPolicy>();
-            container.Register<ILeasedRetry, LeasedRetry>();
-            container.Register<IAsynchronousBackoffPolicy, AsynchronousBackoffPolicy>();
-            container.Register<IWaitHandle, ManualResetEventWaitHandle>();
-            container.Register<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>();
-            container.Register<IApplicationResourceFactory, ApplicationResourceFactory>();
-            container.Register<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>();
-            container.Register<IQueueFactory, NotSupportedQueueFactory>();
-            container.Register<ILeaseManagerFactory, NotSupportedLeaseManagerFactory>();
-            container.Register<IBlobRepositoryFactory, NotSupportedBlobRepositoryFactory>();
-
+            Func<ICorrelationIdProvider> createCorrelationIdProvider;
             if (!string.IsNullOrWhiteSpace(correlationIdKey))
             {
-                container.RegisterInstance<ICorrelationIdProvider>(new CallContextCorrelationIdProvider(correlationIdKey));
+                createCorrelationIdProvider = () => new CallContextCorrelationIdProvider(correlationIdKey);
             }
             else
             {
-                container.RegisterInstance<ICorrelationIdProvider>(new NullCorrelationIdProvider());
+                createCorrelationIdProvider = () => new NullCorrelationIdProvider();
             }
 
-            container.Register<ILoggerFactory, ConsoleLoggerFactory>();
-            
-            container.Register<IComponentHost, ComponentHost>();
-            container.Register<IEmailQueueDispatcher, EmailQueueDispatcher>();
-            container.Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>();
-            container.Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>();
-            container.RegisterInstance<IConfiguration>(new DefaultConfiguration());
-
-            container.RegisterInstance<IComponentFactory>(new ComponentFactory(container));
-            container.Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>();
-
-            return container;
+            return container
+                .Register<IBackoffPolicy, BackoffPolicy>()
+                .Register<ILeasedRetry, LeasedRetry>()
+                .Register<IAsynchronousBackoffPolicy, AsynchronousBackoffPolicy>()
+                .Register<IWaitHandle, ManualResetEventWaitHandle>()
+                .Register<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>()
+                .Register<IApplicationResourceFactory, ApplicationResourceFactory>()
+                .Register<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>()
+                .Register<IQueueFactory, NotSupportedQueueFactory>()
+                .Register<ILeaseManagerFactory, NotSupportedLeaseManagerFactory>()
+                .Register<IBlobRepositoryFactory, NotSupportedBlobRepositoryFactory>()
+                .Register(createCorrelationIdProvider)
+                .Register<ILoggerFactory>(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel))
+                .Register<IComponentHost, ComponentHost>()
+                .Register<IEmailQueueDispatcher, EmailQueueDispatcher>()
+                .Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>()
+                .Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>()
+                .Register<IConfiguration, DefaultConfiguration>()
+                .Register<IComponentFactory>(() => new ComponentFactory(container))
+                .Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>();
         }
     }
 }

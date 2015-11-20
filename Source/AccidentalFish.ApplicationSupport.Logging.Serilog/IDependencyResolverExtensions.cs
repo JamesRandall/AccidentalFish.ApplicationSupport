@@ -27,13 +27,9 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog
             string sourceFqnPropertyName = "SourceFqn",
             string correlationIdPropertyName = "CorrelationId")
         {
-            ICorrelationIdProvider correlationIdProvider = dependencyResolver.Resolve<ICorrelationIdProvider>();
-            ISerilogFactory serilogFactory = new SerilogFactory(configurationProvider, correlationIdProvider, defaultMinimumLogLevel, sourceFqnPropertyName, correlationIdPropertyName);
-            ILoggerFactory loggerFactory = serilogFactory;
-
-            dependencyResolver.RegisterInstance(loggerFactory);
-            dependencyResolver.RegisterInstance(serilogFactory);
-            return dependencyResolver;
+            return dependencyResolver
+                .Register<ILoggerFactory>(() => new SerilogFactory(configurationProvider, dependencyResolver.Resolve<ICorrelationIdProvider>(), defaultMinimumLogLevel, sourceFqnPropertyName, correlationIdPropertyName))
+                .Register<ISerilogFactory>(() => new SerilogFactory(configurationProvider, dependencyResolver.Resolve<ICorrelationIdProvider>(), defaultMinimumLogLevel, sourceFqnPropertyName, correlationIdPropertyName));
         }
     }
 }

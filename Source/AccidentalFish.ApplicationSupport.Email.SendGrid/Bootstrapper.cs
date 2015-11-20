@@ -1,5 +1,4 @@
-﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Email;
+﻿using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.Email.SendGrid
@@ -8,8 +7,7 @@ namespace AccidentalFish.ApplicationSupport.Email.SendGrid
     {
         public static IDependencyResolver UseSendGrid(this IDependencyResolver dependencyResolver)
         {
-            dependencyResolver.Register<IEmailProvider, SendGridEmailProvider>();
-            return dependencyResolver;
+            return dependencyResolver.Register<IEmailProvider, SendGridEmailProvider>();
         }
     }
 }

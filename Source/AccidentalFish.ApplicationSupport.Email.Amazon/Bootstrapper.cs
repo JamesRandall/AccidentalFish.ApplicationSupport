@@ -1,5 +1,4 @@
-﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Email;
+﻿using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.Email.Amazon
@@ -8,8 +7,7 @@ namespace AccidentalFish.ApplicationSupport.Email.Amazon
     {
         public static IDependencyResolver UseAmazonSimpleEmailService(this IDependencyResolver dependencyResolver)
         {
-            dependencyResolver.Register<IEmailProvider, AmazonSimpleEmailProvider>();
-            return dependencyResolver;
+            return dependencyResolver.Register<IEmailProvider, AmazonSimpleEmailProvider>();
         }
     }
 }

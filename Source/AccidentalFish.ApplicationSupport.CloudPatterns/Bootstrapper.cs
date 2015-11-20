@@ -1,5 +1,4 @@
-﻿using System;
-using AccidentalFish.ApplicationSupport.CloudPatterns.Implementation;
+﻿using AccidentalFish.ApplicationSupport.CloudPatterns.Implementation;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 
 namespace AccidentalFish.ApplicationSupport.CloudPatterns
@@ -8,8 +7,7 @@ namespace AccidentalFish.ApplicationSupport.CloudPatterns
     {
         public static IDependencyResolver UseCloudPatterns(this IDependencyResolver dependencyResolver)
         {
-            dependencyResolver.RegisterInstance<ICircuitBreakerFactory>(new CircuitBreakerFactory());
-            return dependencyResolver;
+            return dependencyResolver.RegisterInstance<ICircuitBreakerFactory>(new CircuitBreakerFactory());
         }
     }
 }

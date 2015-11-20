@@ -92,6 +92,8 @@
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailQueueDispatcher.cs" />
+    <Compile Include="Logging\Implementation\TraceLogger.cs" />
+    <Compile Include="Logging\Implementation\TraceLoggerFactory.cs" />
     <Compile Include="Policies\Implementation\NotSupportedLeaseManagerFactory.cs" />
     <Compile Include="Queues\Implementation\NotSupportedQueueFactory.cs" />
     <Compile Include="Templating\TemplateSyntaxEnum.cs" />

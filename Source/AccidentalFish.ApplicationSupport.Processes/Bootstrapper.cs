@@ -11,12 +11,12 @@ namespace AccidentalFish.ApplicationSupport.Processes
     {
         public static IDependencyResolver UseHostableProcesses(this IDependencyResolver resolver)
         {
-            resolver.Register<IMapperFactory, MapperFactory>();
-            resolver.Register<IHostableComponent, LogQueueProcessor>(HostableComponentNames.LogQueueProcessor);
-            resolver.Register<IHostableComponent, EmailQueueProcessor>(HostableComponentNames.EmailQueueProcessor);
             ITemplateEngineFactory templateEngineFactory = new TemplateEngineFactory();
-            resolver.RegisterInstance(templateEngineFactory);
-            return resolver;
+            return resolver
+                .Register<IMapperFactory, MapperFactory>()
+                .Register<IHostableComponent, LogQueueProcessor>(HostableComponentNames.LogQueueProcessor)
+                .Register<IHostableComponent, EmailQueueProcessor>(HostableComponentNames.EmailQueueProcessor)
+                .RegisterInstance(templateEngineFactory);
         }
     }
 }

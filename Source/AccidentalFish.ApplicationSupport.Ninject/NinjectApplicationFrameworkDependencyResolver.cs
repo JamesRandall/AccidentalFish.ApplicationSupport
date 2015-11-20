@@ -14,12 +14,19 @@ namespace AccidentalFish.ApplicationSupport.Ninject
             _kernel = kernel;
         }
 
-        public void Register<T1, T2>() where T2 : T1
+        public IDependencyResolver Register<T1, T2>() where T2 : T1
         {
             _kernel.Rebind<T1>().To<T2>();
+            return this;
         }
 
-        public void Register<T1, T2>(string name) where T2 : T1
+        public IDependencyResolver Register<T1>(Func<T1> creator)
+        {
+            _kernel.Rebind<T1>().ToMethod(context => creator());
+            return this;
+        }
+
+        public IDependencyResolver Register<T1, T2>(string name) where T2 : T1
         {
             var bindings = _kernel.GetBindings(typeof (T1));
             var binding = bindings.SingleOrDefault(x => x.Metadata.Name == name);
@@ -28,16 +35,19 @@ namespace AccidentalFish.ApplicationSupport.Ninject
                 _kernel.RemoveBinding(binding);
             }
             _kernel.Bind<T1>().To<T2>().Named(name);
+            return this;
         }
 
-        public void Register(Type type1, Type type2)
+        public IDependencyResolver Register(Type type1, Type type2)
         {
             _kernel.Rebind(type1).To(type2);
+            return this;
         }
 
-        public void RegisterInstance<T>(T instance)
+        public IDependencyResolver RegisterInstance<T>(T instance)
         {
             _kernel.Rebind<T>().ToConstant(instance);
+            return this;
         }
 
         public bool IsRegistered<T>()
