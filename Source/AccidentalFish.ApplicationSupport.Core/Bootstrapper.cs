@@ -8,6 +8,7 @@ using AccidentalFish.ApplicationSupport.Core.Email;
 using AccidentalFish.ApplicationSupport.Core.Email.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Logging.Implementation;
+using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Policies.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Queues;
@@ -35,10 +36,12 @@ namespace AccidentalFish.ApplicationSupport.Core
         /// <param name="container">The container to use</param>
         /// <param name="correlationIdKey">The correlation ID key. Defaults to correlation-id</param>
         /// <param name="defaultTraceLoggerMinimumLogLevel"></param>
+        /// <param name="defaultLoggerSource">The component source to use for a default logger when no source is specified - defaults to null.</param>
         public static IDependencyResolver UseCore(
             this IDependencyResolver container,
             string correlationIdKey = "correlation-id",
-            LogLevelEnum defaultTraceLoggerMinimumLogLevel = LogLevelEnum.Verbose)
+            LogLevelEnum defaultTraceLoggerMinimumLogLevel = LogLevelEnum.Verbose,
+            IFullyQualifiedName defaultLoggerSource = null)
         {
             Func<ICorrelationIdProvider> createCorrelationIdProvider;
             if (!string.IsNullOrWhiteSpace(correlationIdKey))
@@ -62,9 +65,9 @@ namespace AccidentalFish.ApplicationSupport.Core
                 .Register<ILeaseManagerFactory, NotSupportedLeaseManagerFactory>()
                 .Register<IBlobRepositoryFactory, NotSupportedBlobRepositoryFactory>()
                 .Register(createCorrelationIdProvider)
-                .Register<ILoggerFactory>(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel))
-                .Register(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel).CreateLogger())
-                .Register(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel).CreateAsynchronousLogger(defaultTraceLoggerMinimumLogLevel))
+                .Register<ILoggerFactory>(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel, defaultLoggerSource))
+                .Register(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel, defaultLoggerSource).CreateLogger())
+                .Register(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel, defaultLoggerSource).CreateAsynchronousLogger(defaultTraceLoggerMinimumLogLevel))
                 .Register<IComponentHost, ComponentHost>()
                 .Register<IEmailQueueDispatcher, EmailQueueDispatcher>()
                 .Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>()

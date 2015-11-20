@@ -5,10 +5,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
     internal class TraceLoggerFactory : ILoggerFactory
     {
         private readonly LogLevelEnum _defaultMinimumLogLevel;
+        private readonly IFullyQualifiedName _defaultLoggerSource;
 
-        public TraceLoggerFactory(LogLevelEnum defaultMinimumLogLevel)
+        public TraceLoggerFactory(LogLevelEnum defaultMinimumLogLevel, IFullyQualifiedName defaultLoggerSource)
         {
             _defaultMinimumLogLevel = defaultMinimumLogLevel;
+            _defaultLoggerSource = defaultLoggerSource;
         }
 
         public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel)
@@ -18,17 +20,17 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
 
         public ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
         {
-            return new TraceLogger(null, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+            return new TraceLogger(_defaultLoggerSource, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
         }
 
-        public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
+        public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
-            return new TraceAsynchronousLogger(source, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+            return new TraceAsynchronousLogger(source ?? _defaultLoggerSource, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
         }
 
         public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
-            return new TraceLogger(source, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+            return new TraceLogger(source ?? _defaultLoggerSource, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
         }
     }
 }

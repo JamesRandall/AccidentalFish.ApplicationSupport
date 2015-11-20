@@ -7,10 +7,14 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
     internal class ApplicationInsightLoggerFactory : ILoggerFactory
     {
         private readonly LogLevelEnum _defaultMinimumLogLevel;
+        private readonly IFullyQualifiedName _defaultLoggerSource;
 
-        public ApplicationInsightLoggerFactory(LogLevelEnum defaultMinimumLogLevel)
+        public ApplicationInsightLoggerFactory(
+            LogLevelEnum defaultMinimumLogLevel,
+            IFullyQualifiedName defaultLoggerSource)
         {
             _defaultMinimumLogLevel = defaultMinimumLogLevel;
+            _defaultLoggerSource = defaultLoggerSource;
         }
 
         public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel = null)
@@ -20,7 +24,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
 
         public ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
         {
-            return new ApplicationInsightLogger(null, GetMinimumLogLevel(minimumLogLevel));
+            return new ApplicationInsightLogger(_defaultLoggerSource, GetMinimumLogLevel(minimumLogLevel));
         }
 
         public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
@@ -30,7 +34,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
 
         public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
-            return new ApplicationInsightLogger(source, GetMinimumLogLevel(minimumLogLevel));
+            return new ApplicationInsightLogger(source ?? _defaultLoggerSource, GetMinimumLogLevel(minimumLogLevel));
         }
 
         public LogLevelEnum GetMinimumLogLevel(LogLevelEnum? minimumLogLevel)

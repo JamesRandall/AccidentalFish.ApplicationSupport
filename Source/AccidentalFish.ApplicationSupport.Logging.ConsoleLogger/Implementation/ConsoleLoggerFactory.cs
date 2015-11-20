@@ -1,5 +1,4 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Logging;
-using AccidentalFish.ApplicationSupport.Core.Logging.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 
 namespace AccidentalFish.ApplicationSupport.Logging.ConsoleLogger.Implementation
@@ -7,30 +6,32 @@ namespace AccidentalFish.ApplicationSupport.Logging.ConsoleLogger.Implementation
     internal class ConsoleLoggerFactory : ILoggerFactory
     {
         private readonly LogLevelEnum _defaultMinimumLoggingLevel;
+        private readonly IFullyQualifiedName _defaultLoggerSource;
 
-        public ConsoleLoggerFactory(LogLevelEnum defaultMinimumLoggingLevel)
+        public ConsoleLoggerFactory(LogLevelEnum defaultMinimumLoggingLevel, IFullyQualifiedName defaultLoggerSource)
         {
             _defaultMinimumLoggingLevel = defaultMinimumLoggingLevel;
+            _defaultLoggerSource = defaultLoggerSource;
         }
 
         public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel)
         {
-            return new ConsoleAsynchronousLogger(null, minimumLogLevel.GetValueOrDefault(_defaultMinimumLoggingLevel));
+            return new ConsoleAsynchronousLogger(_defaultLoggerSource, minimumLogLevel.GetValueOrDefault(_defaultMinimumLoggingLevel));
         }
 
         public ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
         {
-            return new ConsoleLogger(null, minimumLogLevel.GetValueOrDefault(_defaultMinimumLoggingLevel));
+            return new ConsoleLogger(_defaultLoggerSource, minimumLogLevel.GetValueOrDefault(_defaultMinimumLoggingLevel));
         }
 
         public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
         {
-            return new ConsoleAsynchronousLogger(source, minimumLogLevel.GetValueOrDefault(_defaultMinimumLoggingLevel));
+            return new ConsoleAsynchronousLogger(source ?? _defaultLoggerSource, minimumLogLevel.GetValueOrDefault(_defaultMinimumLoggingLevel));
         }
 
         public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
-            return new ConsoleLogger(source, minimumLogLevel.GetValueOrDefault(_defaultMinimumLoggingLevel));
+            return new ConsoleLogger(source ?? _defaultLoggerSource, minimumLogLevel.GetValueOrDefault(_defaultMinimumLoggingLevel));
         }
     }
 }

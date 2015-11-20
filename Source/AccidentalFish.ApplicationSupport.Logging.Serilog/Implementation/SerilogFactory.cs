@@ -11,18 +11,21 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
         private readonly Func<LoggerConfiguration> _loggerConfigurationProvider;
         private readonly ICorrelationIdProvider _correlationIdProvider;
         private readonly LogLevelEnum _defaultMinimumLogLevel;
+        private readonly IFullyQualifiedName _defaultLoggerSource;
         private readonly string _sourceFqnPropertyName;
         private readonly string _correlationIdPropertyName;
 
         public SerilogFactory(Func<LoggerConfiguration> loggerConfigurationProvider,
             ICorrelationIdProvider correlationIdProvider,
             LogLevelEnum defaultMinimumLogLevel,
+            IFullyQualifiedName defaultLoggerSource,
             string sourceFqnPropertyName,
             string correlationIdPropertyName)
         {
             _loggerConfigurationProvider = loggerConfigurationProvider;
             _correlationIdProvider = correlationIdProvider;
             _defaultMinimumLogLevel = defaultMinimumLogLevel;
+            _defaultLoggerSource = defaultLoggerSource;
             _sourceFqnPropertyName = sourceFqnPropertyName;
             _correlationIdPropertyName = correlationIdPropertyName;
         }
@@ -34,8 +37,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
 
         public Core.Logging.ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
         {
-            LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
-            return new LoggerFacade(loggerConfiguration.CreateLogger());
+            return CreateLogger(null, minimumLogLevel);
         }
 
         public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
@@ -45,20 +47,28 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
 
         public global::Serilog.ILogger CreateSerilog(LogLevelEnum? minimumLogLevel = null)
         {
-            LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
-            return new LoggerFacade(loggerConfiguration.CreateLogger());
+            return CreateSerilog(null, minimumLogLevel);
         }
 
         public Core.Logging.ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
             LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
-            loggerConfiguration.Enrich.With(new FullyQualifiedNameEnricher(source, _sourceFqnPropertyName));
+            source = source ?? _defaultLoggerSource;
+            if (source != null)
+            {
+                loggerConfiguration.Enrich.With(new FullyQualifiedNameEnricher(source, _sourceFqnPropertyName));
+            }
             return new LoggerFacade(loggerConfiguration.CreateLogger());
         }
 
         public global::Serilog.ILogger CreateSerilog(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
             LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
+            source = source ?? _defaultLoggerSource;
+            if (source != null)
+            {
+                loggerConfiguration.Enrich.With(new FullyQualifiedNameEnricher(source, _sourceFqnPropertyName));
+            }
             return new LoggerFacade(loggerConfiguration.CreateLogger());
         }
 

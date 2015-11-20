@@ -17,6 +17,7 @@ namespace SerilogSample
         {
             DefaultConfigurationSampleNoFactory();
             DefaultConfigurationSampleWithFactory();
+            SupplyingADefaultSource();
             LogDirectlyWithSerilog();
             AccessSerilogWithCast();
             FactorySerilogConfiguration();
@@ -54,6 +55,22 @@ namespace SerilogSample
 
             var structuredData = new { Hello = "World", SubObject = new { Some = "Bling" } };
             sampleLogger.Warning("A simple log item with data {@StructuredData}", structuredData);
+        }
+
+        // Default configuration writing to the trace pipe without using a factory.
+        private static void SupplyingADefaultSource()
+        {
+            IUnityContainer container = new UnityContainer();
+            IDependencyResolver dependencyResolver = new UnityApplicationFrameworkDependencyResolver(container);
+
+            dependencyResolver
+                .UseCore()
+                .UseSerilog(defaultLoggerSource: new LoggerSource("MyComponent"));
+
+            ILogger sampleLogger = dependencyResolver.Resolve<ILogger>();
+
+            var structuredData = new { Hello = "World", SubObject = new { Some = "Bling" } };
+            sampleLogger.Warning("A simple log item with data and source {@StructuredData} |{SourceFqn}| ", structuredData);
         }
 
         // Demonstrates how to:

@@ -131,7 +131,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
                 Message = string.Format(message,additionalData),
                 RoleIdentifier = _runtimeEnvironment.RoleIdentifier,
                 RoleName = _runtimeEnvironment.RoleName,
-                Source = _source.FullyQualifiedName,
+                Source = _source?.FullyQualifiedName,
                 StackTrace = exception?.StackTrace
             };
         }
