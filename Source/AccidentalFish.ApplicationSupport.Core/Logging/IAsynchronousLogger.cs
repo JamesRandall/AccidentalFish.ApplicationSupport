@@ -43,95 +43,108 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging
         /// Log a debug message
         /// </summary>
         /// <param name="message">The message to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task VerboseAsync(string message);
+        Task VerboseAsync(string message, params object[] additionalData);
 
         /// <summary>
         /// Log a debug message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task VerboseAsync(string message, Exception exception);
+        Task VerboseAsync(string message, Exception exception, params object[] additionalData);
 
         /// <summary>
         /// Log a debug message
         /// </summary>
         /// <param name="message">The message to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task DebugAsync(string message);
+        Task DebugAsync(string message, params object[] additionalData);
 
         /// <summary>
         /// Log a debug message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task DebugAsync(string message, Exception exception);
+        Task DebugAsync(string message, Exception exception, params object[] additionalData);
 
         /// <summary>
         /// Log an informational message
         /// </summary>
         /// <param name="message">The message to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task InformationAsync(string message);
+        Task InformationAsync(string message, params object[] additionalData);
         /// <summary>
         /// Log an informational message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task InformationAsync(string message, Exception exception);
+        Task InformationAsync(string message, Exception exception, params object[] additionalData);
 
         /// <summary>
         /// Log a warning message
         /// </summary>
         /// <param name="message">The message to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task WarningAsync(string message);
+        Task WarningAsync(string message, params object[] additionalData);
         /// <summary>
         /// Log a warning message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task WarningAsync(string message, Exception exception);
+        Task WarningAsync(string message, Exception exception, params object[] additionalData);
 
         /// <summary>
         /// Log an error message
         /// </summary>
         /// <param name="message">The message to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task ErrorAsync(string message);
+        Task ErrorAsync(string message, params object[] additionalData);
         /// <summary>
         /// Log a error message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task ErrorAsync(string message, Exception exception);
+        Task ErrorAsync(string message, Exception exception, params object[] additionalData);
 
         /// <summary>
         /// Log an error message
         /// </summary>
         /// <param name="message">The message to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task FatalAsync(string message);
+        Task FatalAsync(string message, params object[] additionalData);
         /// <summary>
         /// Log a error message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task FatalAsync(string message, Exception exception);
+        Task FatalAsync(string message, Exception exception, params object[] additionalData);
 
         /// <summary>
         /// Log a message at the specified level
         /// </summary>
         /// <param name="level">The level to log at</param>
         /// <param name="message">The message to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task LogAsync(LogLevelEnum level, string message);
+        Task LogAsync(LogLevelEnum level, string message, params object[] additionalData);
 
         /// <summary>
         /// Log a message at the specified level
@@ -139,8 +152,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging
         /// <param name="level">The level to log at</param>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
+        /// <param name="additionalData">Optional additional data to supply to the logger</param>
         /// <returns>An awaitable task</returns>
-        Task LogAsync(LogLevelEnum level, string message, Exception exception);
+        Task LogAsync(LogLevelEnum level, string message, Exception exception, params object[] additionalData);
     }
 
     /// <summary>

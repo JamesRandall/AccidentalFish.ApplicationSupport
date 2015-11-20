@@ -33,7 +33,8 @@ namespace SerilogSample
             ILoggerFactory loggerFactory = dependencyResolver.Resolve<ILoggerFactory>();
             ILogger sampleLogger = loggerFactory.CreateLogger();
 
-            sampleLogger.Warning("A simple log item");
+            var structuredData = new { Hello = "World", SubObject = new { Some = "Bling" } };
+            sampleLogger.Warning("A simple log item with data {@StructuredData}", structuredData);
         }
 
         // Demonstrates how to:

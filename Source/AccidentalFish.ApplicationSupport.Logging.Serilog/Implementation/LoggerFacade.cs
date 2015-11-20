@@ -16,74 +16,74 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
             _logger = logger;
         }
 
-        public void Verbose(string message)
+        public void Verbose(string message, params object[] additionalData)
         {
-            _logger.Verbose(message);
+            _logger.Verbose(message, additionalData);
         }
 
-        public void Verbose(string message, Exception exception)
+        public void Verbose(string message, Exception exception, params object[] additionalData)
         {
-            _logger.Verbose(exception, message);
+            _logger.Verbose(exception, message, additionalData);
         }
 
-        public void Debug(string message)
+        public void Debug(string message, params object[] additionalData)
         {
-            _logger.Debug(message);
+            _logger.Debug(message, additionalData);
         }
 
-        public void Debug(string message, Exception exception)
+        public void Debug(string message, Exception exception, params object[] additionalData)
         {
-            _logger.Debug(exception, message);
+            _logger.Debug(exception, message, additionalData);
         }
 
-        public void Information(string message)
+        public void Information(string message, params object[] additionalData)
         {
-            _logger.Information(message);
+            _logger.Information(message, additionalData);
         }
 
-        public void Information(string message, Exception exception)
+        public void Information(string message, Exception exception, params object[] additionalData)
         {
-            _logger.Information(exception, message);
+            _logger.Information(exception, message, additionalData);
         }
 
-        public void Warning(string message)
+        public void Warning(string message, params object[] additionalData)
         {
-            _logger.Warning(message);
+            _logger.Warning(message, additionalData);
         }
 
-        public void Warning(string message, Exception exception)
+        public void Warning(string message, Exception exception, params object[] additionalData)
         {
-            _logger.Warning(exception, message);
+            _logger.Warning(exception, message, additionalData);
         }
 
-        public void Error(string message)
+        public void Error(string message, params object[] additionalData)
         {
-            _logger.Error(message);
+            _logger.Error(message, additionalData);
         }
 
-        public void Error(string message, Exception exception)
+        public void Error(string message, Exception exception, params object[] additionalData)
         {
-            _logger.Error(exception, message);
+            _logger.Error(exception, message, additionalData);
         }
 
-        public void Fatal(string message)
+        public void Fatal(string message, params object[] additionalData)
         {
-            _logger.Fatal(message);
+            _logger.Fatal(message, additionalData);
         }
 
-        public void Fatal(string message, Exception exception)
+        public void Fatal(string message, Exception exception, params object[] additionalData)
         {
-            _logger.Fatal(exception, message);
+            _logger.Fatal(exception, message, additionalData);
         }
 
-        public void Log(LogLevelEnum level, string message)
+        public void Log(LogLevelEnum level, string message, params object[] additionalData)
         {
-            _logger.Write(level.ToLogEventLevel(), message);
+            _logger.Write(level.ToLogEventLevel(), message, additionalData);
         }
 
-        public void Log(LogLevelEnum level, string message, Exception exception)
+        public void Log(LogLevelEnum level, string message, Exception exception, params object[] additionalData)
         {
-            _logger.Write(level.ToLogEventLevel(), exception, message);
+            _logger.Write(level.ToLogEventLevel(), exception, message, additionalData);
         }
 
         ISerilogLogger ISerilogLogger.ForContext(IEnumerable<ILogEventEnricher> enrichers)

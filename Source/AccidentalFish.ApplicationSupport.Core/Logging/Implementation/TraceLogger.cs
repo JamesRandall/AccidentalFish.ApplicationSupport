@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
@@ -20,81 +16,81 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         }
 
 
-        public void Verbose(string message)
+        public void Verbose(string message, params object[] additionalData)
         {
-            Log(LogLevelEnum.Verbose, message);
+            Log(LogLevelEnum.Verbose, message, additionalData);
         }
 
-        public void Verbose(string message, Exception exception)
+        public void Verbose(string message, Exception exception, params object[] additionalData)
         {
-            Log(LogLevelEnum.Verbose, message, exception);
+            Log(LogLevelEnum.Verbose, message, exception, additionalData);
         }
 
-        public void Debug(string message)
+        public void Debug(string message, params object[] additionalData)
         {
-            Log(LogLevelEnum.Debug, message);
+            Log(LogLevelEnum.Debug, message, additionalData);
         }
 
-        public void Debug(string message, Exception exception)
+        public void Debug(string message, Exception exception, params object[] additionalData)
         {
-            Log(LogLevelEnum.Debug, message, exception);
+            Log(LogLevelEnum.Debug, message, exception, additionalData);
         }
 
-        public void Information(string message)
+        public void Information(string message, params object[] additionalData)
         {
-            Log(LogLevelEnum.Information, message);
+            Log(LogLevelEnum.Information, message, additionalData);
         }
 
-        public void Information(string message, Exception exception)
+        public void Information(string message, Exception exception, params object[] additionalData)
         {
-            Log(LogLevelEnum.Information, message, exception);
+            Log(LogLevelEnum.Information, message, exception, additionalData);
         }
 
-        public void Warning(string message)
+        public void Warning(string message, params object[] additionalData)
         {
-            Log(LogLevelEnum.Warning, message);
+            Log(LogLevelEnum.Warning, message, additionalData);
         }
 
-        public void Warning(string message, Exception exception)
+        public void Warning(string message, Exception exception, params object[] additionalData)
         {
-            Log(LogLevelEnum.Warning, message, exception);
+            Log(LogLevelEnum.Warning, message, exception, additionalData);
         }
 
-        public void Error(string message)
+        public void Error(string message, params object[] additionalData)
         {
-            Log(LogLevelEnum.Error, message);
+            Log(LogLevelEnum.Error, message, additionalData);
         }
 
-        public void Error(string message, Exception exception)
+        public void Error(string message, Exception exception, params object[] additionalData)
         {
-            Log(LogLevelEnum.Error, message, exception);
+            Log(LogLevelEnum.Error, message, exception, additionalData);
         }
 
-        public void Fatal(string message)
+        public void Fatal(string message, params object[] additionalData)
         {
-            Log(LogLevelEnum.Fatal, message);
+            Log(LogLevelEnum.Fatal, message, additionalData);
         }
 
-        public void Fatal(string message, Exception exception)
+        public void Fatal(string message, Exception exception, params object[] additionalData)
         {
-            Log(LogLevelEnum.Fatal, message, exception);
+            Log(LogLevelEnum.Fatal, message, exception, additionalData);
         }
 
-        public void Log(LogLevelEnum level, string message)
+        public void Log(LogLevelEnum level, string message, params object[] additionalData)
         {
             if (level >= _minimumLogLevel)
             {
                 string source = _source?.FullyQualifiedName ?? "default";
-                Write(level, $"{source} - {level.ToString().ToUpper()} : {message}");
+                Write(level, $"{source} - {level.ToString().ToUpper()} : {string.Format(message, additionalData)}");
             }
         }
 
-        public void Log(LogLevelEnum level, string message, Exception exception)
+        public void Log(LogLevelEnum level, string message, Exception exception, params object[] additionalData)
         {
             if (level >= _minimumLogLevel)
             {
                 string source = _source?.FullyQualifiedName ?? "default";
-                Write(level, $"{source} - {level.ToString().ToUpper()} : {exception.GetType().Name} - {message}");
+                Write(level, $"{source} - {level.ToString().ToUpper()} : {exception.GetType().Name} - {string.Format(message, additionalData)}");
             }
         }
 
