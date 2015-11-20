@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Core;
+﻿using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
@@ -38,7 +33,7 @@ namespace SerilogSample
             ILoggerFactory loggerFactory = dependencyResolver.Resolve<ILoggerFactory>();
             ILogger sampleLogger = loggerFactory.CreateLogger();
 
-            sampleLogger.WarningAsync("A simple log item").Wait();
+            sampleLogger.Warning("A simple log item");
         }
 
         // Demonstrates how to:
@@ -92,8 +87,8 @@ namespace SerilogSample
             ILoggerFactory loggerFactory = dependencyResolver.Resolve<ILoggerFactory>();
             ILogger sampleLogger = loggerFactory.CreateLogger(new ComponentIdentity("accidentalfish.applicationsupport.samples.serilog"));
 
-            sampleLogger.WarningAsync("Coloured console {SourceFqn}").Wait();
-            sampleLogger.ErrorAsync("Colourful {SourceFqn}").Wait();
+            sampleLogger.Warning("Coloured console {SourceFqn}");
+            sampleLogger.Error("Colourful {SourceFqn}");
         }
     }
 }

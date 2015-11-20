@@ -31,7 +31,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
         private readonly ITemplateEngineFactory _templateEngineFactory;
         private readonly IAsynchronousQueue<EmailQueueItem> _poisonQueue; 
         private readonly IAsynchronousBlockBlobRepository _blobRepository;
-        private readonly ILogger _logger;
+        private readonly IAsynchronousLogger _logger;
         private const int MaximumDeliveryAttempts = 5;
 
         public EmailQueueProcessor(IApplicationResourceFactory applicationResourceFactory,
@@ -49,7 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Email
 
             _poisonQueue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(poisonQueueName, emailComponentIdentity);
             _blobRepository = applicationResourceFactory.GetAsyncBlockBlobRepository(emailComponentIdentity);
-            _logger = loggerFactory.CreateLogger(emailComponentIdentity);
+            _logger = loggerFactory.CreateAsynchronousLogger(emailComponentIdentity);
         }
 
         protected override async Task<bool> HandleRecievedItemAsync(IQueueItem<EmailQueueItem> queueItem)

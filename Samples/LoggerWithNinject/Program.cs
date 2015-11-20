@@ -28,7 +28,7 @@ namespace LoggerWithNinject
 
             IComponentHost componentHost = dependencyResolver.Resolve<IComponentHost>();
             ILoggerFactory loggerFactory = dependencyResolver.Resolve<ILoggerFactory>();
-            ILogger logger = loggerFactory.CreateLogger(new ComponentIdentity("com.accidental-fish.application-support"));
+            IAsynchronousLogger logger = loggerFactory.CreateAsynchronousLogger(new ComponentIdentity("com.accidental-fish.application-support"));
             CancellationTokenSource source = new CancellationTokenSource();
 
             StartComponentHost(componentHost, logger, source);
@@ -38,7 +38,7 @@ namespace LoggerWithNinject
             Thread.Sleep(500);
         }
 
-        private static void StartComponentHost(IComponentHost componentHost, ILogger logger, CancellationTokenSource cancellationTokenSource)
+        private static void StartComponentHost(IComponentHost componentHost, IAsynchronousLogger logger, CancellationTokenSource cancellationTokenSource)
         {
 
             componentHost.StartAsync(new StaticComponentHostConfigurationProvider(new List<ComponentConfiguration>
@@ -52,7 +52,7 @@ namespace LoggerWithNinject
             }), cancellationTokenSource);
         }
 
-        private static async Task<bool> RestartHandler(Exception ex, int retryCount, ILogger logger, IComponentIdentity component)
+        private static async Task<bool> RestartHandler(Exception ex, int retryCount, IAsynchronousLogger logger, IComponentIdentity component)
         {
             try
             {

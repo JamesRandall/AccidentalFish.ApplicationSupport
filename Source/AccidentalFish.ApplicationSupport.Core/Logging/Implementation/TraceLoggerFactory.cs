@@ -11,14 +11,24 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
             _defaultMinimumLogLevel = defaultMinimumLogLevel;
         }
 
-        public ILogger CreateLogger(LogLevelEnum? minimumLogLevel)
+        public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel)
         {
-            return new ConsoleLogger(null, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+            return new TraceAsynchronousLogger(null, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
         }
 
-        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
+        public ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
         {
-            return new ConsoleLogger(source, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+            return new TraceLogger(null, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+        }
+
+        public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
+        {
+            return new TraceAsynchronousLogger(source, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+        }
+
+        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
+        {
+            return new TraceLogger(source, minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
         }
     }
 }

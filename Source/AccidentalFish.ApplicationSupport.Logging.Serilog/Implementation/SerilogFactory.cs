@@ -3,7 +3,6 @@ using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using Serilog;
 using Serilog.Events;
-using ILogger = AccidentalFish.ApplicationSupport.Core.Logging.ILogger;
 
 namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
 {
@@ -28,10 +27,20 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
             _correlationIdPropertyName = correlationIdPropertyName;
         }
 
-        public ILogger CreateLogger(LogLevelEnum? minimumLogLevel)
+        public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel = null)
+        {
+            throw new NotImplementedException("SeriLog only supports synchronous logging, use CreateLogger().");
+        }
+
+        public Core.Logging.ILogger CreateLogger(LogLevelEnum? minimumLogLevel)
         {
             LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
             return new LoggerFacade(loggerConfiguration.CreateLogger());
+        }
+
+        public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
+        {
+            throw new NotImplementedException("SeriLog only supports synchronous logging, use CreateLogger().");
         }
 
         public global::Serilog.ILogger CreateSerilog(LogLevelEnum? minimumLogLevel)
@@ -40,7 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
             return new LoggerFacade(loggerConfiguration.CreateLogger());
         }
 
-        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
+        public Core.Logging.ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
         {
             LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
             loggerConfiguration.Enrich.With(new FullyQualifiedNameEnricher(source, _sourceFqnPropertyName));
@@ -58,20 +67,6 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
             return loggerConfiguration.CreateLogger();
         }
 
-        private LogEventLevel LogEventLevelFrom(LogLevelEnum logLevel)
-        {
-            switch (logLevel)
-            {
-                case LogLevelEnum.Verbose: return LogEventLevel.Verbose;
-                case LogLevelEnum.Debug: return LogEventLevel.Debug;
-                case LogLevelEnum.Information: return LogEventLevel.Information;
-                case LogLevelEnum.Warning: return LogEventLevel.Warning;
-                case LogLevelEnum.Error: return LogEventLevel.Error;
-                case LogLevelEnum.Fatal: return LogEventLevel.Fatal;
-            }
-            throw new NotSupportedException($"Log level {logLevel} is not supported.");
-        }
-
         private LoggerConfiguration GetLoggerConfiguration(LogLevelEnum? minimumLogLevel)
         {
             var configuration = _loggerConfigurationProvider != null ?
@@ -79,7 +74,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
                 new LoggerConfiguration().WriteTo.Trace();
             configuration
                 .MinimumLevel
-                .Is(LogEventLevelFrom(minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel)))
+                .Is(minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel).ToLogEventLevel())
                 .Enrich.With(new CorrelationIdEnricher(_correlationIdProvider, _correlationIdPropertyName));
             return configuration;
         }

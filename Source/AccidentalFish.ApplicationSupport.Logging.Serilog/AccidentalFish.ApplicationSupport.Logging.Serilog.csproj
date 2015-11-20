@@ -52,6 +52,7 @@
     <Compile Include="CorrelationIdEnricher.cs" />
     <Compile Include="FullyQualifiedNameEnricher.cs" />
     <Compile Include="Implementation\LoggerFacade.cs" />
+    <Compile Include="Implementation\LogLevelEnumExtensions.cs" />
     <Compile Include="Implementation\SerilogFactory.cs" />
     <Compile Include="ISerilogFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

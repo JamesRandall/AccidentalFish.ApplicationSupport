@@ -7,7 +7,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 {
     internal class DefaultComponentHostRestartHandler : IComponentHostRestartHandler
     {
-        public async Task<bool> HandleRestart(Exception ex, int retryCount, ILogger logger, IComponentIdentity component)
+        public async Task<bool> HandleRestart(Exception ex, int retryCount, IAsynchronousLogger logger, IComponentIdentity component)
         {
             try
             {

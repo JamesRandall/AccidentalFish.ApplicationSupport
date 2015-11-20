@@ -15,13 +15,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
         private readonly IComponentHostRestartHandler _componentHostRestartHandler;
         public const string FullyQualifiedName = "com.accidentalfish.application-support.component-host";
         private CancellationTokenSource _cancellationTokenSource;
-        private readonly ILogger _logger;
+        private readonly IAsynchronousLogger _logger;
 
         public ComponentHost(IComponentFactory componentFactory, ILoggerFactory loggerFactory, IComponentHostRestartHandler componentHostRestartHandler)
         {
             _componentFactory = componentFactory;
             _componentHostRestartHandler = componentHostRestartHandler;
-            _logger = loggerFactory.CreateLogger(ComponentIdentity);
+            _logger = loggerFactory.CreateAsynchronousLogger(ComponentIdentity);
         }
 
         public Action<Exception, int> CustomErrorHandler { get; set; }

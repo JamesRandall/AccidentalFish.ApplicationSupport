@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
@@ -8,18 +9,18 @@ using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
 
 namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
 {
-    internal class QueueLogger : ILogger<IQueue<LogQueueItem>>
+    internal class QueueAsynchronousLogger : IAsynchronousLogger<IAsynchronousQueue<LogQueueItem>>
     {
         private readonly IRuntimeEnvironment _runtimeEnvironment;
-        private readonly IQueue<LogQueueItem> _queue;
+        private readonly IAsynchronousQueue<LogQueueItem> _queue;
         private readonly IFullyQualifiedName _source;
         private readonly IQueueLoggerExtension _queueLoggerExtension;
         private readonly LogLevelEnum _minimumLoggingLevel;
         private readonly ICorrelationIdProvider _correlationIdProvider;
 
-        public QueueLogger(
+        public QueueAsynchronousLogger(
             IRuntimeEnvironment runtimeEnvironment,
-            IQueue<LogQueueItem> queue,
+            IAsynchronousQueue<LogQueueItem> queue,
             IFullyQualifiedName source,
             IQueueLoggerExtension queueLoggerExtension,
             LogLevelEnum minimumLoggingLevel,
@@ -33,72 +34,72 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
             _correlationIdProvider = correlationIdProvider;
         }
 
-        public void Verbose(string message)
+        public async Task VerboseAsync(string message)
         {
-            Log(LogLevelEnum.Verbose, message);
+            await LogAsync(LogLevelEnum.Verbose, message);
         }
 
-        public void Verbose(string message, Exception exception)
+        public async Task VerboseAsync(string message, Exception exception)
         {
-            Log(LogLevelEnum.Verbose, message, exception);
+            await LogAsync(LogLevelEnum.Verbose, message, exception);
         }
 
-        public void Debug(string message)
+        public async Task DebugAsync(string message)
         {
-            Log(LogLevelEnum.Debug, message);
+            await LogAsync(LogLevelEnum.Debug, message);
         }
 
-        public void Debug(string message, Exception exception)
+        public async Task DebugAsync(string message, Exception exception)
         {
-            Log(LogLevelEnum.Debug, message, exception);
+            await LogAsync(LogLevelEnum.Debug, message, exception);
         }
 
-        public void Information(string message)
+        public async Task InformationAsync(string message)
         {
-            Log(LogLevelEnum.Information, message);
+            await LogAsync(LogLevelEnum.Information, message);
         }
 
-        public void Information(string message, Exception exception)
+        public async Task InformationAsync(string message, Exception exception)
         {
-            Log(LogLevelEnum.Information, message, exception);
+            await LogAsync(LogLevelEnum.Information, message, exception);
         }
 
-        public void Warning(string message)
+        public async Task WarningAsync(string message)
         {
-            Log(LogLevelEnum.Warning, message);
+            await LogAsync(LogLevelEnum.Warning, message);
         }
 
-        public void Warning(string message, Exception exception)
+        public async Task WarningAsync(string message, Exception exception)
         {
-            Log(LogLevelEnum.Warning, message, exception);
+            await LogAsync(LogLevelEnum.Warning, message, exception);
         }
 
-        public void Error(string message)
+        public async Task ErrorAsync(string message)
         {
-            Log(LogLevelEnum.Error, message);
+            await LogAsync(LogLevelEnum.Error, message);
         }
 
-        public void Error(string message, Exception exception)
+        public async Task ErrorAsync(string message, Exception exception)
         {
-            Log(LogLevelEnum.Error, message, exception);
+            await LogAsync(LogLevelEnum.Error, message, exception);
         }
 
-        public void Fatal(string message)
+        public async Task FatalAsync(string message)
         {
-            Log(LogLevelEnum.Fatal, message);
+            await LogAsync(LogLevelEnum.Fatal, message);
         }
 
-        public void Fatal(string message, Exception exception)
+        public async Task FatalAsync(string message, Exception exception)
         {
-            Log(LogLevelEnum.Fatal, message, exception);
+            await LogAsync(LogLevelEnum.Fatal, message, exception);
         }
 
-        public void Log(LogLevelEnum level, string message)
+        public async Task LogAsync(LogLevelEnum level, string message)
         {
-            Log(level, message, null);
+            await LogAsync(level, message, null);
         }
 
-        public void Log(LogLevelEnum level, string message, Exception exception)
+        public async Task LogAsync(LogLevelEnum level, string message, Exception exception)
         {
             LogQueueItem item = CreateLogQueueItem(level, message, exception);
             bool willLog = level >= _minimumLoggingLevel;
@@ -108,7 +109,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
                 {
                     try
                     {
-                        _queue.Enqueue(item);
+                        await _queue.EnqueueAsync(item);
                     }
                     catch (Exception)
                     {
@@ -135,6 +136,6 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
             };
         }
 
-        public IQueue<LogQueueItem> ActualLogger => _queue;
+        public IAsynchronousQueue<LogQueueItem> ActualLogger => _queue;
     }
 }

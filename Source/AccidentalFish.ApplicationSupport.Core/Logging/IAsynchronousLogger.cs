@@ -1,92 +1,137 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Logging
 {
     /// <summary>
-    /// Interface for synchronous loggers
+    /// The level of the log item
     /// </summary>
-    public interface ILogger
+    public enum LogLevelEnum
+    {
+        /// <summary>
+        /// Verbose
+        /// </summary>
+        Verbose = 1,
+        /// <summary>
+        /// Debug
+        /// </summary>
+        Debug = 2,
+        /// <summary>
+        /// Informatonal
+        /// </summary>
+        Information = 3,
+        /// <summary>
+        /// Warning
+        /// </summary>
+        Warning = 4,
+        /// <summary>
+        /// Error
+        /// </summary>
+        Error = 5,
+        /// <summary>
+        /// Fatal
+        /// </summary>
+        Fatal = 6
+    }
+
+    /// <summary>
+    /// Interface for asynchronous log implementations
+    /// </summary>
+    public interface IAsynchronousLogger
     {
         /// <summary>
         /// Log a debug message
         /// </summary>
         /// <param name="message">The message to log</param>
-        void Verbose(string message);
+        /// <returns>An awaitable task</returns>
+        Task VerboseAsync(string message);
 
         /// <summary>
         /// Log a debug message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
-        void Verbose(string message, Exception exception);
+        /// <returns>An awaitable task</returns>
+        Task VerboseAsync(string message, Exception exception);
 
         /// <summary>
         /// Log a debug message
         /// </summary>
         /// <param name="message">The message to log</param>
-        void Debug(string message);
+        /// <returns>An awaitable task</returns>
+        Task DebugAsync(string message);
 
         /// <summary>
         /// Log a debug message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
-        void Debug(string message, Exception exception);
+        /// <returns>An awaitable task</returns>
+        Task DebugAsync(string message, Exception exception);
 
         /// <summary>
         /// Log an informational message
         /// </summary>
         /// <param name="message">The message to log</param>
-        void Information(string message);
+        /// <returns>An awaitable task</returns>
+        Task InformationAsync(string message);
         /// <summary>
         /// Log an informational message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
-        void Information(string message, Exception exception);
+        /// <returns>An awaitable task</returns>
+        Task InformationAsync(string message, Exception exception);
 
         /// <summary>
         /// Log a warning message
         /// </summary>
         /// <param name="message">The message to log</param>
-        void Warning(string message);
+        /// <returns>An awaitable task</returns>
+        Task WarningAsync(string message);
         /// <summary>
         /// Log a warning message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
-        void Warning(string message, Exception exception);
+        /// <returns>An awaitable task</returns>
+        Task WarningAsync(string message, Exception exception);
 
         /// <summary>
         /// Log an error message
         /// </summary>
         /// <param name="message">The message to log</param>
-        void Error(string message);
+        /// <returns>An awaitable task</returns>
+        Task ErrorAsync(string message);
         /// <summary>
         /// Log a error message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
-        void Error(string message, Exception exception);
+        /// <returns>An awaitable task</returns>
+        Task ErrorAsync(string message, Exception exception);
 
         /// <summary>
         /// Log an error message
         /// </summary>
         /// <param name="message">The message to log</param>
-        void Fatal(string message);
+        /// <returns>An awaitable task</returns>
+        Task FatalAsync(string message);
         /// <summary>
         /// Log a error message
         /// </summary>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
-        void Fatal(string message, Exception exception);
+        /// <returns>An awaitable task</returns>
+        Task FatalAsync(string message, Exception exception);
 
         /// <summary>
         /// Log a message at the specified level
         /// </summary>
         /// <param name="level">The level to log at</param>
         /// <param name="message">The message to log</param>
-        void Log(LogLevelEnum level, string message);
+        /// <returns>An awaitable task</returns>
+        Task LogAsync(LogLevelEnum level, string message);
 
         /// <summary>
         /// Log a message at the specified level
@@ -94,7 +139,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging
         /// <param name="level">The level to log at</param>
         /// <param name="message">The message to log</param>
         /// <param name="exception">An exception to log</param>
-        void Log(LogLevelEnum level, string message, Exception exception);
+        /// <returns>An awaitable task</returns>
+        Task LogAsync(LogLevelEnum level, string message, Exception exception);
     }
 
     /// <summary>
@@ -103,7 +149,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging
     /// logger if required.
     /// </summary>
     /// <typeparam name="T">Type of the underlying logger</typeparam>
-    public interface ILogger<out T> : ILogger
+    public interface IAsynchronousLogger<out T> : IAsynchronousLogger
     {
         /// <summary>
         /// The underlying logger

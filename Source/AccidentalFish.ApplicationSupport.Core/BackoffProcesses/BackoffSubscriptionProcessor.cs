@@ -18,7 +18,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
     {
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
         private readonly IAsynchronousSubscription<T> _subscription;
-        private readonly ILogger _logger;
+        private readonly IAsynchronousLogger _logger;
 
         private class ProcessResult
         {
@@ -48,7 +48,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         protected BackoffSubscriptionProcessor(
             IAsynchronousBackoffPolicy backoffPolicy,
             IAsynchronousSubscription<T> subscription,
-            ILogger logger)
+            IAsynchronousLogger logger)
         {
             _backoffPolicy = backoffPolicy;
             _subscription = subscription;
@@ -58,7 +58,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         /// <summary>
         /// The logger the processor is configured with, may be null
         /// </summary>
-        protected ILogger Logger => _logger;
+        protected IAsynchronousLogger Logger => _logger;
 
         /// <summary>
         /// The subscription the processor is configured with

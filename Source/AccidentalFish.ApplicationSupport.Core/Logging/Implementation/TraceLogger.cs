@@ -20,84 +20,82 @@ namespace AccidentalFish.ApplicationSupport.Core.Logging.Implementation
         }
 
 
-        public async Task VerboseAsync(string message)
+        public void Verbose(string message)
         {
-            await LogAsync(LogLevelEnum.Verbose, message);
+            Log(LogLevelEnum.Verbose, message);
         }
 
-        public async Task VerboseAsync(string message, Exception exception)
+        public void Verbose(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Verbose, message, exception);
+            Log(LogLevelEnum.Verbose, message, exception);
         }
 
-        public async Task DebugAsync(string message)
+        public void Debug(string message)
         {
-            await LogAsync(LogLevelEnum.Debug, message);
+            Log(LogLevelEnum.Debug, message);
         }
 
-        public async Task DebugAsync(string message, Exception exception)
+        public void Debug(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Debug, message, exception);
+            Log(LogLevelEnum.Debug, message, exception);
         }
 
-        public async Task InformationAsync(string message)
+        public void Information(string message)
         {
-            await LogAsync(LogLevelEnum.Information, message);
+            Log(LogLevelEnum.Information, message);
         }
 
-        public async Task InformationAsync(string message, Exception exception)
+        public void Information(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Information, message, exception);
+            Log(LogLevelEnum.Information, message, exception);
         }
 
-        public async Task WarningAsync(string message)
+        public void Warning(string message)
         {
-            await LogAsync(LogLevelEnum.Warning, message);
+            Log(LogLevelEnum.Warning, message);
         }
 
-        public async Task WarningAsync(string message, Exception exception)
+        public void Warning(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Warning, message, exception);
+            Log(LogLevelEnum.Warning, message, exception);
         }
 
-        public async Task ErrorAsync(string message)
+        public void Error(string message)
         {
-            await LogAsync(LogLevelEnum.Error, message);
+            Log(LogLevelEnum.Error, message);
         }
 
-        public async Task ErrorAsync(string message, Exception exception)
+        public void Error(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Error, message, exception);
+            Log(LogLevelEnum.Error, message, exception);
         }
 
-        public async Task FatalAsync(string message)
+        public void Fatal(string message)
         {
-            await LogAsync(LogLevelEnum.Fatal, message);
+            Log(LogLevelEnum.Fatal, message);
         }
 
-        public async Task FatalAsync(string message, Exception exception)
+        public void Fatal(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Fatal, message, exception);
+            Log(LogLevelEnum.Fatal, message, exception);
         }
 
-        public Task LogAsync(LogLevelEnum level, string message)
+        public void Log(LogLevelEnum level, string message)
         {
             if (level >= _minimumLogLevel)
             {
                 string source = _source?.FullyQualifiedName ?? "default";
                 Write(level, $"{source} - {level.ToString().ToUpper()} : {message}");
             }
-            return Task.FromResult(0);
         }
 
-        public Task LogAsync(LogLevelEnum level, string message, Exception exception)
+        public void Log(LogLevelEnum level, string message, Exception exception)
         {
             if (level >= _minimumLogLevel)
             {
                 string source = _source?.FullyQualifiedName ?? "default";
                 Write(level, $"{source} - {level.ToString().ToUpper()} : {exception.GetType().Name} - {message}");
             }
-            return Task.FromResult(0);
         }
 
         private void Write(LogLevelEnum level, string text)

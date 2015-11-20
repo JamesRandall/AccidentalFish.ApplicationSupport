@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
+using Microsoft.ApplicationInsights;
 
 namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
 {
-    internal class ApplicationInsightLogger : ILogger
+    internal class ApplicationInsightLogger : ILogger<TelemetryClient>
     {
         private readonly IFullyQualifiedName _fullyQualifiedName;
         private readonly LogLevelEnum _minimumLogLevel;
-        private readonly Microsoft.ApplicationInsights.TelemetryClient _telemetryClient = new Microsoft.ApplicationInsights.TelemetryClient();
+        private readonly TelemetryClient _telemetryClient = new TelemetryClient();
 
         public ApplicationInsightLogger(IFullyQualifiedName fullyQualifiedName, LogLevelEnum minimumLogLevel)
         {
@@ -18,74 +18,74 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
             _minimumLogLevel = minimumLogLevel;
         }
 
-        public async Task VerboseAsync(string message)
+        public void Verbose(string message)
         {
-            await LogAsync(LogLevelEnum.Verbose, message);
+            Log(LogLevelEnum.Verbose, message);
         }
 
-        public async Task VerboseAsync(string message, Exception exception)
+        public void Verbose(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Verbose, message, exception);
+            Log(LogLevelEnum.Verbose, message, exception);
         }
 
-        public async Task DebugAsync(string message)
+        public void Debug(string message)
         {
-            await LogAsync(LogLevelEnum.Debug, message);
+            Log(LogLevelEnum.Debug, message);
         }
 
-        public async Task DebugAsync(string message, Exception exception)
+        public void Debug(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Debug, message, exception);
+            Log(LogLevelEnum.Debug, message, exception);
         }
 
-        public async Task InformationAsync(string message)
+        public void Information(string message)
         {
-            await LogAsync(LogLevelEnum.Information, message);
+            Log(LogLevelEnum.Information, message);
         }
 
-        public async Task InformationAsync(string message, Exception exception)
+        public void Information(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Information, message, exception);
+            Log(LogLevelEnum.Information, message, exception);
         }
 
-        public async Task WarningAsync(string message)
+        public void Warning(string message)
         {
-            await LogAsync(LogLevelEnum.Warning, message);
+            Log(LogLevelEnum.Warning, message);
         }
 
-        public async Task WarningAsync(string message, Exception exception)
+        public void Warning(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Warning, message, exception);
+            Log(LogLevelEnum.Warning, message, exception);
         }
 
-        public async Task ErrorAsync(string message)
+        public void Error(string message)
         {
-            await LogAsync(LogLevelEnum.Error, message);
+            Log(LogLevelEnum.Error, message);
         }
 
-        public async Task ErrorAsync(string message, Exception exception)
+        public void Error(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Error, message, exception);
+            Log(LogLevelEnum.Error, message, exception);
         }
 
-        public async Task FatalAsync(string message)
+        public void Fatal(string message)
         {
-            await LogAsync(LogLevelEnum.Fatal, message);
+            Log(LogLevelEnum.Fatal, message);
         }
 
-        public async Task FatalAsync(string message, Exception exception)
+        public void Fatal(string message, Exception exception)
         {
-            await LogAsync(LogLevelEnum.Fatal, message, exception);
+            Log(LogLevelEnum.Fatal, message, exception);
         }
 
-        public async Task LogAsync(LogLevelEnum level, string message)
+        public void Log(LogLevelEnum level, string message)
         {
-            await LogAsync(level, message, null);
+            Log(level, message, null);
         }
 
-        public Task LogAsync(LogLevelEnum level, string message, Exception exception)
+        public void Log(LogLevelEnum level, string message, Exception exception)
         {
-            if (level < _minimumLogLevel) return Task.FromResult(0);
+            if (level < _minimumLogLevel) return;
 
             Dictionary<string, string> properties = new Dictionary<string, string>
             {
@@ -102,7 +102,8 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
                 _telemetryClient.TrackException(exception, properties);
             }
             _telemetryClient.TrackEvent($"LOG:{level}", properties);
-            return Task.FromResult(0);
         }
+
+        public TelemetryClient ActualLogger => _telemetryClient;
     }
 }

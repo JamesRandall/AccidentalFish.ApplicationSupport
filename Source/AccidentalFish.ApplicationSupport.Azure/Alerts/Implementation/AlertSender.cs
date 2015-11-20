@@ -20,7 +20,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation
 
         private readonly IAsynchronousTableStorageRepository<AlertSubscriber> _table;
         private readonly string _sourceEmailAddress;
-        private readonly ILogger _logger;
+        private readonly IAsynchronousLogger _logger;
 
         public AlertSender(
             ILoggerFactory loggerFactory,
@@ -29,7 +29,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Alerts.Implementation
         {
             _emailProvider = emailProvider;
             _table = applicationResourceFactory.GetTableStorageRepository<AlertSubscriber>(ComponentIdentity);
-            _logger = loggerFactory.CreateLogger(ComponentIdentity);
+            _logger = loggerFactory.CreateAsynchronousLogger(ComponentIdentity);
             _sourceEmailAddress = applicationResourceFactory.Setting(ComponentIdentity, "alert-from");
         }
 

@@ -18,7 +18,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
     {
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
         private readonly IAsynchronousQueue<T> _queue;
-        private readonly ILogger _logger;
+        private readonly IAsynchronousLogger _logger;
 
         private class ProcessResult
         {
@@ -48,7 +48,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         protected BackoffQueueProcessor(
             IAsynchronousBackoffPolicy backoffPolicy,
             IAsynchronousQueue<T> queue,
-            ILogger logger)
+            IAsynchronousLogger logger)
         {
             _backoffPolicy = backoffPolicy;
             _queue = queue;
@@ -58,7 +58,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         /// <summary>
         /// The logger the processor is configured with, may be null
         /// </summary>
-        protected ILogger Logger => _logger;
+        protected IAsynchronousLogger Logger => _logger;
 
         /// <summary>
         /// The queue the processor is configured with

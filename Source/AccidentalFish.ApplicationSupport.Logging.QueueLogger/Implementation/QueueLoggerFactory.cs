@@ -26,18 +26,33 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
             _defaultMinimumLogLevel = defaultMinimumLogLevel;
         }
 
-        public ILogger CreateLogger(LogLevelEnum? minimuLogLevel)
+        public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimuLogLevel)
         {
-            return CreateLogger(new LoggerSource("default"), minimuLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+            return CreateAsynchronousLogger(new LoggerSource("default"), minimuLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
         }
 
-        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimuLogLevel)
+        public ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
         {
-            return new Logging.QueueLogger.Implementation.QueueLogger(_runtimeEnvironment,
-                _applicationResourceFactory.GetLoggerQueue(),
+            return CreateLogger(new LoggerSource("default"), minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel));
+        }
+
+        public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimuLogLevel)
+        {
+            return new QueueAsynchronousLogger(_runtimeEnvironment,
+                _applicationResourceFactory.GetAsynchronousLoggerQueue(),
                 source,
                 _queueLoggerExtension,
                 minimuLogLevel.GetValueOrDefault(_defaultMinimumLogLevel),
+                _correlationIdProvider);
+        }
+
+        public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
+        {
+            return new QueueLogger(_runtimeEnvironment,
+                _applicationResourceFactory.GetLoggerQueue(),
+                source,
+                _queueLoggerExtension,
+                minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel),
                 _correlationIdProvider);
         }
     }

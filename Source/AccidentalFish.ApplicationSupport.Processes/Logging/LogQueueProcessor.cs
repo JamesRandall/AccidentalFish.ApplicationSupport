@@ -30,7 +30,7 @@ namespace AccidentalFish.ApplicationSupport.Processes.Logging
             IAzureApplicationResourceFactory applicationResourceFactory,
             IAsynchronousBackoffPolicy backoffPolicy,
             IMapperFactory mapperFactory,
-            IAlertSender alertSender) : base(backoffPolicy, applicationResourceFactory.GetLoggerQueue())
+            IAlertSender alertSender) : base(backoffPolicy, applicationResourceFactory.GetAsynchronousLoggerQueue())
         {
             _mapperFactory = mapperFactory;
             _alertSender = alertSender;
