@@ -29,7 +29,9 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog
         {
             return dependencyResolver
                 .Register<ILoggerFactory>(() => new SerilogFactory(configurationProvider, dependencyResolver.Resolve<ICorrelationIdProvider>(), defaultMinimumLogLevel, sourceFqnPropertyName, correlationIdPropertyName))
-                .Register<ISerilogFactory>(() => new SerilogFactory(configurationProvider, dependencyResolver.Resolve<ICorrelationIdProvider>(), defaultMinimumLogLevel, sourceFqnPropertyName, correlationIdPropertyName));
+                .Register<ISerilogFactory>(() => new SerilogFactory(configurationProvider, dependencyResolver.Resolve<ICorrelationIdProvider>(), defaultMinimumLogLevel, sourceFqnPropertyName, correlationIdPropertyName))
+                .Register(() => new SerilogFactory(configurationProvider, dependencyResolver.Resolve<ICorrelationIdProvider>(), defaultMinimumLogLevel, sourceFqnPropertyName, correlationIdPropertyName).CreateLogger())
+                .Register(() => new SerilogFactory(configurationProvider, dependencyResolver.Resolve<ICorrelationIdProvider>(), defaultMinimumLogLevel, sourceFqnPropertyName, correlationIdPropertyName).CreateSerilog());
         }
     }
 }

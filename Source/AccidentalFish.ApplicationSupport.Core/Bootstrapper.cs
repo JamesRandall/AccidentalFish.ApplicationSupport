@@ -63,6 +63,8 @@ namespace AccidentalFish.ApplicationSupport.Core
                 .Register<IBlobRepositoryFactory, NotSupportedBlobRepositoryFactory>()
                 .Register(createCorrelationIdProvider)
                 .Register<ILoggerFactory>(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel))
+                .Register(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel).CreateLogger())
+                .Register(() => new TraceLoggerFactory(defaultTraceLoggerMinimumLogLevel).CreateAsynchronousLogger(defaultTraceLoggerMinimumLogLevel))
                 .Register<IComponentHost, ComponentHost>()
                 .Register<IEmailQueueDispatcher, EmailQueueDispatcher>()
                 .Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>()

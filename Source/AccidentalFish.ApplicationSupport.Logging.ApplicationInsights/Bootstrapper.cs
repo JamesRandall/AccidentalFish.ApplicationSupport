@@ -8,7 +8,9 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
         public static IDependencyResolver UseAzureApplicationInsightsLogger(this IDependencyResolver dependencyResolver,
             LogLevelEnum defaultMinimumLogLevel = LogLevelEnum.Warning)
         {
-            return dependencyResolver.Register<ILoggerFactory>(() => new ApplicationInsightLoggerFactory(defaultMinimumLogLevel));
+            return dependencyResolver
+                .Register<ILoggerFactory>(() => new ApplicationInsightLoggerFactory(defaultMinimumLogLevel))
+                .Register(() => new ApplicationInsightLoggerFactory(defaultMinimumLogLevel).CreateLogger());
         }
     }
 }

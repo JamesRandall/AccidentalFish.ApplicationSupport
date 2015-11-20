@@ -1,4 +1,5 @@
-﻿using AccidentalFish.ApplicationSupport.Core;
+﻿using System;
+using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
@@ -14,14 +15,32 @@ namespace SerilogSample
     {
         static void Main(string[] args)
         {
-            DefaultConfigurationSample();
+            DefaultConfigurationSampleNoFactory();
+            DefaultConfigurationSampleWithFactory();
             LogDirectlyWithSerilog();
             AccessSerilogWithCast();
             FactorySerilogConfiguration();
+            Console.ReadLine();
+        }
+
+        // Default configuration writing to the trace pipe without using a factory.
+        private static void DefaultConfigurationSampleNoFactory()
+        {
+            IUnityContainer container = new UnityContainer();
+            IDependencyResolver dependencyResolver = new UnityApplicationFrameworkDependencyResolver(container);
+
+            dependencyResolver
+                .UseCore()
+                .UseSerilog();
+
+            ILogger sampleLogger = dependencyResolver.Resolve<ILogger>();
+
+            var structuredData = new { Hello = "World", SubObject = new { Some = "Bling" } };
+            sampleLogger.Warning("A simple log item with data {@StructuredData}", structuredData);
         }
 
         // The default configuration writes to the trace pipe.
-        private static void DefaultConfigurationSample()
+        private static void DefaultConfigurationSampleWithFactory()
         {
             IUnityContainer container = new UnityContainer();
             IDependencyResolver dependencyResolver = new UnityApplicationFrameworkDependencyResolver(container);

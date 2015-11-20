@@ -13,7 +13,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
             _defaultMinimumLogLevel = defaultMinimumLogLevel;
         }
 
-        public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel)
+        public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel = null)
         {
             throw new NotSupportedException("The Application Insight logger is only available as a synchronous logger. Use CreateLogger instead.");
         }
@@ -23,7 +23,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
             return new ApplicationInsightLogger(null, GetMinimumLogLevel(minimumLogLevel));
         }
 
-        public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
+        public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
             throw new NotSupportedException("The Application Insight logger is only available as a synchronous logger. Use CreateLogger instead.");
         }

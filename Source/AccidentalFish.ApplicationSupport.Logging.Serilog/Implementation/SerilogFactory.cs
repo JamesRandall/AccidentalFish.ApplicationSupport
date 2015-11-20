@@ -32,7 +32,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
             throw new NotImplementedException("SeriLog only supports synchronous logging, use CreateLogger().");
         }
 
-        public Core.Logging.ILogger CreateLogger(LogLevelEnum? minimumLogLevel)
+        public Core.Logging.ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
         {
             LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
             return new LoggerFacade(loggerConfiguration.CreateLogger());
@@ -43,20 +43,20 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
             throw new NotImplementedException("SeriLog only supports synchronous logging, use CreateLogger().");
         }
 
-        public global::Serilog.ILogger CreateSerilog(LogLevelEnum? minimumLogLevel)
+        public global::Serilog.ILogger CreateSerilog(LogLevelEnum? minimumLogLevel = null)
         {
             LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
             return new LoggerFacade(loggerConfiguration.CreateLogger());
         }
 
-        public Core.Logging.ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
+        public Core.Logging.ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
             LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
             loggerConfiguration.Enrich.With(new FullyQualifiedNameEnricher(source, _sourceFqnPropertyName));
             return new LoggerFacade(loggerConfiguration.CreateLogger());
         }
 
-        public global::Serilog.ILogger CreateSerilog(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel)
+        public global::Serilog.ILogger CreateSerilog(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
             LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
             return new LoggerFacade(loggerConfiguration.CreateLogger());

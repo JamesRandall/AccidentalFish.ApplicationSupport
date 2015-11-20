@@ -21,15 +21,21 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger
 
             return dependencyResolver
                 .Register(typeof (IQueueLoggerExtension), loggerExtension)
-                .Register<ILoggerFactory>(() =>
-                {
-                    IRuntimeEnvironment runtimeEnvironment = dependencyResolver.Resolve<IRuntimeEnvironment>();
-                    IApplicationResourceFactory applicationResourceFactory = dependencyResolver.Resolve<IApplicationResourceFactory>();
-                    IQueueLoggerExtension queueLoggerExtension = dependencyResolver.Resolve<IQueueLoggerExtension>();
-                    ICorrelationIdProvider correlationIdProvider = dependencyResolver.Resolve<ICorrelationIdProvider>();
+                .Register(() => GetLoggerFactory(dependencyResolver, defaultMinimumLogLevel))
+                .Register(() => GetLoggerFactory(dependencyResolver, defaultMinimumLogLevel).CreateLogger())
+                .Register(() => GetLoggerFactory(dependencyResolver, defaultMinimumLogLevel).CreateAsynchronousLogger());
+        }
 
-                    return new QueueLoggerFactory(runtimeEnvironment, applicationResourceFactory, queueLoggerExtension, correlationIdProvider, defaultMinimumLogLevel);
-                });
+        private static ILoggerFactory GetLoggerFactory(IDependencyResolver dependencyResolver,
+            LogLevelEnum defaultMinimumLogLevel)
+        {
+            IRuntimeEnvironment runtimeEnvironment = dependencyResolver.Resolve<IRuntimeEnvironment>();
+            IApplicationResourceFactory applicationResourceFactory = dependencyResolver.Resolve<IApplicationResourceFactory>();
+            IQueueLoggerExtension queueLoggerExtension = dependencyResolver.Resolve<IQueueLoggerExtension>();
+            ICorrelationIdProvider correlationIdProvider = dependencyResolver.Resolve<ICorrelationIdProvider>();
+
+            return new QueueLoggerFactory(runtimeEnvironment, applicationResourceFactory, queueLoggerExtension,
+                correlationIdProvider, defaultMinimumLogLevel);
         }
     }
 }
