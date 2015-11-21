@@ -136,6 +136,7 @@
     <Compile Include="Components\IAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\Implementation\AzureApplicationResourceFactory.cs" />
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Extensions\ILoggerFactoryExtensions.cs" />
     <Compile Include="Queues\AzureQueueFactory.cs" />
     <Compile Include="Implementation\AzureResourceManager.cs" />
     <Compile Include="Queues\BrokeredMessageQueue.cs" />
