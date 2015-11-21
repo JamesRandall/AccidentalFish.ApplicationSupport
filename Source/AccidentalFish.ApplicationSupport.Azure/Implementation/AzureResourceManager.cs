@@ -1,30 +1,39 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.Blobs;
+using AccidentalFish.ApplicationSupport.Azure.Extensions;
 using AccidentalFish.ApplicationSupport.Azure.Queues;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
-using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Implementation
 {
     internal class AzureResourceManager : IAzureResourceManager
     {
+        private readonly ILogger _logger;
+        public AzureResourceManager(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.GetAssemblyLogger();
+        }
+
         public async Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousQueue<T> abstractQueue) where T : class
         {
             AsynchronousQueue<T> storageQueue = abstractQueue as AsynchronousQueue<T>;
             if (storageQueue != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating storage queue");
                 return (await storageQueue.UnderlyingQueue.CreateIfNotExistsAsync());
             }
             AsynchronousBrokeredMessageQueue<T> serviceBusQueue = abstractQueue as AsynchronousBrokeredMessageQueue<T>;
             if (serviceBusQueue != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating service bus queue");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(serviceBusQueue.ConnectionString);
                 if (!(await namespaceManager.QueueExistsAsync(serviceBusQueue.UnderlyingQueue.Path)))
                 {
@@ -42,11 +51,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousQueue<T> storageQueue = abstractQueue as AsynchronousQueue<T>;
             if (storageQueue != null)
             {
+                _logger?.Verbose("AzureResourceManager: DeleteIfExistsAsync - deleting storage queue");
                 return (await storageQueue.UnderlyingQueue.DeleteIfExistsAsync());
             }
             AsynchronousBrokeredMessageQueue<T> serviceBusQueue = abstractQueue as AsynchronousBrokeredMessageQueue<T>;
             if (serviceBusQueue != null)
             {
+                _logger?.Verbose("AzureResourceManager: DeleteIfExistsAsync - deleting service bus queue");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(serviceBusQueue.ConnectionString);
                 if ((await namespaceManager.QueueExistsAsync(serviceBusQueue.UnderlyingQueue.Path)))
                 {
@@ -64,11 +75,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             StorageQueue<T> storageQueue = abstractQueue as StorageQueue<T>;
             if (storageQueue != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating storage queue");
                 return storageQueue.UnderlyingQueue.CreateIfNotExists();
             }
             BrokeredMessageQueue<T> serviceBusQueue = abstractQueue as BrokeredMessageQueue<T>;
             if (serviceBusQueue != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating service bus queue");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(serviceBusQueue.ConnectionString);
                 if (!namespaceManager.QueueExists(serviceBusQueue.UnderlyingQueue.Path))
                 {
@@ -85,11 +98,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             StorageQueue<T> storageQueue = abstractQueue as StorageQueue<T>;
             if (storageQueue != null)
             {
+                _logger?.Verbose("AzureResourceManager: DeleteIfExistsAsync - deleting storage queue");
                 return storageQueue.UnderlyingQueue.DeleteIfExists();
             }
             BrokeredMessageQueue<T> serviceBusQueue = abstractQueue as BrokeredMessageQueue<T>;
             if (serviceBusQueue != null)
             {
+                _logger?.Verbose("AzureResourceManager: DeleteIfExistsAsync - deleting service bus queue");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(serviceBusQueue.ConnectionString);
                 if (namespaceManager.QueueExists(serviceBusQueue.UnderlyingQueue.Path))
                 {
@@ -106,6 +121,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousTopic<T> topic = abstractTopic as AsynchronousTopic<T>;
             if (topic != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating topic");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(topic.ConnectionString);
                 if (!(await namespaceManager.QueueExistsAsync(topic.UnderlyingTopic.Path)))
                 {
@@ -122,6 +138,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousTopic<T> topic = abstractTopic as AsynchronousTopic<T>;
             if (topic != null)
             {
+                _logger?.Verbose("AzureResourceManager: DeleteIfExistsAsync - deleting topic");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(topic.ConnectionString);
                 if ((await namespaceManager.QueueExistsAsync(topic.UnderlyingTopic.Path)))
                 {
@@ -138,6 +155,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousSubscription<T> subscription = abstractSubscription as AsynchronousSubscription<T>;
             if (subscription != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating subscription");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(subscription.ConnectionString);
                 if (!(await namespaceManager.QueueExistsAsync(subscription.UnderlyingSubscription.Name)))
                 {
@@ -154,6 +172,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousSubscription<T> subscription = abstractSubscription as AsynchronousSubscription<T>;
             if (subscription != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating subscription with filter");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(subscription.ConnectionString);
                 if (!(await namespaceManager.QueueExistsAsync(subscription.UnderlyingSubscription.Name)))
                 {
@@ -170,6 +189,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousSubscription<T> subscription = abstractSubscription as AsynchronousSubscription<T>;
             if (subscription != null)
             {
+                _logger?.Verbose("AzureResourceManager: DeleteIfExistsAsync - deleting subscription");
                 NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(subscription.ConnectionString);
                 if ((await namespaceManager.QueueExistsAsync(subscription.UnderlyingSubscription.Name)))
                 {
@@ -186,6 +206,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousTableStorageRepository<T> table = abstractTable as AsynchronousTableStorageRepository<T>;
             if (table != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating table");
                 return await table.Table.CreateIfNotExistsAsync();
             }
             throw new ArgumentException($"The table type {abstractTable.GetType().FullName} is not supported for resource management");
@@ -196,6 +217,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousTableStorageRepository<T> table = abstractTable as AsynchronousTableStorageRepository<T>;
             if (table != null)
             {
+                _logger?.Verbose("AzureResourceManager: DeleteIfExistsAsync - deleting table");
                 return (await table.Table.DeleteIfExistsAsync());
             }
             throw new ArgumentException($"The table type {abstractTable.GetType().FullName} is not supported for resource management");
@@ -206,6 +228,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousBlockBlobRepository repository = abstractRepository as AsynchronousBlockBlobRepository;
             if (repository != null)
             {
+                _logger?.Verbose("AzureResourceManager: CreateIfNotExistsAsync - creating blob repository");
                 return await repository.Container.CreateIfNotExistsAsync();
             }
             throw new ArgumentException($"The blob container type {abstractRepository.GetType().FullName} is not supported for resource management");
@@ -216,6 +239,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
             AsynchronousBlockBlobRepository repository = abstractRepository as AsynchronousBlockBlobRepository;
             if (repository != null)
             {
+                _logger?.Verbose("AzureResourceManager: DeleteIfExistsAsync - deleting blob repository");
                 return await repository.Container.DeleteIfExistsAsync();
             }
             throw new ArgumentException($"The blob container type {abstractRepository.GetType().FullName} is not supported for resource management");
