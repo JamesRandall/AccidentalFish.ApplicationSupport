@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
 
@@ -13,19 +15,29 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
     {
         private readonly IDbConfiguration _dbConfiguration;
         private readonly DbContext _context;
+        private readonly ILogger _logger;
 
-        public EntityFrameworkUnitOfWorkAsync(IConfiguration configuration, IDbContextFactory dbContextFactory, IDbConfiguration dbConfiguration)
+        public EntityFrameworkUnitOfWorkAsync(
+            IConfiguration configuration,
+            IDbContextFactory dbContextFactory,
+            IDbConfiguration dbConfiguration,
+            ILogger logger) : this(logger)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (dbContextFactory == null) throw new ArgumentNullException(nameof(dbContextFactory));
             if (dbConfiguration == null) throw new ArgumentNullException(nameof(dbConfiguration));
 
-
             _context = dbContextFactory.CreateContext(configuration.SqlConnectionString);
             _dbConfiguration = dbConfiguration;
+
+            _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: Created unit of work for {0}", _context.Database.Connection.ConnectionString);
         }
 
-        public EntityFrameworkUnitOfWorkAsync(Type contextType, string connectionString, IDbConfiguration dbConfiguration)
+        public EntityFrameworkUnitOfWorkAsync(
+            Type contextType,
+            string connectionString,
+            IDbConfiguration dbConfiguration,
+            ILogger logger) : this(logger)
         {
             if (contextType == null) throw new ArgumentNullException(nameof(contextType));
             if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
@@ -33,6 +45,13 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
             _context = (DbContext) Activator.CreateInstance(contextType, connectionString);
             _dbConfiguration = dbConfiguration;
+
+            _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: Created unit of work for {0}", _context.Database.Connection.ConnectionString);
+        }
+
+        private EntityFrameworkUnitOfWorkAsync(ILogger logger)
+        {
+            _logger = logger;
         }
 
         public IRepositoryAsync<T> GetRepository<T>() where T : class
@@ -40,9 +59,13 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             return new EntityFrameworkRepositoryAsync<T>(_context);
         }
 
-        public Task<int> SaveAsync()
+        public async Task<int> SaveAsync()
         {
-            return _context.SaveChangesAsync();
+            Stopwatch sw = Stopwatch.StartNew();
+            int result = await _context.SaveChangesAsync();
+            sw.Stop();
+            _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: Committed changes in {0}ms", sw.ElapsedMilliseconds);
+            return result;
         }
 
         public Task ExecuteAsync(Func<Task> func)
@@ -81,23 +104,36 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
                 saveFailed = false;
                 try
                 {
+                    _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: OptimisticRepositoryWinsUpdateAsync - attempting update retry {0}", retries);
                     update();
                     await SaveAsync();
+                    _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: OptimisticRepositoryWinsUpdateAsync - update succeeded on retry {0}", retries);
                 }
                 catch (DbUpdateConcurrencyException concurrencyException)
                 {
+                    _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: OptimisticRepositoryWinsUpdateAsync - update failed on retry {0}", retries);
                     retries++;
                     foreach(DbEntityEntry entity in concurrencyException.Entries) entity.Reload();
                     saveFailed = true;
                 }
             } while (saveFailed && retries < maxRetries);
+            if (saveFailed)
+            {
+                _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: OptimisticRepositoryWinsUpdateAsync - updated failed after max retried of {0}", maxRetries);
+            }
             return !saveFailed;
         }
 
         public bool SuspendExecutionPolicy
         {
             get { return _dbConfiguration.SuspendExecutionStrategy; }
-            set { _dbConfiguration.SuspendExecutionStrategy = value; }
+            set
+            {
+                _logger?.Verbose(value
+                    ? "EntityFrameworkUnitOfWorkAsync: Suspending execution policy"
+                    : "EntityFrameworkUnitOfWorkAsync: Resuming execution policy");
+                _dbConfiguration.SuspendExecutionStrategy = value;
+            }
         }
 
         public void Dispose()

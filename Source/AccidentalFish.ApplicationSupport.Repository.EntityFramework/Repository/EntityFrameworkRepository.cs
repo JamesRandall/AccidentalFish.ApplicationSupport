@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 
 namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repository
@@ -50,11 +51,6 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
         public void Update(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
-        }
-
-        public void Save()
-        {
-            _context.SaveChanges();
         }
 
         public void Delete(int id)

@@ -54,6 +54,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Extensions\ILoggerFactoryExtensions.cs" />
     <Compile Include="Policies\IDbConfiguration.cs" />
     <Compile Include="Policies\Implementation\NullDatabaseConfiguration.cs" />
     <Compile Include="Policies\Implementation\SqlDatabaseConfiguration.cs" />

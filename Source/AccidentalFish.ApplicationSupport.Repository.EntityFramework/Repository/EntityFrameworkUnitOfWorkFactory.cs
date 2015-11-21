@@ -1,6 +1,8 @@
 ﻿using System;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Repository;
+using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Extensions;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
 
 namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repository
@@ -12,8 +14,18 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
         private readonly IDbContextFactory _contextFactory;
         private readonly IDbConfiguration _dbConfiguration;
         private readonly Type _contextType;
+        private readonly ILogger _logger;
 
-        public EntityFrameworkUnitOfWorkFactory(IConfiguration configuration, IDbContextFactory contextFactory, IDbConfiguration dbConfiguration)
+        private EntityFrameworkUnitOfWorkFactory(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory?.GetAssemblyLogger();
+        }
+
+        public EntityFrameworkUnitOfWorkFactory(
+            IConfiguration configuration,
+            IDbContextFactory contextFactory,
+            IDbConfiguration dbConfiguration,
+            ILoggerFactory loggerFactory) : this(loggerFactory)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
@@ -28,12 +40,12 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
         public EntityFrameworkUnitOfWorkFactory(
             string contextType,
             string connectionString,
-            IDbConfiguration dbConfiguration)
+            IDbConfiguration dbConfiguration,
+            ILoggerFactory loggerFactory) : this(loggerFactory)
         {
             if (String.IsNullOrWhiteSpace(contextType)) throw new ArgumentNullException(nameof(contextType));
             if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
             if (dbConfiguration == null) throw new ArgumentNullException(nameof(dbConfiguration));
-
 
             _contextType = Type.GetType(contextType);
             _connectionString = connectionString;
@@ -41,6 +53,9 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
 
             if (_contextType == null)
             {
+                // deliberately not logged as an error as this throws an exception - it is for the callee to decide
+                // if this is an error
+                _logger?.Verbose("EntityFrameworkUnitOfWorkFactory: Unable to locate context type {0}", _contextType);
                 throw new InvalidOperationException($"Unable to locate context type {_contextType}");
             }
         }
@@ -48,15 +63,15 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
         public IUnitOfWork Create()
         {
             return _contextType == null ?
-                new EntityFrameworkUnitOfWork(_configuration, _contextFactory, _dbConfiguration) :
-                new EntityFrameworkUnitOfWork(_contextType, _connectionString, _dbConfiguration);
+                new EntityFrameworkUnitOfWork(_configuration, _contextFactory, _dbConfiguration, _logger) :
+                new EntityFrameworkUnitOfWork(_contextType, _connectionString, _dbConfiguration, _logger);
         }
 
         public IUnitOfWorkAsync CreateAsync()
         {
             return _contextType == null ?
-                new EntityFrameworkUnitOfWorkAsync(_configuration, _contextFactory, _dbConfiguration) :
-                new EntityFrameworkUnitOfWorkAsync(_contextType, _connectionString, _dbConfiguration);
+                new EntityFrameworkUnitOfWorkAsync(_configuration, _contextFactory, _dbConfiguration, _logger) :
+                new EntityFrameworkUnitOfWorkAsync(_contextType, _connectionString, _dbConfiguration, _logger);
         }
     }
 }
