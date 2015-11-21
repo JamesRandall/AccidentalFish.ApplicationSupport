@@ -51,6 +51,7 @@
     <Compile Include="IDependencyResolverExtensions.cs" />
     <Compile Include="CorrelationIdEnricher.cs" />
     <Compile Include="FullyQualifiedNameEnricher.cs" />
+    <Compile Include="Implementation\AsynchronousLoggerFacade.cs" />
     <Compile Include="Implementation\LoggerFacade.cs" />
     <Compile Include="Implementation\LogLevelEnumExtensions.cs" />
     <Compile Include="Implementation\SerilogFactory.cs" />

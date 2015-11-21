@@ -47,8 +47,9 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="ApplicationInsightLogger.cs" />
-    <Compile Include="ApplicationInsightLoggerFactory.cs" />
+    <Compile Include="Implementation\ApplicationInsightAsynchronousLogger.cs" />
+    <Compile Include="Implementation\ApplicationInsightLogger.cs" />
+    <Compile Include="Implementation\ApplicationInsightLoggerFactory.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

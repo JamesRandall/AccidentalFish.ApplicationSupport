@@ -32,7 +32,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
 
         public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel = null)
         {
-            throw new NotImplementedException("SeriLog only supports synchronous logging, use CreateLogger().");
+           return CreateAsynchronousLogger(null, minimumLogLevel);
         }
 
         public Core.Logging.ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
@@ -42,7 +42,13 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
 
         public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
-            throw new NotImplementedException("SeriLog only supports synchronous logging, use CreateLogger().");
+            LoggerConfiguration loggerConfiguration = GetLoggerConfiguration(minimumLogLevel);
+            source = source ?? _defaultLoggerSource;
+            if (source != null)
+            {
+                loggerConfiguration.Enrich.With(new FullyQualifiedNameEnricher(source, _sourceFqnPropertyName));
+            }
+            return new AsynchronousLoggerFacade(loggerConfiguration.CreateLogger());
         }
 
         public global::Serilog.ILogger CreateSerilog(LogLevelEnum? minimumLogLevel = null)

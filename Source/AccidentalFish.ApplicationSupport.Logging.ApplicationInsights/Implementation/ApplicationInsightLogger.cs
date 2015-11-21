@@ -4,7 +4,7 @@ using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using Microsoft.ApplicationInsights;
 
-namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
+namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.Implementation
 {
     internal class ApplicationInsightLogger : ILogger<TelemetryClient>
     {

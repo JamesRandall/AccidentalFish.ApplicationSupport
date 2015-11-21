@@ -1,8 +1,7 @@
-﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Logging;
+﻿using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 
-namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
+namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.Implementation
 {
     internal class ApplicationInsightLoggerFactory : ILoggerFactory
     {
@@ -19,7 +18,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
 
         public IAsynchronousLogger CreateAsynchronousLogger(LogLevelEnum? minimumLogLevel = null)
         {
-            throw new NotSupportedException("The Application Insight logger is only available as a synchronous logger. Use CreateLogger instead.");
+            return new ApplicationInsightAsynchronousLogger(_defaultLoggerSource, GetMinimumLogLevel(minimumLogLevel));
         }
 
         public ILogger CreateLogger(LogLevelEnum? minimumLogLevel = null)
@@ -29,7 +28,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
 
         public IAsynchronousLogger CreateAsynchronousLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
-            throw new NotSupportedException("The Application Insight logger is only available as a synchronous logger. Use CreateLogger instead.");
+            return new ApplicationInsightAsynchronousLogger(source ?? _defaultLoggerSource, GetMinimumLogLevel(minimumLogLevel));
         }
 
         public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)

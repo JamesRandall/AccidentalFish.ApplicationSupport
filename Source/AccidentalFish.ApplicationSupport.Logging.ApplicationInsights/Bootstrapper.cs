@@ -1,6 +1,7 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
+using AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.Implementation;
 
 namespace AccidentalFish.ApplicationSupport.Logging.ApplicationInsights
 {
