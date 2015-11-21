@@ -19,6 +19,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime
         /// <param name="logger">An optional logger - null if no logger is configured</param>
         /// <param name="component">The identity of the component that raised the fault</param>
         /// <returns>True if the component instance should be restarted, false if it should be terminated</returns>
-        Task<bool> HandleRestart(Exception ex, int retryCount, IAsynchronousLogger logger, IComponentIdentity component);
+        Task<bool> HandleRestart(Exception ex, int retryCount, ILogger logger, IComponentIdentity component);
     }
 }

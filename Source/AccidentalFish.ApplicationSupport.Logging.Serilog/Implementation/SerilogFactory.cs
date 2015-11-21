@@ -91,7 +91,10 @@ namespace AccidentalFish.ApplicationSupport.Logging.Serilog.Implementation
             configuration
                 .MinimumLevel
                 .Is(minimumLogLevel.GetValueOrDefault(_defaultMinimumLogLevel).ToLogEventLevel())
-                .Enrich.With(new CorrelationIdEnricher(_correlationIdProvider, _correlationIdPropertyName));
+                .Enrich.With(new CorrelationIdEnricher(_correlationIdProvider, _correlationIdPropertyName))
+                .Enrich.WithThreadId()
+                .Enrich.WithProcessId()
+                .Enrich.WithMachineName();
             return configuration;
         }
     }

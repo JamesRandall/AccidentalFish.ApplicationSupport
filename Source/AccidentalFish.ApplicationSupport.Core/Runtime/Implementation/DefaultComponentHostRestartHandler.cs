@@ -7,7 +7,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 {
     internal class DefaultComponentHostRestartHandler : IComponentHostRestartHandler
     {
-        public async Task<bool> HandleRestart(Exception ex, int retryCount, IAsynchronousLogger logger, IComponentIdentity component)
+        public async Task<bool> HandleRestart(Exception ex, int retryCount, ILogger logger, IComponentIdentity component)
         {
             try
             {
@@ -15,14 +15,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
 
                 if (doDelay)
                 {
-                    await
-                        logger.WarningAsync(
-                            $"Error occurred in component {component.FullyQualifiedName}. Restarting in 30 seconds.", ex);
+                    logger?.Warning("Error occurred in component {0}. Restarting in 30 seconds.", ex, component.FullyQualifiedName);
                     await Task.Delay(TimeSpan.FromSeconds(30));
                 }
                 else
                 {
-                    await logger.WarningAsync($"Error occurred in component {component.FullyQualifiedName}. Restarting immediately.", ex);
+                    logger?.Warning("Error occurred in component {0}. Restarting immediately.", ex, component.FullyQualifiedName);
                 }
             }
             catch (Exception)

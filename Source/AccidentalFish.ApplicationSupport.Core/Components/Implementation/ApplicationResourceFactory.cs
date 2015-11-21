@@ -1,6 +1,8 @@
 ﻿using System;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
+using AccidentalFish.ApplicationSupport.Core.Extensions;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Repository;
@@ -16,6 +18,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         private readonly IConfiguration _configuration;
         private readonly ILeaseManagerFactory _leaseManagerFactory;
         private readonly IUnitOfWorkFactoryProvider _unitOfWorkFactoryProvider;
+        private readonly ILogger _logger;
 
         public ApplicationResourceFactory(
             IApplicationResourceSettingProvider applicationResourceSettingProvider,
@@ -24,7 +27,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             IBlobRepositoryFactory blobRepositoryFactory,
             IConfiguration configuration,
             ILeaseManagerFactory leaseManagerFactory,
-            IUnitOfWorkFactoryProvider unitOfWorkFactoryProvider)
+            IUnitOfWorkFactoryProvider unitOfWorkFactoryProvider,
+            ILoggerFactory loggerFactory)
         {
             _applicationResourceSettingProvider = applicationResourceSettingProvider;
             _nameProvider = nameProvider;
@@ -33,11 +37,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             _configuration = configuration;
             _leaseManagerFactory = leaseManagerFactory;
             _unitOfWorkFactoryProvider = unitOfWorkFactoryProvider;
+            _logger = loggerFactory?.GetAssemblyLogger();
         }
 
         public IUnitOfWorkFactory GetUnitOfWorkFactory(IComponentIdentity componentIdentity)
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+            _logger?.Verbose("ApplicationResourceFactory - GetUnitOfWorkFactory - {0}", componentIdentity);
 
             string sqlConnectionString = _applicationResourceSettingProvider.SqlConnectionString(componentIdentity);
             string contextType = _applicationResourceSettingProvider.SqlContextType(componentIdentity);
@@ -47,6 +53,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         public ILeaseManager<T> GetLeaseManager<T>(IComponentIdentity componentIdentity)
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+            _logger?.Verbose("ApplicationResourceFactory - GetLeaseManager - {0}", componentIdentity);
 
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string defaultLeaseBlockName = _applicationResourceSettingProvider.DefaultLeaseBlockName(componentIdentity);
@@ -58,6 +65,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             if (String.IsNullOrWhiteSpace(leaseBlockName)) throw new ArgumentNullException(nameof(leaseBlockName));
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
 
+            _logger?.Verbose("ApplicationResourceFactory - GetLeaseManager - {0},{1}", leaseBlockName, componentIdentity);
+
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _leaseManagerFactory.CreateLeaseManager<T>(storageAccountConnectionString, leaseBlockName);
         }
@@ -65,6 +74,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         public IAsynchronousQueue<T> GetAsyncQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncQuee - {0}", componentIdentity);
 
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string defaultQueueName = _applicationResourceSettingProvider.DefaultQueueName(componentIdentity);
@@ -74,6 +85,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         public IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncQueue - {0},{1}", queuename, componentIdentity);
 
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queuename);
@@ -85,6 +98,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
 
+            _logger?.Verbose("ApplicationResourceFactory - GetQueue - {0}", componentIdentity);
+
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string defaultQueueName = _applicationResourceSettingProvider.DefaultQueueName(componentIdentity);
             return _queueFactory.CreateQueue<T>(storageAccountConnectionString, defaultQueueName);
@@ -94,6 +109,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
 
+            _logger?.Verbose("ApplicationResourceFactory - GetQueue - {0},{1}", queuename, componentIdentity);
+
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _queueFactory.CreateQueue<T>(storageAccountConnectionString, queuename);
         }
@@ -101,6 +118,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         public IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncTopic - {0}", componentIdentity);
 
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
@@ -112,6 +131,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             if (String.IsNullOrWhiteSpace(topicName)) throw new ArgumentNullException(nameof(topicName));
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
 
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncTopic - {0},{1}", topicName, componentIdentity);
+
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             return _queueFactory.CreateAsynchronousTopic<T>(serviceBusConnectionString, topicName);
         }
@@ -119,6 +140,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         public IAsynchronousSubscription<T> GetAsyncSubscription<T>(IComponentIdentity componentIdentity) where T : class
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncSubscription - {0}", componentIdentity);
 
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
@@ -131,6 +154,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             if (String.IsNullOrWhiteSpace(subscriptionName)) throw new ArgumentNullException(nameof(subscriptionName));
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
 
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncSubscription - {0},{1}", subscriptionName, componentIdentity);
+
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             string defaultTopicName = _applicationResourceSettingProvider.DefaultTopicName(componentIdentity);
             return _queueFactory.CreateAsynchronousSubscription<T>(serviceBusConnectionString, defaultTopicName, subscriptionName);
@@ -142,6 +167,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             if (String.IsNullOrWhiteSpace(topicName)) throw new ArgumentNullException(nameof(topicName));
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
 
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncSubscription - {0},{1},{2}", subscriptionName, topicName, componentIdentity);
+
             string serviceBusConnectionString = _applicationResourceSettingProvider.ServiceBusConnectionString(componentIdentity);
             return _queueFactory.CreateAsynchronousSubscription<T>(serviceBusConnectionString, topicName, subscriptionName);
         }
@@ -149,6 +176,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         public IAsynchronousBlockBlobRepository GetAsyncBlockBlobRepository(IComponentIdentity componentIdentity)
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncBlockBlobRepository - {0}", componentIdentity);
 
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string blobContainerName = _applicationResourceSettingProvider.DefaultBlobContainerName(componentIdentity);
@@ -159,7 +188,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         {
             if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentNullException(nameof(containerName));
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
-            
+
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncBlockBlobRepository - {0},{1}", containerName, componentIdentity);
+
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _blobRepositoryFactory.CreateAsynchronousBlockBlobRepository(storageAccountConnectionString, containerName);
         }

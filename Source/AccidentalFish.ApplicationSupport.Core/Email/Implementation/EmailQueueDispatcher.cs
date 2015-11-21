@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Components;
+using AccidentalFish.ApplicationSupport.Core.Extensions;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Templating;
 
@@ -12,11 +14,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 #pragma warning restore 612
     {
         public const string FullyQualifiedName = "com.accidental-fish.email";
-        private readonly IAsynchronousQueue<EmailQueueItem> _queue; 
+        private readonly IAsynchronousQueue<EmailQueueItem> _queue;
+        private readonly ILogger _logger;
 
-        public EmailQueueDispatcher(IApplicationResourceFactory applicationResourceFactory)
+        public EmailQueueDispatcher(IApplicationResourceFactory applicationResourceFactory, ILoggerFactory loggerFactory)
         {
             _queue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(ComponentIdentity);
+            _logger = loggerFactory?.GetAssemblyLogger();
         }
 
         public Task SendAsync(string to, string cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues, TemplateSyntaxEnum templateSyntax = TemplateSyntaxEnum.Razor)
@@ -26,6 +30,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 
         public async Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues, TemplateSyntaxEnum templateSyntax = TemplateSyntaxEnum.Razor)
         {
+            _logger?.Verbose("EmailQueueDispatcher - SendAsync with template - {0}", emailTemplateId);
+
             EmailQueueItem item = new EmailQueueItem
             {
                 Cc = new List<string>(cc),
@@ -46,6 +52,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
 
         public async Task SendAsync(IEnumerable<string> to, IEnumerable<string> cc, string @from, string subject, string htmlBody, string textBody)
         {
+            _logger?.Verbose("EmailQueueDispatcher - SendAsync with subject/body - {0}", subject);
+
             EmailQueueItem item = new EmailQueueItem
             {
                 Cc = new List<string>(cc),

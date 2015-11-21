@@ -92,6 +92,7 @@
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailQueueDispatcher.cs" />
+    <Compile Include="Extensions\ILoggerFactoryExtensions.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Implementation\TraceAsynchronousLogger.cs" />
     <Compile Include="Logging\Implementation\TraceLogger.cs" />

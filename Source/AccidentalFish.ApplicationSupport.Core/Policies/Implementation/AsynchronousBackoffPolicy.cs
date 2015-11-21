@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Extensions;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 
 namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
 {
@@ -11,6 +13,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
         private Action _shutdownAction;
         private int _backoffIndex = -1;
         private CancellationToken _cancellationToken;
+        private readonly ILogger _logger;
+
+        public AsynchronousBackoffPolicy(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory?.GetAssemblyLogger();
+        }
 
         public async Task ExecuteAsync(Func<Task<bool>> function, CancellationToken cancellationToken)
         {
@@ -41,10 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
                     shouldContinue = false;
                 }
             } while (shouldContinue);
-            if (_shutdownAction != null)
-            {
-                _shutdownAction();
-            }
+            _shutdownAction?.Invoke();
         }
 
         private async Task<bool> Backoff()
@@ -57,6 +62,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
             }
             try
             {
+                _logger?.Verbose("AsynchronousBackoffPolicy - backing off for {0}ms", BackoffTimings[_backoffIndex]);
                 await Task.Delay(BackoffTimings[_backoffIndex], _cancellationToken);
                 return true;
             }

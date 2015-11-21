@@ -37,7 +37,7 @@ namespace SerilogSample
             ILogger sampleLogger = dependencyResolver.Resolve<ILogger>();
 
             var structuredData = new { Hello = "World", SubObject = new { Some = "Bling" } };
-            sampleLogger.Warning("A simple log item with data {@StructuredData}", structuredData);
+            sampleLogger.Warning("A simple log item with data {0}", structuredData);
         }
 
         // The default configuration writes to the trace pipe.

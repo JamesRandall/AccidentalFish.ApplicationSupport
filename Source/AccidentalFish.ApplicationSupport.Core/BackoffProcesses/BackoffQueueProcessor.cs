@@ -18,7 +18,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
     {
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
         private readonly IAsynchronousQueue<T> _queue;
-        private readonly IAsynchronousLogger _logger;
+        private readonly ILogger _logger;
 
         private class ProcessResult
         {
@@ -48,7 +48,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         protected BackoffQueueProcessor(
             IAsynchronousBackoffPolicy backoffPolicy,
             IAsynchronousQueue<T> queue,
-            IAsynchronousLogger logger)
+            ILogger logger)
         {
             _backoffPolicy = backoffPolicy;
             _queue = queue;
@@ -58,7 +58,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         /// <summary>
         /// The logger the processor is configured with, may be null
         /// </summary>
-        protected IAsynchronousLogger Logger => _logger;
+        protected ILogger Logger => _logger;
 
         /// <summary>
         /// The queue the processor is configured with
@@ -84,25 +84,29 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         /// <returns>An awaitable task</returns>
         public async Task StartAsync(CancellationToken token)
         {
+            Logger?.Verbose("Starting BackoffQueueProcessor {0}", ComponentIdentity);
             await _backoffPolicy.ExecuteAsync(AttemptDequeueAsync, token);
+            Logger?.Verbose("Exiting BackoffQueueProcessor {0}", ComponentIdentity);
         }
 
         private async Task<bool> AttemptDequeueAsync()
         {
             try
             {
+                Logger?.Verbose("Attempting dequeue in {0}", ComponentIdentity);
                 bool didWork = true;
                 await _queue.DequeueAsync(async item =>
                 {
                     ProcessResult result = await ProcessItem(item);
                     didWork = result.DidWork;
+                    Logger?.Verbose("Dequeue result in {0} of {1}", ComponentIdentity, result);
                     return result.Complete;
                 });
                 return didWork;
             }
             catch (Exception ex)
             {
-                LogError("Unable to dequeue message from queue", ex);
+                Logger?.Error("Error occurred in dequeue in {0}", ex, ComponentIdentity);
                 throw;
             }
         }
@@ -125,11 +129,6 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             };
 
             return result;
-        }
-
-        private void LogError(string message, Exception ex)
-        {
-            _logger?.ErrorAsync(message, ex).Wait();
         }
     }
 }

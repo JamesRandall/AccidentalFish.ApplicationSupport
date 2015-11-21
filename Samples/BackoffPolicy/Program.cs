@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Unity;
 using Microsoft.Practices.Unity;
@@ -17,7 +18,7 @@ namespace BackoffPolicy
             IUnityContainer container = new UnityContainer();
             UnityApplicationFrameworkDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
 
-            resolver.UseCore();
+            resolver.UseCore(defaultTraceLoggerMinimumLogLevel: LogLevelEnum.Verbose);
 
             IAsynchronousBackoffPolicy policy = resolver.Resolve<IAsynchronousBackoffPolicy>();
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -43,7 +44,7 @@ namespace BackoffPolicy
         {
             await IncrementCounter();
             Console.WriteLine(_counter);
-            return true;
+            return _counter < 100 || _counter > 110; // force backoff between 100 and 110
         }
 
         private static Task IncrementCounter()

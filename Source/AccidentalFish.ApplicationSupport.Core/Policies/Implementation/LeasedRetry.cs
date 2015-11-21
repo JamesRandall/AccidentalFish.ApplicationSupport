@@ -1,10 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Extensions;
+using AccidentalFish.ApplicationSupport.Core.Logging;
+using static System.String;
 
 namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
 {
     internal class LeasedRetry : ILeasedRetry
     {
+        private readonly ILogger _logger;
+
+        public LeasedRetry(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory?.GetAssemblyLogger();
+        }
+
         public Task<bool> RetryAsync<T>(ILeaseManager<T> leaseManager, T key, Func<Task> func)
         {
             return RetryAsync(leaseManager, key, TimeSpan.FromSeconds(30), 10, false, func);
@@ -37,8 +47,9 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
             string leaseId = null;
             int retry = 0;
 
-            while (String.IsNullOrWhiteSpace(leaseId) && retry < maxRetries)
+            while (IsNullOrWhiteSpace(leaseId) && retry < maxRetries)
             {
+                _logger?.Verbose("LeasedRetry - RetryAsync - attempting to acquire lease {0}, retry {1}", key, retry);
                 try
                 {
                     leaseId = await leaseManager.LeaseAsync(key, leaseDuration);
@@ -48,7 +59,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
                     leaseId = null;
                 }
 
-                if (String.IsNullOrWhiteSpace(leaseId))
+                if (IsNullOrWhiteSpace(leaseId))
                 {
                     if (retry == 0)
                     {
@@ -59,7 +70,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
                 }
             }
 
-            if (String.IsNullOrWhiteSpace(leaseId)) return false;
+            if (IsNullOrWhiteSpace(leaseId))
+            {
+                _logger?.Verbose("LeasedRetry - RetryAsync - failed to acquire lease {0} after retry {1} and giving up", key, retry);
+                return false;
+            }
+
+            _logger?.Verbose("LeasedRetry - RetryAsync - acquired lease {0} after retry {1}", key, retry);
 
             try
             {
@@ -68,6 +85,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
             finally
             {
                 leaseManager.ReleaseAsync(key, leaseId).Wait();
+                _logger?.Verbose("LeasedRetry - RetryAsync - released lease {0}", key);
             }
 
             return true;
