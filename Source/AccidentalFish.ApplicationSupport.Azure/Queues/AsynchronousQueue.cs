@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -11,18 +12,22 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     {
         private readonly CloudQueue _queue;
         private readonly IQueueSerializer _serializer;
+        private readonly ILogger _logger;
 
-        public AsynchronousQueue(IQueueSerializer queueSerializer, string connectionString, string queueName)
+        public AsynchronousQueue(IQueueSerializer queueSerializer, string connectionString, string queueName, ILogger logger)
         {
-            if (queueSerializer == null) throw new ArgumentNullException("queueSerializer");
-            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException("connectionString");
-            if (String.IsNullOrWhiteSpace(queueName)) throw new ArgumentNullException("queueName");
+            if (queueSerializer == null) throw new ArgumentNullException(nameof(queueSerializer));
+            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+            if (String.IsNullOrWhiteSpace(queueName)) throw new ArgumentNullException(nameof(queueName));
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
             queueClient.DefaultRequestOptions.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
             _queue = queueClient.GetQueueReference(queueName);
             _serializer = queueSerializer;
+            _logger = logger;
+
+            _logger?.Verbose("AsynchronousQueue: created for queue {0}", queueName);
         }
 
         public Task EnqueueAsync(T item)

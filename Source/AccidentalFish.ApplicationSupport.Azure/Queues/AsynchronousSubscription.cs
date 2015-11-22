@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.ServiceBus.Messaging;
 
@@ -9,13 +10,26 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     {
         private readonly IQueueSerializer _queueSerializer;
         private readonly string _connectionString;
+        private readonly string _topicName;
+        private readonly string _subscriptionName;
+        private readonly ILogger _logger;
         private readonly SubscriptionClient _client;
 
-        public AsynchronousSubscription(IQueueSerializer queueSerializer, string connectionString, string topicName, string subscriptionName)
+        public AsynchronousSubscription(
+            IQueueSerializer queueSerializer,
+            string connectionString,
+            string topicName,
+            string subscriptionName,
+            ILogger logger)
         {
+            if (subscriptionName == null) throw new ArgumentNullException(nameof(subscriptionName));
             _queueSerializer = queueSerializer;
             _connectionString = connectionString;
+            _topicName = topicName;
+            _subscriptionName = subscriptionName;
+            _logger = logger;
             _client = SubscriptionClient.CreateFromConnectionString(connectionString, topicName, subscriptionName, ReceiveMode.PeekLock);
+            _logger?.Verbose("AsynchronousSubscription: created for topic {0} subscription {1}", topicName, subscriptionName);
         }
 
         public async Task<bool> RecieveAsync(Func<T, Task<bool>> process)
@@ -25,21 +39,25 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             {
                 try
                 {
+                    _logger?.Verbose("AsynchronousSubscription: RecieveAsync - recieved item from topic {0} on subscription {1}", _topicName, _subscriptionName);
                     string body = message.GetBody<string>();
                     T payload = _queueSerializer.Deserialize<T>(body);
                     bool markComplete = await process(payload);
                     if (markComplete)
                     {
                         await message.CompleteAsync();
+                        _logger?.Verbose("AsynchronousSubscription: RecieveAsync - marked item from topic {0} on subscription {1} as complete", _topicName, _subscriptionName);
                     }
                     else
                     {
                         await message.AbandonAsync();
+                        _logger?.Verbose("AsynchronousSubscription: RecieveAsync - marked item from topic {0} on subscription {1} as abandoned at callers request", _topicName, _subscriptionName);
                     }
                 }
                 catch (Exception)
                 {
                     message.Abandon();
+                    _logger?.Verbose("AsynchronousSubscription: RecieveAsync - marked item from topic {0} on subscription {1} as abandoned due to error", _topicName, _subscriptionName);
                 }
             }
             else
