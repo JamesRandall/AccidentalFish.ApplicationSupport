@@ -1,4 +1,5 @@
 ﻿using System;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.ServiceBus.Messaging;
 
@@ -10,10 +11,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         private readonly string _connectionString;
         private readonly QueueClient _client;
 
-        public BrokeredMessageQueue(
-            IQueueSerializer queueSerializer,
-            string connectionString,
-            string queueName)
+        public BrokeredMessageQueue(IQueueSerializer queueSerializer, string connectionString, string queueName, ILogger logger)
         {
             _queueSerializer = queueSerializer;
             _connectionString = connectionString;

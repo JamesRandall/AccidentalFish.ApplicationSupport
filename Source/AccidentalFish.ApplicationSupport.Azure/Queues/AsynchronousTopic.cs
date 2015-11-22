@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.ServiceBus.Messaging;
 
@@ -10,7 +11,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         private readonly string _connectionString;
         private readonly TopicClient _client;
 
-        public AsynchronousTopic(IQueueSerializer queueSerializer, string connectionString, string topicName)
+        public AsynchronousTopic(IQueueSerializer queueSerializer, string connectionString, string topicName, ILogger logger)
         {
             _queueSerializer = queueSerializer;
             _connectionString = connectionString;

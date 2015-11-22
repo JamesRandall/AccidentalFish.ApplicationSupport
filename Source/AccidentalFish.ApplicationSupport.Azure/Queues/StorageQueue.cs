@@ -1,4 +1,5 @@
 ﻿using System;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -11,7 +12,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         private readonly CloudQueue _queue;
         private readonly IQueueSerializer _serializer;
 
-        public StorageQueue(IQueueSerializer queueSerializer, string connectionString, string queueName)
+        public StorageQueue(IQueueSerializer queueSerializer, string connectionString, string queueName, ILogger logger)
         {
             if (queueSerializer == null) throw new ArgumentNullException(nameof(queueSerializer));
             if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
