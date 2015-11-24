@@ -1,4 +1,5 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Mappers;
+using AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Model;
 using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Mappers

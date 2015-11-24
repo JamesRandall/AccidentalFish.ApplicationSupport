@@ -6,9 +6,9 @@ using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation;
+using AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Implementation;
 
-namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger
+namespace AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger
 {
     // ReSharper disable once InconsistentNaming
     public static class IDependencyResolverExtensions

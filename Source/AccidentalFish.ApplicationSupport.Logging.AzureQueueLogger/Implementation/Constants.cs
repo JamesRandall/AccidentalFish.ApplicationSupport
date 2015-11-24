@@ -1,5 +1,5 @@
 ﻿
-namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
+namespace AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Implementation
 {
     internal class Constants
     {

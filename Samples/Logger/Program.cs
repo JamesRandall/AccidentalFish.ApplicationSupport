@@ -8,6 +8,7 @@ using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
+using AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger;
 using AccidentalFish.ApplicationSupport.Logging.QueueLogger;
 using AccidentalFish.ApplicationSupport.Processes;
 using AccidentalFish.ApplicationSupport.Unity;

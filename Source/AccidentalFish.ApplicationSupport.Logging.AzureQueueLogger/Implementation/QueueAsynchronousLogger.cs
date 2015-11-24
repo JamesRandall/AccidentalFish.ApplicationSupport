@@ -5,11 +5,11 @@ using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Extensions;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
+using AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Extensions;
+using AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Model;
 using Microsoft.WindowsAzure.Storage.Queue;
 
-namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
+namespace AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Implementation
 {
     internal class QueueAsynchronousLogger : IAsynchronousLogger<CloudQueue>
     {

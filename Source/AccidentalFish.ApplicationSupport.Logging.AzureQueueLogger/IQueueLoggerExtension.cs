@@ -1,7 +1,7 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
+using AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Model;
 
-namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger
+namespace AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger
 {
     /// <summary>
     /// Allows the injection of functionality into the queue logger (and any other loggers that accept an ILoggerExtension in their constructor)

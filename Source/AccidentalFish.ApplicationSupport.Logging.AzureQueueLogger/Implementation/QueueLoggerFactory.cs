@@ -7,7 +7,7 @@ using AccidentalFish.ApplicationSupport.Core.Runtime;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 
-namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
+namespace AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Implementation
 {
     internal class QueueLoggerFactory : ILoggerFactory
     {
@@ -74,7 +74,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
 
         public ILogger CreateLogger(IFullyQualifiedName source, LogLevelEnum? minimumLogLevel = null)
         {
-            return new QueueLogger(_runtimeEnvironment,
+            return new AzureQueueLogger.Implementation.QueueLogger(_runtimeEnvironment,
                 GetQueue(),
                 _queueSerializer,
                 source ?? _defaultLoggerSource,

@@ -87,11 +87,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AccidentalFish.ApplicationSupport.Logging.QueueLogger\Implementation\ApplicationResourceFactoryExtensions.cs">
-      <Link>Private\ApplicationResourceFactoryExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\AccidentalFish.ApplicationSupport.Logging.QueueLogger\Implementation\Constants.cs">
+    <Compile Include="..\AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger\Implementation\Constants.cs">
       <Link>Private\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger\Model\LogQueueItem.cs">
+      <Link>Logging\Model\LogQueueItem.cs</Link>
     </Compile>
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
@@ -103,6 +103,7 @@
     <Compile Include="Email\ITemplateEngineFactory.cs" />
     <Compile Include="Email\RazorTemplateEngine.cs" />
     <Compile Include="Email\TemplateEngineFactory.cs" />
+    <Compile Include="Extensions\ApplicationResourceFactoryExtensions.cs" />
     <Compile Include="HostableComponentIdentities.cs" />
     <Compile Include="HostableComponentNames.cs" />
     <Compile Include="Logging\LogQueueProcessor.cs" />
@@ -124,10 +125,6 @@
     <ProjectReference Include="..\AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.csproj">
       <Project>{18671945-cd5c-4ce6-8c02-cd7c8b0cc68e}</Project>
       <Name>AccidentalFish.ApplicationSupport.DependencyResolver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Logging.QueueLogger\AccidentalFish.ApplicationSupport.Logging.QueueLogger.csproj">
-      <Project>{1e2566a4-4685-470f-9175-8d65a388fd66}</Project>
-      <Name>AccidentalFish.ApplicationSupport.Logging.QueueLogger</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -9,8 +9,9 @@ using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Mappers;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation;
+using AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Model;
 using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
+using AccidentalFish.ApplicationSupport.Processes.Extensions;
 using AccidentalFish.ApplicationSupport.Processes.Mappers;
 
 namespace AccidentalFish.ApplicationSupport.Processes.Logging

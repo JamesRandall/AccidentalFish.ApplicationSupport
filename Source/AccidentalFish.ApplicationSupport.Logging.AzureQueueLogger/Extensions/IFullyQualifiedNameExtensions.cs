@@ -1,6 +1,6 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Naming;
 
-namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Extensions
+namespace AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Extensions
 {
     // ReSharper disable once InconsistentNaming
     public static class IFullyQualifiedNameExtensions

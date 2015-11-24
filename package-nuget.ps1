@@ -28,7 +28,7 @@ cp .\Source\AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.Applicat
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj -IncludeReferencedProjects
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights\AccidentalFish.ApplicationSupport.Logging.ApplicationInsights.csproj -IncludeReferencedProjects
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Logging.ConsoleLogger\AccidentalFish.ApplicationSupport.Logging.ConsoleLogger.csproj -IncludeReferencedProjects
-.\nuget pack .\Source\AccidentalFish.ApplicationSupport.Logging.QueueLogger\AccidentalFish.ApplicationSupport.Logging.QueueLogger.csproj -IncludeReferencedProjects
+.\nuget pack .\Source\AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger\AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.csproj -IncludeReferencedProjects
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Logging.Serilog\AccidentalFish.ApplicationSupport.Logging.Serilog.csproj -IncludeReferencedProjects
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj -IncludeReferencedProjects
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Autofac\AccidentalFish.ApplicationSupport.Autofac.csproj -IncludeReferencedProjects

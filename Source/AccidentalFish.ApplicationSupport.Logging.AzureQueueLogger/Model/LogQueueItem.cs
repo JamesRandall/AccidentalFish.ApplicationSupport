@@ -1,7 +1,7 @@
 ﻿using System;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 
-namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model
+namespace AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Model
 {
     /// <summary>
     /// Log item as represented on a queue

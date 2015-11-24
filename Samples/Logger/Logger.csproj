@@ -118,9 +118,9 @@
       <Project>{18671945-cd5c-4ce6-8c02-cd7c8b0cc68e}</Project>
       <Name>AccidentalFish.ApplicationSupport.DependencyResolver</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Source\AccidentalFish.ApplicationSupport.Logging.QueueLogger\AccidentalFish.ApplicationSupport.Logging.QueueLogger.csproj">
+    <ProjectReference Include="..\..\Source\AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger\AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.csproj">
       <Project>{1e2566a4-4685-470f-9175-8d65a388fd66}</Project>
-      <Name>AccidentalFish.ApplicationSupport.Logging.QueueLogger</Name>
+      <Name>AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Source\AccidentalFish.ApplicationSupport.Processes\AccidentalFish.ApplicationSupport.Processes.csproj">
       <Project>{2020ef8c-4d77-4dec-a287-11d877f2685f}</Project>

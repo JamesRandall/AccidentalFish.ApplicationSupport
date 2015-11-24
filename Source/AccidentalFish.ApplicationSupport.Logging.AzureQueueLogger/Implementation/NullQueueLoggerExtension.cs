@@ -1,7 +1,7 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
+using AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Model;
 
-namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
+namespace AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger.Implementation
 {
     internal class NullQueueLoggerExtension : IQueueLoggerExtension
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{1E2566A4-4685-470F-9175-8D65A388FD66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AccidentalFish.ApplicationSupport.Logging.QueueLogger</RootNamespace>
-    <AssemblyName>AccidentalFish.ApplicationSupport.Logging.QueueLogger</AssemblyName>
+    <RootNamespace>AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger</RootNamespace>
+    <AssemblyName>AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -75,7 +75,6 @@
     <Compile Include="IDependencyResolverExtensions.cs" />
     <Compile Include="Implementation\QueueLogger.cs" />
     <Compile Include="IQueueLoggerExtension.cs" />
-    <Compile Include="Implementation\ApplicationResourceFactoryExtensions.cs" />
     <Compile Include="Implementation\Constants.cs" />
     <Compile Include="Implementation\NullQueueLoggerExtension.cs" />
     <Compile Include="Implementation\QueueAsynchronousLogger.cs" />

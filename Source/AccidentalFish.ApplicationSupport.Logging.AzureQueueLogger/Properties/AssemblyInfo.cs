@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AccidentalFish ApplicationSupport Queue Logger")]
+[assembly: AssemblyTitle("AccidentalFish ApplicationSupport Azure Queue Logger")]
 [assembly: AssemblyDescription("Queue based logger for the AccidentalFish Application Support framework")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.Logging.QueueLogger")]
+[assembly: AssemblyProduct("AccidentalFish.ApplicationSupport.Logging.AzureQueueLogger")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

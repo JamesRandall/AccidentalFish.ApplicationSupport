@@ -4,9 +4,6 @@ using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation;
-using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
