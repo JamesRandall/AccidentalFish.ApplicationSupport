@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
     <Compile Include="IDependencyResolverExtensions.cs" />
     <Compile Include="CorrelationIdEnricher.cs" />
     <Compile Include="FullyQualifiedNameEnricher.cs" />
