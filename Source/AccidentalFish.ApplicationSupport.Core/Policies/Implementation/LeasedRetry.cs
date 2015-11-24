@@ -8,11 +8,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
 {
     internal class LeasedRetry : ILeasedRetry
     {
-        private readonly ILogger _logger;
+        private readonly ICoreAssemblyLogger _logger;
 
-        public LeasedRetry(ILoggerFactory loggerFactory)
+        public LeasedRetry(ICoreAssemblyLogger logger)
         {
-            _logger = loggerFactory?.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public Task<bool> RetryAsync<T>(ILeaseManager<T> leaseManager, T key, Func<Task> func)

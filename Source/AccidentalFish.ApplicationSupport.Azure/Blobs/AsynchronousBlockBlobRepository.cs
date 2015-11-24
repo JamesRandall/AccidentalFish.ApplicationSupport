@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
-using AccidentalFish.ApplicationSupport.Core.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
@@ -12,14 +12,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
 {
     internal class AsynchronousBlockBlobRepository : IAsynchronousBlockBlobRepository
     {
-        private readonly ILogger _logger;
+        private readonly IAzureAssemblyLogger _logger;
         private readonly CloudBlobContainer _container;
         private readonly string _endpoint;
         
         public AsynchronousBlockBlobRepository(
             string storageAccountConnectionString,
             string containerName,
-            ILogger logger)
+            IAzureAssemblyLogger logger)
         {
             _logger = logger;
             if (IsNullOrWhiteSpace(containerName)) throw new ArgumentNullException(nameof(containerName));

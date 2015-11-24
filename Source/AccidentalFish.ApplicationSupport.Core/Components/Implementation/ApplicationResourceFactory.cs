@@ -18,7 +18,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         private readonly IConfiguration _configuration;
         private readonly ILeaseManagerFactory _leaseManagerFactory;
         private readonly IUnitOfWorkFactoryProvider _unitOfWorkFactoryProvider;
-        private readonly ILogger _logger;
+        private readonly ICoreAssemblyLogger _logger;
 
         public ApplicationResourceFactory(
             IApplicationResourceSettingProvider applicationResourceSettingProvider,
@@ -28,7 +28,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             IConfiguration configuration,
             ILeaseManagerFactory leaseManagerFactory,
             IUnitOfWorkFactoryProvider unitOfWorkFactoryProvider,
-            ILoggerFactory loggerFactory)
+            ICoreAssemblyLogger logger)
         {
             _applicationResourceSettingProvider = applicationResourceSettingProvider;
             _nameProvider = nameProvider;
@@ -37,7 +37,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             _configuration = configuration;
             _leaseManagerFactory = leaseManagerFactory;
             _unitOfWorkFactoryProvider = unitOfWorkFactoryProvider;
-            _logger = loggerFactory?.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public IUnitOfWorkFactory GetUnitOfWorkFactory(IComponentIdentity componentIdentity)

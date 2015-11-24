@@ -5,8 +5,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
-using AccidentalFish.ApplicationSupport.Core.Logging;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Blobs
@@ -15,9 +15,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
     {
         private readonly CloudBlockBlob _blockBlob;
         private readonly string _name;
-        private readonly ILogger _logger;
+        private readonly IAzureAssemblyLogger _logger;
 
-        public BlockBlob(CloudBlockBlob blockBlob, string name, ILogger logger)
+        public BlockBlob(CloudBlockBlob blockBlob, string name, IAzureAssemblyLogger logger)
         {
             if (blockBlob == null) throw new ArgumentNullException(nameof(blockBlob));
 

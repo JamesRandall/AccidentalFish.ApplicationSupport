@@ -65,14 +65,15 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
         public TableQuery<T> TableQuery<T>(string column, IEnumerable<object> values, TableStorageQueryOperator op) where T : ITableEntity
         {
             TableQuery<T> query = new TableQuery<T>();
-            if (column != null && values.Any())
+            if (!string.IsNullOrWhiteSpace(column) && values.Any())
             {
                 List<string> tableQueries = new List<string>();
                 foreach (object value in values)
                 {
-                    if (value is string)
+                    string s = value as string;
+                    if (s != null)
                     {
-                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterCondition(column, QueryComparisons.Equal, (string)value));
+                        tableQueries.Add(Microsoft.WindowsAzure.Storage.Table.TableQuery.GenerateFilterCondition(column, QueryComparisons.Equal, s));
                     }
                     else if (value is Guid)
                     {

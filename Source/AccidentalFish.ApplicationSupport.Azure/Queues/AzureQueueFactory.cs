@@ -1,4 +1,5 @@
 ﻿using System;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 
@@ -9,16 +10,19 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         private readonly IQueueFactory _queueFactory;
         private readonly IConfiguration _configuration;
         private readonly IQueueSerializer _queueSerializer;
+        private readonly IAzureAssemblyLogger _logger;
 
         public AzureQueueFactory(IQueueFactory queueFactory,
             IConfiguration configuration,
-            IQueueSerializer queueSerializer)
+            IQueueSerializer queueSerializer,
+            IAzureAssemblyLogger logger)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (queueSerializer == null) throw new ArgumentNullException(nameof(queueSerializer));
             _queueFactory = queueFactory;
             _configuration = configuration;
             _queueSerializer = queueSerializer;
+            _logger = logger;
         }
 
         public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string queueName) where T : class
@@ -74,22 +78,22 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 
         public IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string queueName) where T : class
         {
-            return new AsynchronousBrokeredMessageQueue<T>(_queueSerializer, _configuration.ServiceBusConnectionString, queueName);
+            return new AsynchronousBrokeredMessageQueue<T>(_queueSerializer, _configuration.ServiceBusConnectionString, queueName, _logger);
         }
 
         public IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string serviceBusConnectionString, string queueName) where T : class
         {
-            return new AsynchronousBrokeredMessageQueue<T>(_queueSerializer, serviceBusConnectionString, queueName);
+            return new AsynchronousBrokeredMessageQueue<T>(_queueSerializer, serviceBusConnectionString, queueName, _logger);
         }
 
         public IQueue<T> CreateBrokeredMessageQueue<T>(string queueName) where T : class
         {
-            return new BrokeredMessageQueue<T>(_queueSerializer, _configuration.ServiceBusConnectionString, queueName);
+            return new BrokeredMessageQueue<T>(_queueSerializer, _configuration.ServiceBusConnectionString, queueName, _logger);
         }
 
         public IQueue<T> CreateBrokeredMessageQueue<T>(string serviceBusConnectionString, string queueName) where T : class
         {
-            return new BrokeredMessageQueue<T>(_queueSerializer, serviceBusConnectionString, queueName);
+            return new BrokeredMessageQueue<T>(_queueSerializer, serviceBusConnectionString, queueName, _logger);
         }
     }
 }

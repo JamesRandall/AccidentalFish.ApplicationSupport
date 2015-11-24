@@ -13,11 +13,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
         private Action _shutdownAction;
         private int _backoffIndex = -1;
         private CancellationToken _cancellationToken;
-        private readonly ILogger _logger;
+        private readonly ICoreAssemblyLogger _logger;
 
-        public AsynchronousBackoffPolicy(ILoggerFactory loggerFactory)
+        public AsynchronousBackoffPolicy(ICoreAssemblyLogger logger)
         {
-            _logger = loggerFactory?.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public async Task ExecuteAsync(Func<Task<bool>> function, CancellationToken cancellationToken)

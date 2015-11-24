@@ -40,7 +40,7 @@ namespace AccidentalFish.ApplicationSupport.Core
         public static IDependencyResolver UseCore(
             this IDependencyResolver container,
             string correlationIdKey = "correlation-id",
-            LogLevelEnum defaultTraceLoggerMinimumLogLevel = LogLevelEnum.Verbose,
+            LogLevelEnum defaultTraceLoggerMinimumLogLevel = LogLevelEnum.Warning,
             IFullyQualifiedName defaultLoggerSource = null)
         {
             Func<ICorrelationIdProvider> createCorrelationIdProvider;
@@ -52,7 +52,6 @@ namespace AccidentalFish.ApplicationSupport.Core
             {
                 createCorrelationIdProvider = () => new NullCorrelationIdProvider();
             }
-
             return container
                 .Register<IBackoffPolicy, BackoffPolicy>()
                 .Register<ILeasedRetry, LeasedRetry>()
@@ -74,7 +73,10 @@ namespace AccidentalFish.ApplicationSupport.Core
                 .Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>()
                 .Register<IConfiguration, DefaultConfiguration>()
                 .Register<IComponentFactory>(() => new ComponentFactory(container))
-                .Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>();
+                .Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>()
+                // internal
+                .Register<ICoreAssemblyLogger>(() =>
+                    new CoreAssemblyLogger(container.Resolve<ILoggerFactory>().CreateLogger(new LoggerSource("AccidentalFish.ApplicationSupport.Core"))));
         }
     }
 }

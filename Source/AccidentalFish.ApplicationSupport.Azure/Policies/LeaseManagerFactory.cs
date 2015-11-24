@@ -1,22 +1,20 @@
-﻿using AccidentalFish.ApplicationSupport.Azure.Extensions;
-using AccidentalFish.ApplicationSupport.Azure.NoSql;
-using AccidentalFish.ApplicationSupport.Core.Logging;
+﻿using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Policies
 {
     internal class LeaseManagerFactory : ILeaseManagerFactory
     {
-        private readonly ILoggerFactory _loggerFactory;
+        private readonly IAzureAssemblyLogger _logger;
 
-        public LeaseManagerFactory(ILoggerFactory loggerFactory)
+        public LeaseManagerFactory(IAzureAssemblyLogger logger)
         {
-            _loggerFactory = loggerFactory;
+            _logger = logger;
         }
 
         public ILeaseManager<T> CreateLeaseManager<T>(string storageAccountConnectionString, string leaseBlockName)
         {
-            return new LeaseManager<T>(storageAccountConnectionString, leaseBlockName, _loggerFactory.GetAssemblyLogger());
+            return new LeaseManager<T>(storageAccountConnectionString, leaseBlockName, _logger);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Repository;
+using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Logging;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
 
 namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repository
@@ -15,13 +16,13 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
     {
         private readonly IDbConfiguration _dbConfiguration;
         private readonly DbContext _context;
-        private readonly ILogger _logger;
+        private readonly IEntityFrameworkRepositoryLogger _logger;
 
         public EntityFrameworkUnitOfWorkAsync(
             IConfiguration configuration,
             IDbContextFactory dbContextFactory,
             IDbConfiguration dbConfiguration,
-            ILogger logger) : this(logger)
+            IEntityFrameworkRepositoryLogger logger) : this(logger)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (dbContextFactory == null) throw new ArgumentNullException(nameof(dbContextFactory));
@@ -37,7 +38,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             Type contextType,
             string connectionString,
             IDbConfiguration dbConfiguration,
-            ILogger logger) : this(logger)
+            IEntityFrameworkRepositoryLogger logger) : this(logger)
         {
             if (contextType == null) throw new ArgumentNullException(nameof(contextType));
             if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
@@ -49,7 +50,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: Created unit of work for {0}", _context.Database.Connection.ConnectionString);
         }
 
-        private EntityFrameworkUnitOfWorkAsync(ILogger logger)
+        private EntityFrameworkUnitOfWorkAsync(IEntityFrameworkRepositoryLogger logger)
         {
             _logger = logger;
         }

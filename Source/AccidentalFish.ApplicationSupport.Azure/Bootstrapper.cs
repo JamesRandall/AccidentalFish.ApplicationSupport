@@ -4,6 +4,8 @@ using AccidentalFish.ApplicationSupport.Azure.Blobs;
 using AccidentalFish.ApplicationSupport.Azure.Components;
 using AccidentalFish.ApplicationSupport.Azure.Components.Implementation;
 using AccidentalFish.ApplicationSupport.Azure.Implementation;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
+using AccidentalFish.ApplicationSupport.Azure.Logging.Implementation;
 using AccidentalFish.ApplicationSupport.Azure.NoSql;
 using AccidentalFish.ApplicationSupport.Azure.Policies;
 using AccidentalFish.ApplicationSupport.Azure.Queues;
@@ -13,6 +15,7 @@ using AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Alerts;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
@@ -39,7 +42,8 @@ namespace AccidentalFish.ApplicationSupport.Azure
             return dependencyResolver
                 .Register<ITableStorageQueryBuilder, TableStorageQueryBuilder>()
                 .Register<ITableContinuationTokenSerializer, TableContinuationTokenSerializer>()
-                .Register(typeof(IQueueSerializer), useLegacyQueueSerializer ? typeof(LegacyQueueSerializer) : typeof(QueueSerializer))
+                .Register(typeof (IQueueSerializer),
+                    useLegacyQueueSerializer ? typeof (LegacyQueueSerializer) : typeof (QueueSerializer))
                 .Register<IConfiguration>(() => new Configuration.Configuration(forceAppConfig))
                 // policies            
                 .Register<ILeaseManagerFactory, LeaseManagerFactory>()
@@ -52,10 +56,15 @@ namespace AccidentalFish.ApplicationSupport.Azure
                 .Register<ITableStorageConcurrencyManager, TableStorageConcurrencyManager>()
                 .Register<IAzureQueueFactory, AzureQueueFactory>()
                 // alerts
-                .Register(typeof(IAlertSender), registerEmailAlertSender ? typeof(AlertSender) : typeof(NullAlertSender))
+                .Register(typeof (IAlertSender),
+                    registerEmailAlertSender ? typeof (AlertSender) : typeof (NullAlertSender))
                 // azure
                 .Register<IAzureResourceManager, AzureResourceManager>()
-                .Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>();
+                .Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>()
+                // internal
+                .Register<IAzureAssemblyLogger>(() => new AzureAssemblyLogger(
+                    dependencyResolver.Resolve<ILoggerFactory>()
+                        .CreateLogger(new LoggerSource("AccidentalFish.ApplicationSupport.Azure"))));
         }     
     }
 }

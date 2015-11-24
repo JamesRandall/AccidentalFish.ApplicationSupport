@@ -2,7 +2,7 @@
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Repository;
-using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Extensions;
+using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Logging;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
 
 namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repository
@@ -14,18 +14,18 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
         private readonly IDbContextFactory _contextFactory;
         private readonly IDbConfiguration _dbConfiguration;
         private readonly Type _contextType;
-        private readonly ILogger _logger;
+        private readonly IEntityFrameworkRepositoryLogger _logger;
 
-        private EntityFrameworkUnitOfWorkFactory(ILoggerFactory loggerFactory)
+        private EntityFrameworkUnitOfWorkFactory(IEntityFrameworkRepositoryLogger logger)
         {
-            _logger = loggerFactory?.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public EntityFrameworkUnitOfWorkFactory(
             IConfiguration configuration,
             IDbContextFactory contextFactory,
             IDbConfiguration dbConfiguration,
-            ILoggerFactory loggerFactory) : this(loggerFactory)
+            IEntityFrameworkRepositoryLogger logger) : this(logger)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
@@ -41,7 +41,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             string contextType,
             string connectionString,
             IDbConfiguration dbConfiguration,
-            ILoggerFactory loggerFactory) : this(loggerFactory)
+            IEntityFrameworkRepositoryLogger logger) : this(logger)
         {
             if (String.IsNullOrWhiteSpace(contextType)) throw new ArgumentNullException(nameof(contextType));
             if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));

@@ -136,7 +136,9 @@
     <Compile Include="Components\IAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\Implementation\AzureApplicationResourceFactory.cs" />
     <Compile Include="Configuration\Configuration.cs" />
-    <Compile Include="Extensions\ILoggerFactoryExtensions.cs" />
+    <Compile Include="Extensions\CloudTableExtensions.cs" />
+    <Compile Include="Logging\IAzureAssemblyLogger.cs" />
+    <Compile Include="Logging\Implementation\AzureAssemblyLogger.cs" />
     <Compile Include="Queues\AzureQueueFactory.cs" />
     <Compile Include="Implementation\AzureResourceManager.cs" />
     <Compile Include="Queues\BrokeredMessageQueue.cs" />
@@ -147,7 +149,6 @@
     <Compile Include="Queues\StorageQueue.cs" />
     <Compile Include="TableStorage\IAsynchronousTableStorageRepository.cs" />
     <Compile Include="TableStorage\Implementation\AsynchronousTableStorageRepository.cs" />
-    <Compile Include="TableStorage\Implementation\AzureTableCreator.cs" />
     <Compile Include="TableStorage\Implementation\ITableContinuationTokenSerializer.cs" />
     <Compile Include="TableStorage\Implementation\ITableStorageQueryBuilder.cs" />
     <Compile Include="TableStorage\Implementation\LazyTableCreateAsynchronousTableStorageRepository.cs" />

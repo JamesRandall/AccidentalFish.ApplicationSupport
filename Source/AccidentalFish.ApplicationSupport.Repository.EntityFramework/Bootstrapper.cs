@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Data.Entity;
+using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
+using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Logging;
+using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Logging.Implementation;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies.Implementation;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repository;
@@ -37,6 +40,11 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework
             }
 
             dependencyResolver.Register<IUnitOfWorkFactoryProvider, EntityFrameworkUnitOfWorkFactoryProvider>();
+            // internal
+            dependencyResolver.Register<IEntityFrameworkRepositoryLogger>(() =>
+                new EntityFrameworkRepositoryLogger(
+                    dependencyResolver.Resolve<ILoggerFactory>()
+                        .CreateLogger(new LoggerSource("AccidentalFish.ApplicationSupport.Repository.EntityFramework"))));
             return dependencyResolver;
         }
     }

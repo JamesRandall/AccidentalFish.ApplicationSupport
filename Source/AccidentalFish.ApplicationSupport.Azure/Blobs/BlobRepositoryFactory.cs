@@ -1,23 +1,22 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Azure.Extensions;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
-using AccidentalFish.ApplicationSupport.Core.Logging;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Blobs
 {
     internal class BlobRepositoryFactory : IBlobRepositoryFactory
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
+        private readonly IAzureAssemblyLogger _logger;
 
         public BlobRepositoryFactory(IConfiguration configuration,
-            ILoggerFactory loggerFactory)
+            IAzureAssemblyLogger logger)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             _configuration = configuration;
-            _logger = loggerFactory.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public IAsynchronousBlockBlobRepository CreateAsynchronousBlockBlobRepository(string containerName)

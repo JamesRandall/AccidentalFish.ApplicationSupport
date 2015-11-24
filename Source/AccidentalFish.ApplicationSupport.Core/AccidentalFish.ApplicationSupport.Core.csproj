@@ -92,8 +92,10 @@
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
     <Compile Include="Email\Implementation\EmailQueueDispatcher.cs" />
-    <Compile Include="Extensions\ILoggerFactoryExtensions.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Logging\ICoreAssemblyLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Implementation\CoreAssemblyLogger.cs" />
     <Compile Include="Logging\Implementation\TraceAsynchronousLogger.cs" />
     <Compile Include="Logging\Implementation\TraceLogger.cs" />
     <Compile Include="Logging\Implementation\TraceLoggerFactory.cs" />
@@ -111,7 +113,6 @@
     <Compile Include="Policies\ILeaseManager.cs" />
     <Compile Include="Policies\ILeaseManagerFactory.cs" />
     <Compile Include="Policies\Implementation\LeasedRetry.cs" />
-    <Compile Include="Policies\IResourceCreator.cs" />
     <Compile Include="Queues\IAsynchronousSubscription.cs" />
     <Compile Include="Queues\IQueue.cs" />
     <Compile Include="Queues\IQueueItem.cs" />

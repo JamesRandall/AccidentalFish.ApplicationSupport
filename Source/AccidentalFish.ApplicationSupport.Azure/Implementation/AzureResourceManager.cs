@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.Blobs;
-using AccidentalFish.ApplicationSupport.Azure.Extensions;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Azure.Queues;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
-using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
@@ -16,10 +15,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Implementation
 {
     internal class AzureResourceManager : IAzureResourceManager
     {
-        private readonly ILogger _logger;
-        public AzureResourceManager(ILoggerFactory loggerFactory)
+        private readonly IAzureAssemblyLogger _logger;
+
+        public AzureResourceManager(IAzureAssemblyLogger logger)
         {
-            _logger = loggerFactory.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public async Task<bool> CreateIfNotExistsAsync<T>(IAsynchronousQueue<T> abstractQueue) where T : class

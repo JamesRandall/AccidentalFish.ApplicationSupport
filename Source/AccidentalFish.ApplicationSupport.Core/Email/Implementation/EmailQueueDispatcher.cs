@@ -15,12 +15,12 @@ namespace AccidentalFish.ApplicationSupport.Core.Email.Implementation
     {
         public const string FullyQualifiedName = "com.accidental-fish.email";
         private readonly IAsynchronousQueue<EmailQueueItem> _queue;
-        private readonly ILogger _logger;
+        private readonly ICoreAssemblyLogger _logger;
 
-        public EmailQueueDispatcher(IApplicationResourceFactory applicationResourceFactory, ILoggerFactory loggerFactory)
+        public EmailQueueDispatcher(IApplicationResourceFactory applicationResourceFactory, ICoreAssemblyLogger logger)
         {
             _queue = applicationResourceFactory.GetAsyncQueue<EmailQueueItem>(ComponentIdentity);
-            _logger = loggerFactory?.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public Task SendAsync(string to, string cc, string @from, string emailTemplateId, Dictionary<string, string> mergeValues, TemplateSyntaxEnum templateSyntax = TemplateSyntaxEnum.Razor)

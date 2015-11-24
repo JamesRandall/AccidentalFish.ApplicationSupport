@@ -1,7 +1,6 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Azure.Extensions;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
-using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Queues
@@ -10,17 +9,17 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     {
         private readonly IConfiguration _configuration;
         private readonly IQueueSerializer _queueSerializer;
-        private readonly ILogger _logger;
+        private readonly IAzureAssemblyLogger _logger;
 
         public QueueFactory(IConfiguration configuration,
             IQueueSerializer queueSerializer,
-            ILoggerFactory loggerFactory)
+            IAzureAssemblyLogger logger)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (queueSerializer == null) throw new ArgumentNullException(nameof(queueSerializer));
             _configuration = configuration;
             _queueSerializer = queueSerializer;
-            _logger = loggerFactory.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string queueName) where T : class

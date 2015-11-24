@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Azure.TableStorage;
-using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Policies;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -10,10 +10,10 @@ namespace AccidentalFish.ApplicationSupport.Azure.Policies
 {
     internal class LeaseManager<T> : ILeaseManager<T>
     {
-        private readonly ILogger _logger;
+        private readonly IAzureAssemblyLogger _logger;
         private readonly CloudBlobContainer _container;
 
-        public LeaseManager(string storageAccountConnectionString, string leaseBlockName, ILogger logger)
+        public LeaseManager(string storageAccountConnectionString, string leaseBlockName, IAzureAssemblyLogger logger)
         {
             _logger = logger;
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);

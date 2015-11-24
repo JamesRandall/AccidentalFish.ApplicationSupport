@@ -1,6 +1,8 @@
 ﻿using System;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using Microsoft.WindowsAzure.Storage.Table;
+using static System.String;
 
 namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
 {
@@ -10,12 +12,14 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
         private readonly ITableStorageQueryBuilder _tableStorageQueryBuilder;
         private readonly ITableContinuationTokenSerializer _tableContinuationTokenSerializer;
         private readonly IAzureResourceManager _azureResourceManager;
+        private readonly IAzureAssemblyLogger _logger;
 
         public TableStorageRepositoryFactory(
             IConfiguration configuration,
             ITableStorageQueryBuilder tableStorageQueryBuilder,
             ITableContinuationTokenSerializer tableContinuationTokenSerializer,
-            IAzureResourceManager azureResourceManager)
+            IAzureResourceManager azureResourceManager,
+            IAzureAssemblyLogger logger)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (tableStorageQueryBuilder == null) throw new ArgumentNullException(nameof(tableStorageQueryBuilder));
@@ -25,6 +29,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
             _tableStorageQueryBuilder = tableStorageQueryBuilder;
             _tableContinuationTokenSerializer = tableContinuationTokenSerializer;
             _azureResourceManager = azureResourceManager;
+            _logger = logger;
         }
 
         public IAsynchronousTableStorageRepository<T> CreateAsynchronousNoSqlRepository<T>(
@@ -36,9 +41,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
 
         public IAsynchronousTableStorageRepository<T> CreateAsynchronousNoSqlRepository<T>(string tableName) where T : ITableEntity, new()
         {
-            if (String.IsNullOrWhiteSpace(tableName)) throw new ArgumentNullException(nameof(tableName));
+            if (IsNullOrWhiteSpace(tableName)) throw new ArgumentNullException(nameof(tableName));
 
-            return new AsynchronousTableStorageRepository<T>(_configuration.StorageAccountConnectionString, tableName, _tableStorageQueryBuilder, _tableContinuationTokenSerializer);
+            return new AsynchronousTableStorageRepository<T>(_configuration.StorageAccountConnectionString, tableName, _tableStorageQueryBuilder, _tableContinuationTokenSerializer, _logger);
         }
 
         public IAsynchronousTableStorageRepository<T> CreateAsynchronousNoSqlRepository<T>(
@@ -47,9 +52,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.TableStorage.Implementation
         {
             if (lazyTableCreation)
             {
-                return new LazyTableCreateAsynchronousTableStorageRepository<T>(new AsynchronousTableStorageRepository<T>(storageAccountConnectionString, tableName, _tableStorageQueryBuilder, _tableContinuationTokenSerializer), _azureResourceManager);
+                return new LazyTableCreateAsynchronousTableStorageRepository<T>(new AsynchronousTableStorageRepository<T>(storageAccountConnectionString, tableName, _tableStorageQueryBuilder, _tableContinuationTokenSerializer, _logger), _azureResourceManager);
             }
-            return new AsynchronousTableStorageRepository<T>(storageAccountConnectionString, tableName, _tableStorageQueryBuilder, _tableContinuationTokenSerializer);
+            return new AsynchronousTableStorageRepository<T>(storageAccountConnectionString, tableName, _tableStorageQueryBuilder, _tableContinuationTokenSerializer, _logger);
         }
     }
 }

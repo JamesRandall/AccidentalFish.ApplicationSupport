@@ -10,11 +10,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
     internal class BackoffPolicy : IBackoffPolicy
     {
         private static readonly List<int> BackoffTimings = new List<int> { 100, 250, 500, 1000, 5000 };
-        private readonly ILogger _logger;
+        private readonly ICoreAssemblyLogger _logger;
 
-        public BackoffPolicy(ILoggerFactory loggerFactory)
+        public BackoffPolicy(ICoreAssemblyLogger logger)
         {
-            _logger = loggerFactory.GetAssemblyLogger();
+            _logger = logger;
         }
 
         public void Execute(Func<bool> function, IWaitHandle waitHandle)

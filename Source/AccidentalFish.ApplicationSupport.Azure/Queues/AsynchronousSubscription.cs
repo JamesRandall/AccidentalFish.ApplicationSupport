@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Core.Logging;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.ServiceBus.Messaging;
 
@@ -12,7 +12,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         private readonly string _connectionString;
         private readonly string _topicName;
         private readonly string _subscriptionName;
-        private readonly ILogger _logger;
+        private readonly IAzureAssemblyLogger _logger;
         private readonly SubscriptionClient _client;
 
         public AsynchronousSubscription(
@@ -20,7 +20,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             string connectionString,
             string topicName,
             string subscriptionName,
-            ILogger logger)
+            IAzureAssemblyLogger logger)
         {
             if (subscriptionName == null) throw new ArgumentNullException(nameof(subscriptionName));
             _queueSerializer = queueSerializer;

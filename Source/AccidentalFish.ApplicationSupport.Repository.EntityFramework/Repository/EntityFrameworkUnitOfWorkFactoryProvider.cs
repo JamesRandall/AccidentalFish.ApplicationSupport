@@ -1,5 +1,6 @@
 ﻿using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Repository;
+using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Logging;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
 
 namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repository
@@ -7,17 +8,17 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
     internal class EntityFrameworkUnitOfWorkFactoryProvider : IUnitOfWorkFactoryProvider
     {
         private readonly IDbConfiguration _dbConfiguration;
-        private readonly ILoggerFactory _loggerFactory;
+        private readonly IEntityFrameworkRepositoryLogger _logger;
 
-        public EntityFrameworkUnitOfWorkFactoryProvider(IDbConfiguration dbConfiguration, ILoggerFactory loggerFactory)
+        public EntityFrameworkUnitOfWorkFactoryProvider(IDbConfiguration dbConfiguration, IEntityFrameworkRepositoryLogger logger)
         {
             _dbConfiguration = dbConfiguration;
-            _loggerFactory = loggerFactory;
+            _logger = logger;
         }
 
         public IUnitOfWorkFactory Create(string contextType, string connectionString)
         {
-            return new EntityFrameworkUnitOfWorkFactory(contextType, connectionString, _dbConfiguration, _loggerFactory);
+            return new EntityFrameworkUnitOfWorkFactory(contextType, connectionString, _dbConfiguration, _logger);
         }
     }
 }

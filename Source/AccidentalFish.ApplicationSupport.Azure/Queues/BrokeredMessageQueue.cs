@@ -1,5 +1,5 @@
 ﻿using System;
-using AccidentalFish.ApplicationSupport.Core.Logging;
+using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using Microsoft.ServiceBus.Messaging;
 
@@ -9,27 +9,35 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
     {
         private readonly IQueueSerializer _queueSerializer;
         private readonly string _connectionString;
+        private readonly string _queueName;
+        private readonly IAzureAssemblyLogger _logger;
         private readonly QueueClient _client;
 
-        public BrokeredMessageQueue(IQueueSerializer queueSerializer, string connectionString, string queueName, ILogger logger)
+        public BrokeredMessageQueue(IQueueSerializer queueSerializer, string connectionString, string queueName, IAzureAssemblyLogger logger)
         {
             _queueSerializer = queueSerializer;
             _connectionString = connectionString;
+            _queueName = queueName;
+            _logger = logger;
             _client = QueueClient.CreateFromConnectionString(connectionString, queueName);
+
+            _logger?.Verbose("BrokeredMessageQueue: created for queue {0}", queueName);
         }
 
         public void Enqueue(T item, Action<T> success, Action<T, Exception> failure)
         {
             try
             {
+                _logger?.Verbose("BrokeredMessageQueue: Enqueue - enqueueing item on queue {0}", _queueName);
                 string value = _queueSerializer.Serialize(item);
                 BrokeredMessage message = new BrokeredMessage(value);
                 _client.Send(message);
-                if (success != null) success(item);
+                success?.Invoke(item);
             }
             catch (Exception ex)
             {
-                if (failure != null) failure(item, ex);
+                _logger?.Verbose("BrokeredMessageQueue: Enqueue - error occurred on queue {0}", ex, _queueName);
+                failure?.Invoke(item, ex);
             }
         }
 
@@ -39,6 +47,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 
             if (message != null)
             {
+                _logger?.Verbose("BrokeredMessageQueue: Dequeue - dequeued item from queue {0}", _queueName);
                 try
                 {
                     string body = message.GetBody<string>();
@@ -47,10 +56,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                     bool markComplete = success(queueItem);
                     if (markComplete)
                     {
+                        _logger?.Verbose("BrokeredMessageQueue: Dequeue - marking item complete on queue {0} at request of caller", _queueName);
                         message.Complete();
                     }
                     else
                     {
+                        _logger?.Verbose("BrokeredMessageQueue: Dequeue - marking item abandoned on queue {0} at request of caller", _queueName);
                         message.Abandon();
                     }
                 }
@@ -58,6 +69,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 {
                     message.Abandon();
                     failure(ex);
+
+                    _logger?.Verbose("BrokeredMessageQueue: Dequeue - error occurred and marking abandoned on queue {0}", ex, _queueName);
                 }
             }
         }
@@ -68,6 +81,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 
             if (message != null)
             {
+                _logger?.Verbose("BrokeredMessageQueue: Dequeue - dequeued item from queue {0}", _queueName);
                 try
                 {
                     string body = message.GetBody<string>();
@@ -76,10 +90,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                     bool markComplete = success(queueItem);
                     if (markComplete)
                     {
+                        _logger?.Verbose("BrokeredMessageQueue: Dequeue - marking item complete on queue {0} at request of caller", _queueName);
                         message.Complete();
                     }
                     else
                     {
+                        _logger?.Verbose("BrokeredMessageQueue: Dequeue - marking item abandoned on queue {0} at request of caller", _queueName);
                         message.Abandon();
                     }
                 }
@@ -87,6 +103,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
                 {
                     message.Abandon();
                     failure(ex);
+
+                    _logger?.Verbose("BrokeredMessageQueue: Dequeue - error occurred and marking abandoned on queue {0}", ex, _queueName);
                 }
             }
             else
@@ -97,6 +115,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 
         public void ExtendLease(IQueueItem<T> queueItem, TimeSpan visibilityTimeout)
         {
+            _logger?.Verbose("BrokeredMessageQueue: ExtendLease - extending a lease with a visibility timeout on queue {0}", _queueName);
             throw new NotSupportedException("Service Bus queues do not support specified visibility timeout extensions on lease extension. They extend by the default visibility in the queue definition. Please use the overloaded ExtendLease method");
         }
 
@@ -105,6 +124,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             BrokeredMessageQueueItem<T> brokeredMessageQueueItem = queueItem as BrokeredMessageQueueItem<T>;
             if (brokeredMessageQueueItem != null)
             {
+                _logger?.Verbose("BrokeredMessageQueue: ExtendLease - renewing lock on queue {0}", _queueName);
                 brokeredMessageQueueItem.Message.RenewLock();
             }
             else
