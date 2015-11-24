@@ -1,7 +1,9 @@
 ﻿using System;
 using AccidentalFish.ApplicationSupport.Core.Components;
+using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
+using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation;
@@ -34,11 +36,13 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger
             IFullyQualifiedName defaultLoggerSource)
         {
             IRuntimeEnvironment runtimeEnvironment = dependencyResolver.Resolve<IRuntimeEnvironment>();
-            IApplicationResourceFactory applicationResourceFactory = dependencyResolver.Resolve<IApplicationResourceFactory>();
+            IConfiguration configuration = dependencyResolver.Resolve<IConfiguration>();
             IQueueLoggerExtension queueLoggerExtension = dependencyResolver.Resolve<IQueueLoggerExtension>();
             ICorrelationIdProvider correlationIdProvider = dependencyResolver.Resolve<ICorrelationIdProvider>();
+            IQueueSerializer queueSerializer = dependencyResolver.Resolve<IQueueSerializer>();
+            IApplicationResourceSettingNameProvider nameProvider = dependencyResolver.Resolve<IApplicationResourceSettingNameProvider>();
 
-            return new QueueLoggerFactory(runtimeEnvironment, applicationResourceFactory, queueLoggerExtension,
+            return new QueueLoggerFactory(runtimeEnvironment, nameProvider, configuration, queueSerializer, queueLoggerExtension,
                 correlationIdProvider, defaultMinimumLogLevel, defaultLoggerSource);
         }
     }

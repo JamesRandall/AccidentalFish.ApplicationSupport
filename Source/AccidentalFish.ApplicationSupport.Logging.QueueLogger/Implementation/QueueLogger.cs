@@ -4,14 +4,17 @@ using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Naming;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
+using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Extensions;
 using AccidentalFish.ApplicationSupport.Logging.QueueLogger.Model;
+using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
 {
-    internal class QueueLogger : ILogger<IQueue<LogQueueItem>>
+    internal class QueueLogger : ILogger<CloudQueue>
     {
         private readonly IRuntimeEnvironment _runtimeEnvironment;
-        private readonly IQueue<LogQueueItem> _queue;
+        private readonly CloudQueue _queue;
+        private readonly IQueueSerializer _queueSerializer;
         private readonly IFullyQualifiedName _source;
         private readonly IQueueLoggerExtension _queueLoggerExtension;
         private readonly LogLevelEnum _minimumLoggingLevel;
@@ -19,7 +22,8 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
 
         public QueueLogger(
             IRuntimeEnvironment runtimeEnvironment,
-            IQueue<LogQueueItem> queue,
+            CloudQueue queue,
+            IQueueSerializer queueSerializer,
             IFullyQualifiedName source,
             IQueueLoggerExtension queueLoggerExtension,
             LogLevelEnum minimumLoggingLevel,
@@ -27,6 +31,7 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
         {
             _runtimeEnvironment = runtimeEnvironment;
             _queue = queue;
+            _queueSerializer = queueSerializer;
             _source = source;
             _queueLoggerExtension = queueLoggerExtension;
             _minimumLoggingLevel = minimumLoggingLevel;
@@ -100,6 +105,8 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
 
         public void Log(LogLevelEnum level, string message, Exception exception, params object[] additionalData)
         {
+            // because the queue logger uses internal resources this prevents it eating itself
+            if (_source != null && _source.IsFrameworkSource()) return;
             LogQueueItem item = CreateLogQueueItem(level, message, exception, additionalData);
             bool willLog = level >= _minimumLoggingLevel;
             if (_queueLoggerExtension.BeforeLog(item, exception, willLog))
@@ -108,7 +115,8 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
                 {
                     try
                     {
-                        _queue.Enqueue(item);
+                        CloudQueueMessage queueMessage = new CloudQueueMessage(_queueSerializer.Serialize(item));
+                        _queue.AddMessage(queueMessage);
                     }
                     catch (Exception)
                     {
@@ -135,6 +143,6 @@ namespace AccidentalFish.ApplicationSupport.Logging.QueueLogger.Implementation
             };
         }
 
-        public IQueue<LogQueueItem> ActualLogger => _queue;
+        public CloudQueue ActualLogger => _queue;
     }
 }

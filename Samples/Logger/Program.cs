@@ -8,6 +8,7 @@ using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Runtime;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
+using AccidentalFish.ApplicationSupport.Logging.QueueLogger;
 using AccidentalFish.ApplicationSupport.Processes;
 using AccidentalFish.ApplicationSupport.Unity;
 using Microsoft.Practices.Unity;
@@ -24,6 +25,7 @@ namespace Logger
             dependencyResolver
                 .UseCore()
                 .UseAzure()
+                .UseQueueLogger(defaultMinimumLogLevel:LogLevelEnum.Verbose)
                 .UseHostableProcesses();
 
             IComponentHost componentHost = dependencyResolver.Resolve<IComponentHost>();
@@ -40,7 +42,6 @@ namespace Logger
 
         private static void StartComponentHost(IComponentHost componentHost, IAsynchronousLogger logger, CancellationTokenSource cancellationTokenSource)
         {
-            
             componentHost.StartAsync(new StaticComponentHostConfigurationProvider(new List<ComponentConfiguration>
             {
                 new ComponentConfiguration

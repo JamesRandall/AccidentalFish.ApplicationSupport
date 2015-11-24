@@ -75,7 +75,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
         {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
 
-            _logger?.Verbose("ApplicationResourceFactory - GetAsyncQuee - {0}", componentIdentity);
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncQueue - {0}", componentIdentity);
 
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             string defaultQueueName = _applicationResourceSettingProvider.DefaultQueueName(componentIdentity);
