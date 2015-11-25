@@ -1,7 +1,7 @@
 AccidentalFish.ApplicationSupport
 =================================
 
-**v3.0.0 Released** - see the [Release Notes](https://github.com/JamesRandall/AccidentalFish.ApplicationSupport/blob/master/v3.0.0.md), [Documentation](http://jamesrandall.github.io/AccidentalFish.ApplicationSupport/) and [API Reference](http://jamesrandall.github.io/docs/accidentalfish.applicationsupport/)
+**v3.0.0 Released** - see the [Release Notes](https://github.com/JamesRandall/AccidentalFish.ApplicationSupport/blob/master/ReleaseNotes/v3.0.0.md), [Documentation](http://jamesrandall.github.io/AccidentalFish.ApplicationSupport/) and [API Reference](http://jamesrandall.github.io/docs/accidentalfish.applicationsupport/)
 
 As I've worked on a variety of Azure projects over the last 18 months there is a bunch of plumbing I've found to be common for example wanting dependency injectable patterns for resource access, configuring components across multiple projects and servers, deployment, separation of concerns, fault diagnosis and a management dashboard, to name just a few.
 
