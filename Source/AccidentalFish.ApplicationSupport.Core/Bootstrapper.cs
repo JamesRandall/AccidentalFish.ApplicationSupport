@@ -74,6 +74,7 @@ namespace AccidentalFish.ApplicationSupport.Core
                 .Register<IConfiguration, DefaultConfiguration>()
                 .Register<IComponentFactory>(() => new ComponentFactory(container))
                 .Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>()
+                .Register<ILargeMessageQueueFactory, LargeMessageQueueFactory>()
                 // internal
                 .Register<ICoreAssemblyLogger>(() =>
                     new CoreAssemblyLogger(container.Resolve<ILoggerFactory>().CreateLogger(new LoggerSource("AccidentalFish.ApplicationSupport.Core"))));
