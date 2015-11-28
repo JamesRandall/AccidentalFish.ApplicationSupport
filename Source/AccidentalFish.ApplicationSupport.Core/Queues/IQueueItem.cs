@@ -1,4 +1,6 @@
-﻿namespace AccidentalFish.ApplicationSupport.Core.Queues
+﻿using System.Collections.Generic;
+
+namespace AccidentalFish.ApplicationSupport.Core.Queues
 {
     /// <summary>
     /// Wrapper for a queued item
@@ -15,5 +17,10 @@
         /// The number of times the item has been dequeued
         /// </summary>
         int DequeueCount { get; }
+
+        /// <summary>
+        /// Properties associated with the message
+        /// </summary>
+        IReadOnlyDictionary<string, object> Properties { get; }
     }
 }

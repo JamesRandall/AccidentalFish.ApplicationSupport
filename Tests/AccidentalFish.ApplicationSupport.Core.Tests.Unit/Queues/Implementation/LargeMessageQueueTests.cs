@@ -61,7 +61,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Queues.Implementatio
             await queue.EnqueueAsync(item);
 
             // Assert
-            _referenceQueueMock.Verify(x => x.EnqueueAsync(It.Is<LargeMessageReference>(v=> v.BlobReference == blobName)));
+            _referenceQueueMock.Verify(x => x.EnqueueAsync(It.Is<LargeMessageReference>(v=> v.BlobReference == blobName), null));
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Queues.Implementatio
             await queue.EnqueueAsync(item, timespan);
 
             // Assert
-            _referenceQueueMock.Verify(x => x.EnqueueAsync(It.Is<LargeMessageReference>(v => v.BlobReference == blobName), timespan));
+            _referenceQueueMock.Verify(x => x.EnqueueAsync(It.Is<LargeMessageReference>(v => v.BlobReference == blobName), timespan, null));
         }
 
         [TestMethod]

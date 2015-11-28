@@ -68,6 +68,43 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             return message != null;
         }
 
+        public async Task<bool> RecieveQueueItemAsync(Func<IQueueItem<T>, Task<bool>> process)
+        {
+            BrokeredMessage message = await _client.ReceiveAsync();
+            if (message != null)
+            {
+                try
+                {
+                    _logger?.Verbose("AsynchronousSubscription: RecieveAsync - recieved item from topic {0} on subscription {1}", _topicName, _subscriptionName);
+                    string body = message.GetBody<string>();
+                    T payload = _queueSerializer.Deserialize<T>(body);
+                    BrokeredMessageQueueItem<T> queueItem = new BrokeredMessageQueueItem<T>(message, payload, message.DeliveryCount, null);
+                    bool markComplete = await process(queueItem);
+                    if (markComplete)
+                    {
+                        await message.CompleteAsync();
+                        _logger?.Verbose("AsynchronousSubscription: RecieveAsync - marked item from topic {0} on subscription {1} as complete", _topicName, _subscriptionName);
+                    }
+                    else
+                    {
+                        await message.AbandonAsync();
+                        _logger?.Verbose("AsynchronousSubscription: RecieveAsync - marked item from topic {0} on subscription {1} as abandoned at callers request", _topicName, _subscriptionName);
+                    }
+                }
+                catch (Exception)
+                {
+                    message.Abandon();
+                    _logger?.Verbose("AsynchronousSubscription: RecieveAsync - marked item from topic {0} on subscription {1} as abandoned due to error", _topicName, _subscriptionName);
+                }
+            }
+            else
+            {
+                // we pass null into the process function as it may still want to take action based on their being no message.
+                await process(null);
+            }
+            return message != null;
+        }
+
         internal string ConnectionString => _connectionString;
 
         internal SubscriptionClient UnderlyingSubscription => _client;

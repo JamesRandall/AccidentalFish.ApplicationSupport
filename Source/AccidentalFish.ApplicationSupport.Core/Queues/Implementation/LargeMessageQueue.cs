@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,13 +29,23 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
             _logger.Verbose("LargeMessageQueue<T>: constructing");
         }
 
-        public async Task EnqueueAsync(T item)
+        public async Task EnqueueAsync(T item, IDictionary<string, object> messageProperties = null)
         {
+            if (messageProperties != null)
+            {
+                throw new NotSupportedException("Large message queues do not support message properties");
+            }
+
             await DoEnqueue(item, null);
         }
 
-        public async Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay)
+        public async Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay, IDictionary<string, object> messageProperties = null)
         {
+            if (messageProperties != null)
+            {
+                throw new NotSupportedException("Large message queues do not support message properties");
+            }
+
             await DoEnqueue(item, initialVisibilityDelay);
         }
 
