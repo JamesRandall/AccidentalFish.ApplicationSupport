@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
@@ -29,19 +30,22 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             _logger?.Verbose("AsynchronousBrokeredMessageQueue: created for queue {0}", queueName);
         }
 
-        public async Task EnqueueAsync(T item)
+        public async Task EnqueueAsync(T item, IDictionary<string, object> messageProperties=null)
         {
             string value = _queueSerializer.Serialize(item);
             BrokeredMessage message = new BrokeredMessage(value);
+            AddProperties(message, messageProperties);
+
             await _client.SendAsync(message);
 
             _logger?.Verbose("AsynchronousBrokeredMessageQueue: EnqueueAsync - enqueued item on queue {0}", _queueName);
         }
 
-        public async Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay)
+        public async Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay, IDictionary<string, object> messageProperties = null)
         {
             string value = _queueSerializer.Serialize(item);
             BrokeredMessage message = new BrokeredMessage(value);
+            AddProperties(message, messageProperties);
             message.ScheduledEnqueueTimeUtc = DateTimeOffset.UtcNow.Add(initialVisibilityDelay).DateTime;
             await _client.SendAsync(message);
 
@@ -102,6 +106,17 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             else
             {
                 throw new InvalidOperationException("Not a brokered message queue item");
+            }
+        }
+
+        private static void AddProperties(BrokeredMessage message, IDictionary<string, object> messageProperties)
+        {
+            if (messageProperties != null)
+            {
+                foreach (KeyValuePair<string, object> kvp in messageProperties)
+                {
+                    message.Properties.Add(kvp);
+                }
             }
         }
 

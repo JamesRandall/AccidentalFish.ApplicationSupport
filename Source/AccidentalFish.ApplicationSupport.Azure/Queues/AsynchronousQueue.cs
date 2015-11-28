@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
@@ -32,15 +33,25 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             _logger?.Verbose("AsynchronousQueue: created for queue {0}", queueName);
         }
 
-        public Task EnqueueAsync(T item)
+        public Task EnqueueAsync(T item, IDictionary<string, object> messageProperties = null)
         {
+            if (messageProperties != null)
+            {
+                throw new NotSupportedException("Message properties are not supported by Azure Storage queues");
+            }
+
             _logger?.Verbose("AsynchronousQueue: EnqueueAsync - enqueueing item");
             CloudQueueMessage message = new CloudQueueMessage(_serializer.Serialize(item));
             return _queue.AddMessageAsync(message);
         }
 
-        public Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay)
+        public Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay, IDictionary<string, object> messageProperties = null)
         {
+            if (messageProperties != null)
+            {
+                throw new NotSupportedException("Message properties are not supported by Azure Storage queues");
+            }
+
             _logger?.Verbose("AsynchronousQueue: EnqueueAsync - enqueueing item with initial visibility delay of {0}ms", initialVisibilityDelay.TotalMilliseconds);
             CloudQueueMessage message = new CloudQueueMessage(_serializer.Serialize(item));
             return _queue.AddMessageAsync(message, null, initialVisibilityDelay, null, null);

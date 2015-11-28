@@ -100,7 +100,14 @@
     <Compile Include="Logging\Implementation\TraceLogger.cs" />
     <Compile Include="Logging\Implementation\TraceLoggerFactory.cs" />
     <Compile Include="Policies\Implementation\NotSupportedLeaseManagerFactory.cs" />
+    <Compile Include="Queues\ILargeMessageQueue.cs" />
+    <Compile Include="Queues\ILargeMessageQueueFactory.cs" />
+    <Compile Include="Queues\Implementation\LargeMessageQueue.cs" />
+    <Compile Include="Queues\Implementation\LargeMessageQueueFactory.cs" />
+    <Compile Include="Queues\Implementation\LargeMessageQueueItem.cs" />
     <Compile Include="Queues\Implementation\NotSupportedQueueFactory.cs" />
+    <Compile Include="Queues\LargeMessageQueueException.cs" />
+    <Compile Include="Queues\LargeMessageReference.cs" />
     <Compile Include="Templating\TemplateSyntaxEnum.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Logging\ICorrelationIdProvider.cs" />

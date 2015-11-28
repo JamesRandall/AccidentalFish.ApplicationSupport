@@ -9,7 +9,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
 {
     internal class CloudQueueItem<T> : QueueItem<T> where T : class
     {
-        public CloudQueueItem(CloudQueueMessage message, T item, int dequeueCount, string popReceipt) : base(item, dequeueCount, popReceipt)
+        public CloudQueueItem(CloudQueueMessage message, T item, int dequeueCount, string popReceipt) : base(item, dequeueCount, popReceipt, null)
         {
             CloudQueueMessage = message;
         }

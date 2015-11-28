@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure;
 using AccidentalFish.ApplicationSupport.Core;
@@ -55,18 +57,22 @@ namespace TopicsAndSubscriptions
                 while (true)
                 {
                     await Task.Delay(3333);
-                    await secondSubscription.RecieveAsync(m =>
+                    await secondSubscription.RecieveQueueItemAsync(m =>
                     {
                         System.Console.Write("Second Subscription: ");
-                        System.Console.WriteLine(m.SaySomething);
+                        System.Console.WriteLine(m.Item.SaySomething);
                         return Task.FromResult(true);
                     });
                 }
             });
-            
+
             topic.SendAsync(new MyMessage
             {
                 SaySomething = "Hello World"
+            }, new Dictionary<string, object>
+            {
+                {"P1", 56},
+                {"P2", "Zaphod"}
             });
 
             System.Console.Read();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Queues
@@ -16,16 +17,18 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues
         /// Enqueue the given item
         /// </summary>
         /// <param name="item">The item to queue</param>
+        /// <param name="messageProperties">Optional properties for the message</param>
         /// <returns>An awaitable task</returns>
-        Task EnqueueAsync(T item);
+        Task EnqueueAsync(T item, IDictionary<string, object> messageProperties = null);
         /// <summary>
         /// Enqueue an item and specify after how long until it appears in the queue.
         /// Implementations may throw a NotSupportedException if not supported.
         /// </summary>
         /// <param name="item">The item to queue</param>
         /// <param name="initialVisibilityDelay">The delay until the item appears in the queue</param>
+        /// <param name="messageProperties">Optional properties for the message</param>
         /// <returns>An awaitable task</returns>
-        Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay);
+        Task EnqueueAsync(T item, TimeSpan initialVisibilityDelay, IDictionary<string, object> messageProperties = null);
         /// <summary>
         /// Dequeues an item and passes it to the specified asynchronous function for processing
         /// </summary>

@@ -16,3 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("54c0605c-9f84-4041-a423-9f74ef857749")]
 
 [assembly: InternalsVisibleTo("AccidentalFish.ApplicationSupport.Core.Tests.Unit")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
