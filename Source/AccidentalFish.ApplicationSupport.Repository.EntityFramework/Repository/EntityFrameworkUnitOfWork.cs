@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
-using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Repository;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Logging;
 using AccidentalFish.ApplicationSupport.Repository.EntityFramework.Policies;
@@ -33,7 +33,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             _context = dbContextFactory.CreateContext(configuration.SqlConnectionString);
             _dbConfiguration = dbConfiguration;
 
-            _logger?.Verbose("EntityFrameworkUnitOfWork: Created unit of work for {0}", _context.Database.Connection.ConnectionString);
+            _logger?.Verbose("EntityFrameworkUnitOfWork: Created unit of work for {0}", _context.GetType().FullName);
         }
 
         public EntityFrameworkUnitOfWork(
@@ -49,7 +49,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             _context = (DbContext) Activator.CreateInstance(contextType, connectionString);
             _dbConfiguration = dbConfiguration;
 
-            _logger?.Verbose("EntityFrameworkUnitOfWork: Created unit of work for {0}", _context.Database.Connection.ConnectionString);
+            _logger?.Verbose("EntityFrameworkUnitOfWork: Created unit of work for {0}", _context.GetType().FullName);
         }
 
         public IRepository<T> GetRepository<T>() where T : class

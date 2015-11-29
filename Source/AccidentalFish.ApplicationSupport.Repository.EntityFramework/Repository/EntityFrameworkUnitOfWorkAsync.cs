@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
@@ -31,7 +32,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             _context = dbContextFactory.CreateContext(configuration.SqlConnectionString);
             _dbConfiguration = dbConfiguration;
 
-            _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: Created unit of work for {0}", _context.Database.Connection.ConnectionString);
+            _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: Created unit of work for {0}", _context.GetType().FullName);
         }
 
         public EntityFrameworkUnitOfWorkAsync(
@@ -47,7 +48,7 @@ namespace AccidentalFish.ApplicationSupport.Repository.EntityFramework.Repositor
             _context = (DbContext) Activator.CreateInstance(contextType, connectionString);
             _dbConfiguration = dbConfiguration;
 
-            _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: Created unit of work for {0}", _context.Database.Connection.ConnectionString);
+            _logger?.Verbose("EntityFrameworkUnitOfWorkAsync: Created unit of work for {0}", _context.GetType().FullName);
         }
 
         private EntityFrameworkUnitOfWorkAsync(IEntityFrameworkRepositoryLogger logger)
