@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs">
-      <Link>Properties\AssemblyInfoCommon.cs</Link>
+      <Link>AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Logging\IEntityFrameworkRepositoryLogger.cs" />
