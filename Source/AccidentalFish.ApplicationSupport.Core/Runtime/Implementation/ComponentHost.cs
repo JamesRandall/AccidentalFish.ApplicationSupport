@@ -81,7 +81,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                         {
                             shouldRetry = await _componentHostRestartHandler.HandleRestart(ex, retryCount, _logger, componentIdentity);
                         }
-                        shouldRetry = restartEvaluator != null && restartEvaluator(ex, retryCount);
                         if (shouldRetry)
                         {
                             _logger?.Information($"Restarting {retryCount} for component {componentIdentity}", ex);
