@@ -16,6 +16,7 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
     /// <typeparam name="T">The type of the queue item</typeparam>
     public abstract class BackoffQueueProcessor<T> : IHostableComponent where T : class
     {
+        private readonly Func<Exception, Task<bool>> _dequeErrorHandler;
         private readonly IAsynchronousBackoffPolicy _backoffPolicy;
         private readonly IAsynchronousQueue<T> _queue;
         private readonly ILogger _logger;
@@ -32,9 +33,11 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         /// </summary>
         /// <param name="backoffPolicy">The back off policy to use.</param>
         /// <param name="queue">The queue to be processed</param>
+        /// <param name="dequeErrorHandler">Optional error handler for dequeue failures. This can return true / false or throw an exception</param>
         protected BackoffQueueProcessor(
             IAsynchronousBackoffPolicy backoffPolicy,
-            IAsynchronousQueue<T> queue) : this(backoffPolicy, queue, null)
+            IAsynchronousQueue<T> queue,
+            Func<Exception, Task<bool>> dequeErrorHandler=null) : this(backoffPolicy, queue, null, dequeErrorHandler)
         {
             
         }
@@ -45,14 +48,17 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
         /// <param name="backoffPolicy">The back off policy to use.</param>
         /// <param name="queue">The queue to be processed</param>
         /// <param name="logger">The logger to use for reporting issues</param>
+        /// <param name="dequeErrorHandler">Optional error handler for dequeue failures. This can return true / false or throw an exception</param>
         protected BackoffQueueProcessor(
             IAsynchronousBackoffPolicy backoffPolicy,
             IAsynchronousQueue<T> queue,
-            ILogger logger)
+            ILogger logger,
+            Func<Exception, Task<bool>> dequeErrorHandler = null)
         {
             _backoffPolicy = backoffPolicy;
             _queue = queue;
             _logger = logger;
+            _dequeErrorHandler = dequeErrorHandler;
         }
 
         /// <summary>
@@ -95,14 +101,25 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
             {
                 Logger?.Verbose("Attempting dequeue in {0}", ComponentIdentity);
                 bool didWork = true;
-                await _queue.DequeueAsync(async item =>
+                try
                 {
-                    ProcessResult result = await ProcessItem(item);
-                    didWork = result.DidWork;
-                    Logger?.Verbose("Dequeue result in {0} of {1}", ComponentIdentity, result);
-                    return result.Complete;
-                });
-                return didWork;
+                    await _queue.DequeueAsync(async item =>
+                    {
+                        ProcessResult result = await ProcessItem(item);
+                        didWork = result.DidWork;
+                        Logger?.Verbose("Dequeue result in {0} of {1}", ComponentIdentity, result);
+                        return result.Complete;
+                    });
+                    return didWork;
+                }
+                catch (Exception ex)
+                {
+                    if (_dequeErrorHandler != null)
+                    {
+                        return await _dequeErrorHandler(ex);
+                    }
+                    throw;
+                }
             }
             catch (Exception ex)
             {

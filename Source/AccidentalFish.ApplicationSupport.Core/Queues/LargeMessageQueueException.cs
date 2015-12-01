@@ -7,15 +7,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues
     /// </summary>
     public class LargeMessageQueueException : Exception
     {
+        private readonly IQueueItem<LargeMessageReference> _queueItem;
         private readonly string _blobReference;
+        
+        internal LargeMessageQueueException(string message, Exception innerException, IQueueItem<LargeMessageReference> queueItem) : base(message, innerException)
+        {
+            _queueItem = queueItem;
+        }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="message">Error message</param>
-        /// <param name="innerException">Inner exception</param>
-        /// <param name="blobReference">Reference to the blob</param>
-        public LargeMessageQueueException(string message, Exception innerException, string blobReference) : base(message, innerException)
+        internal LargeMessageQueueException(string message, Exception innerException, string blobReference) : base(message, innerException)
         {
             _blobReference = blobReference;
         }
@@ -23,6 +23,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues
         /// <summary>
         /// Reference to the blob
         /// </summary>
-        public string BlobReference => _blobReference;
+        public string BlobReference => _queueItem?.Item?.BlobReference ?? _blobReference;
+
+        /// <summary>
+        /// Reference to the queue item
+        /// </summary>
+        public IQueueItem<LargeMessageReference> QueueItem => _queueItem;
     }
 }

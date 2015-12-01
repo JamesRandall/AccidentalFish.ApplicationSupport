@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Logging;
+using AccidentalFish.ApplicationSupport.Core.Queues.Model;
 
 namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
 {
@@ -63,12 +64,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
                     {
                         blob = _blobRepository.Get(message.Item.BlobReference);
                         var serializedObjectText = await blob.DownloadStringAsync(Encoding.UTF8);
+                        await _referenceQueue.ExtendLeaseAsync(message);
                         item = _serializer.Deserialize<T>(serializedObjectText);
+                        await _referenceQueue.ExtendLeaseAsync(message);
                     }
                     catch (Exception ex)
                     {
                         _logger.Verbose("LargeMessageQueue<T>: DequeueAsync - unable to download blob {0}", message.Item.BlobReference);
-                        throw new LargeMessageQueueException("Unable to download blob", ex, message.Item.BlobReference);
+                        throw new LargeMessageQueueException("Unable to download blob", ex, message);
                     }
                     
                     bool result = await processor(new LargeMessageQueueItem<T>(item, message.DequeueCount, message));
@@ -78,12 +81,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
                         try
                         {
                             _logger.Verbose("LargeMessageQueue<T>: DequeueAsync - deleting blob reference {0}", message.Item.BlobReference);
+                            await _referenceQueue.ExtendLeaseAsync(message);
                             await blob.DeleteAsync();
                         }
                         catch (Exception ex)
                         {
                             _logger.Verbose("LargeMessageQueue<T>: DequeueAsync - unable to delete blob reference {0}", message.Item.BlobReference);
-                            throw new LargeMessageQueueException("Unable to delete blob, abandoning queue item", ex, message.Item.BlobReference);
+                            throw new LargeMessageQueueException("Unable to delete blob, abandoning queue item", ex, message);
                         }
                     }
 

@@ -5,6 +5,7 @@ using AccidentalFish.ApplicationSupport.Core.Blobs;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.Core.Queues.Implementation;
+using AccidentalFish.ApplicationSupport.Core.Queues.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

@@ -104,7 +104,7 @@
     <Compile Include="Queues\ILargeMessageQueueFactory.cs" />
     <Compile Include="Queues\Implementation\LargeMessageQueue.cs" />
     <Compile Include="Queues\Implementation\LargeMessageQueueFactory.cs" />
-    <Compile Include="Queues\Implementation\LargeMessageQueueItem.cs" />
+    <Compile Include="Queues\Model\LargeMessageQueueItem.cs" />
     <Compile Include="Queues\Implementation\NotSupportedQueueFactory.cs" />
     <Compile Include="Queues\LargeMessageQueueException.cs" />
     <Compile Include="Queues\LargeMessageReference.cs" />
