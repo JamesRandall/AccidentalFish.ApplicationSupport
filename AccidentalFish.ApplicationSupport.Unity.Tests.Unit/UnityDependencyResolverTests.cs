@@ -1,20 +1,21 @@
-﻿using AccidentalFish.ApplicationSupport.DependencyResolver;
+﻿using System;
+using AccidentalFish.ApplicationSupport.DependencyResolver;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Ninject;
 
-namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
+namespace AccidentalFish.ApplicationSupport.Unity.Tests.Unit
 {
     [TestClass]
-    public class DependecyResolverTests
+    public class UnityDependencyResolverTests
     {
-        private IKernel _kernel;
+        private IUnityContainer _kernel;
         private IDependencyResolver _resolver;
 
         [TestInitialize]
         public void Setup()
         {
-            _kernel = new StandardKernel();
-            _resolver = new NinjectApplicationFrameworkDependencyResolver(_kernel);
+            _kernel = new UnityContainer();
+            _resolver = new UnityApplicationFrameworkDependencyResolver(_kernel);
         }
 
         [TestMethod]

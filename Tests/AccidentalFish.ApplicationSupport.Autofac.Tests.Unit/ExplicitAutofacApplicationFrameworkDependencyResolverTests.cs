@@ -126,5 +126,24 @@ namespace AccidentalFish.ApplicationSupport.Autofac.Tests.Unit
             _resolver.Register<ITestObject, TestObject>();
             _resolver.Resolve<ITestObject>();
         }
+
+        [TestMethod]
+        public void LambdaRegistrationResolves()
+        {
+            _resolver.Register<ITestObject>(() => new TestObject());
+            _resolver.Build();
+            ITestObject result = _resolver.Resolve<ITestObject>();
+            Assert.IsInstanceOfType(result, typeof(TestObject));
+        }
+
+        [TestMethod]
+        public void LambdaSecondRegistrationReplacesFirst()
+        {
+            _resolver.Register<ITestObject>(() => new TestObject());
+            _resolver.Register<ITestObject>(() => new SecondTestObject());
+            _resolver.Build();
+            ITestObject result = _resolver.Resolve<ITestObject>();
+            Assert.IsInstanceOfType(result, typeof(SecondTestObject));
+        }
     }
 }

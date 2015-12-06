@@ -71,7 +71,7 @@ namespace AccidentalFish.ApplicationSupport.Core
                 .Register<IEmailQueueDispatcher, EmailQueueDispatcher>()
                 .Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>()
                 .Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>()
-                .Register<IConfiguration, DefaultConfiguration>()
+                .Register<IConfiguration>(() => new DefaultConfiguration())
                 .Register<IComponentFactory>(() => new ComponentFactory(container))
                 .Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>()
                 .Register<ILargeMessageQueueFactory, LargeMessageQueueFactory>()

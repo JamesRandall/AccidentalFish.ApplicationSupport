@@ -110,5 +110,22 @@ namespace AccidentalFish.ApplicationSupport.Autofac.Tests.Unit
             Assert.IsInstanceOfType(result, typeof(SecondTestObject));
             Assert.IsInstanceOfType(result2, typeof(TestObject));
         }
+
+        [TestMethod]
+        public void LambdaRegistrationResolves()
+        {
+            _resolver.Register<ITestObject>(() => new TestObject());
+            ITestObject result = _resolver.Resolve<ITestObject>();
+            Assert.IsInstanceOfType(result, typeof(TestObject));
+        }
+
+        [TestMethod]
+        public void LambdaSecondRegistrationReplacesFirst()
+        {
+            _resolver.Register<ITestObject>(() => new TestObject());
+            _resolver.Register<ITestObject>(() => new SecondTestObject());
+            ITestObject result = _resolver.Resolve<ITestObject>();
+            Assert.IsInstanceOfType(result, typeof(SecondTestObject));
+        }
     }
 }
