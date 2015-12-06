@@ -8,14 +8,14 @@ namespace AccidentalFish.ApplicationSupport.Unity.Tests.Unit
     [TestClass]
     public class UnityDependencyResolverTests
     {
-        private IUnityContainer _kernel;
+        private IUnityContainer _container;
         private IDependencyResolver _resolver;
 
         [TestInitialize]
         public void Setup()
         {
-            _kernel = new UnityContainer();
-            _resolver = new UnityApplicationFrameworkDependencyResolver(_kernel);
+            _container = new UnityContainer();
+            _resolver = new UnityApplicationFrameworkDependencyResolver(_container);
         }
 
         [TestMethod]
