@@ -124,8 +124,8 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
 
             ProcessResult result = new ProcessResult
             {
-                Complete = true,
-                DidWork = await  HandleRecievedItemAsync((message))
+                Complete = await HandleRecievedItemAsync(message),
+                DidWork = true
             };
 
             return result;

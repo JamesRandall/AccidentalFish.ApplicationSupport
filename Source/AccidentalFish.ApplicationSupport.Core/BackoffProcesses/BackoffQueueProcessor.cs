@@ -141,8 +141,8 @@ namespace AccidentalFish.ApplicationSupport.Core.BackoffProcesses
 
             ProcessResult result = new ProcessResult
             {
-                Complete = true,
-                DidWork = await HandleRecievedItemAsync(message) // let the virtual method decide whether to complete (true) or abandon (false) the message
+                Complete = await HandleRecievedItemAsync(message), // let the virtual method decide whether to complete (true) or abandon (false) the message,
+                DidWork = true
             };
 
             return result;
