@@ -53,9 +53,14 @@ namespace AccidentalFish.ApplicationSupport.Core
                 createCorrelationIdProvider = () => new NullCorrelationIdProvider();
             }
             return container
+                .Register<IAsynchronousDelay, AsynchronousDelay>()
+                .Register<ITimerThreadPoolExecuter, TimerThreadPoolExecuter>()
+                .Register<ITimerFactory, TimerFactory>()
                 .Register<IBackoffPolicy, BackoffPolicy>()
-                .Register<ILeasedRetry, LeasedRetry>()
+                .Register<IBackoffPolicyTimingProvider, BackoffPolicyDefaultTimingProvider>()
                 .Register<IAsynchronousBackoffPolicy, AsynchronousBackoffPolicy>()
+                .Register<IBackoffPolicyFactory, BackoffPolicyFactory>()
+                .Register<ILeasedRetry, LeasedRetry>()
                 .Register<IWaitHandle, ManualResetEventWaitHandle>()
                 .Register<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>()
                 .Register<IApplicationResourceFactory, ApplicationResourceFactory>()
@@ -74,7 +79,7 @@ namespace AccidentalFish.ApplicationSupport.Core
                 .Register<IConfiguration>(() => new DefaultConfiguration())
                 .Register<IComponentFactory>(() => new ComponentFactory(container))
                 .Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>()
-                .Register<ILargeMessageQueueFactory, LargeMessageQueueFactory>()
+                .Register<ILargeMessageQueueFactory, LargeMessageQueueFactory>()                
                 // internal
                 .Register<ICoreAssemblyLogger>(() =>
                     new CoreAssemblyLogger(container.Resolve<ILoggerFactory>().CreateLogger(new LoggerSource("AccidentalFish.ApplicationSupport.Core"))));

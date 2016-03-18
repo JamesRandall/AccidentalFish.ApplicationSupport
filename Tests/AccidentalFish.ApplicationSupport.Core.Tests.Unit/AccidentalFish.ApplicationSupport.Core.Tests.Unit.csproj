@@ -93,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logging\Implementation\LoggerTests.cs" />
+    <Compile Include="Policies\Implementation\AsynchronousIntervalTimerTests.cs" />
+    <Compile Include="Policies\Implementation\AsynchronousRegularTimerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queues\Implementation\LargeMessageQueueFactoryTests.cs" />
     <Compile Include="Queues\Implementation\LargeMessageQueueTests.cs" />

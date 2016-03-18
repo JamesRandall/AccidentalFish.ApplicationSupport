@@ -17,6 +17,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Threading.Implementation
             return _manualResetEvent.WaitOne(timeout);
         }
 
+        public bool Wait(TimeSpan timeout)
+        {
+            return _manualResetEvent.WaitOne(timeout);
+        }
+
         public void Reset()
         {
             _manualResetEvent.Reset();

@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AccidentalFish.ApplicationSupport.Core.Extensions;
 using AccidentalFish.ApplicationSupport.Core.Logging;
 
 namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
 {
     internal class AsynchronousBackoffPolicy : IAsynchronousBackoffPolicy
     {
-        private static readonly List<int> BackoffTimings = new List<int> { 100, 250, 500, 1000, 5000 };
         private Action _shutdownAction;
         private int _backoffIndex = -1;
         private CancellationToken _cancellationToken;
         private readonly ICoreAssemblyLogger _logger;
+        private readonly TimeSpan[] _backoffTimings;
 
-        public AsynchronousBackoffPolicy(ICoreAssemblyLogger logger)
+        public AsynchronousBackoffPolicy(ICoreAssemblyLogger logger, IBackoffPolicyTimingProvider provider)
         {
             _logger = logger;
+            _backoffTimings = provider.GetIntervals().ToArray();
         }
 
         public async Task ExecuteAsync(Func<Task<bool>> function, CancellationToken cancellationToken)
@@ -56,14 +57,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Policies.Implementation
         {
 
             _backoffIndex++;
-            if (_backoffIndex >= BackoffTimings.Count)
+            if (_backoffIndex >= _backoffTimings.Length)
             {
-                _backoffIndex = BackoffTimings.Count - 1;
+                _backoffIndex = _backoffTimings.Length - 1;
             }
             try
             {
-                _logger?.Verbose("AsynchronousBackoffPolicy - backing off for {0}ms", BackoffTimings[_backoffIndex]);
-                await Task.Delay(BackoffTimings[_backoffIndex], _cancellationToken);
+                _logger?.Verbose("AsynchronousBackoffPolicy - backing off for {0}ms", _backoffTimings[_backoffIndex].TotalMilliseconds);
+                await Task.Delay(_backoffTimings[_backoffIndex], _cancellationToken);
                 return true;
             }
             catch (TaskCanceledException)

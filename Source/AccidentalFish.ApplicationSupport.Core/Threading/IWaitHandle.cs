@@ -1,4 +1,6 @@
-﻿namespace AccidentalFish.ApplicationSupport.Core.Threading
+﻿using System;
+
+namespace AccidentalFish.ApplicationSupport.Core.Threading
 {
     /// <summary>
     /// Wrapper for a threading wait handle. Supplied implementation wraps a manual reset event.
@@ -11,6 +13,12 @@
         /// <param name="timeout">The maximum time to wait</param>
         /// <returns>True if the handle was set, false if the handle was not set and the timeout reached</returns>
         bool Wait(int timeout);
+        /// <summary>
+        /// Wait for the handle to be set.
+        /// </summary>
+        /// <param name="timeout">The maximum time to wait</param>
+        /// <returns>True if the handle was set, false if the handle was not set and the timeout reached</returns>
+        bool Wait(TimeSpan timeout);
         /// <summary>
         /// Reset the wait handle
         /// </summary>

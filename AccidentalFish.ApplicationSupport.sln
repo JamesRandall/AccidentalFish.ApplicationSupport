@@ -78,6 +78,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReleaseNotes", "ReleaseNote
 		ReleaseNotes\v3.1.3.md = ReleaseNotes\v3.1.3.md
 		ReleaseNotes\v3.2.0.md = ReleaseNotes\v3.2.0.md
 		ReleaseNotes\v3.2.2.md = ReleaseNotes\v3.2.2.md
+		ReleaseNotes\v3.3.0.md = ReleaseNotes\v3.3.0.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Ninject", "Source\AccidentalFish.ApplicationSupport.Ninject\AccidentalFish.ApplicationSupport.Ninject.csproj", "{14E9E435-B14A-4D85-B03F-F997854FD0D1}"
@@ -115,6 +116,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalFish.ApplicationSupport.Azure.Tests.Unit", "Tests\AccidentalFish.ApplicationSupport.Azure.Tests.Unit\AccidentalFish.ApplicationSupport.Azure.Tests.Unit.csproj", "{0306F001-2A3A-4F9E-B352-54D57CE4BA0F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackoffQueueProcessorSample", "Samples\BackoffQueueProcessorSample\BackoffQueueProcessorSample.csproj", "{66DB65EC-F919-4DB5-8959-EC9B06CBB1F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimerSample", "Samples\TimerSample\TimerSample.csproj", "{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -374,6 +377,14 @@ Global
 		{66DB65EC-F919-4DB5-8959-EC9B06CBB1F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66DB65EC-F919-4DB5-8959-EC9B06CBB1F9}.Release|x64.ActiveCfg = Release|Any CPU
 		{66DB65EC-F919-4DB5-8959-EC9B06CBB1F9}.Release|x64.Build.0 = Release|Any CPU
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}.Debug|x64.Build.0 = Debug|Any CPU
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}.Release|x64.ActiveCfg = Release|Any CPU
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -406,6 +417,7 @@ Global
 		{29097DE3-6D71-4E3C-8ABE-0D56600C0738} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
 		{0306F001-2A3A-4F9E-B352-54D57CE4BA0F} = {F127F13B-CB27-49FA-B201-E57630D8CCD8}
 		{66DB65EC-F919-4DB5-8959-EC9B06CBB1F9} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
+		{73D0C29C-5CED-47F2-8FF5-49F70E384AD8} = {C7214A7F-4365-4624-8C92-48BE40FCD969}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45
