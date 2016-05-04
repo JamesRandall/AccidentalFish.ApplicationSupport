@@ -35,7 +35,7 @@ cp .\Source\AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.Applicat
 
 if ($pushLocal)
 {
-	cp *.nupkg \LocalPackageRepository
+	cp *.nupkg \MicroserviceAnalyticPackageRepository
 }
 
 if ($pushNuget)

@@ -29,6 +29,11 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
 
         public ILargeMessageQueue<T> Create<T>(IComponentIdentity componentIdentity) where T : class
         {
+            return Create<T>(componentIdentity, null);
+        }
+
+        public ILargeMessageQueue<T> Create<T>(IComponentIdentity componentIdentity, ILargeMessageQueueErrorHandler errorHandler) where T : class
+        {
             if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
 
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
@@ -37,21 +42,34 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
             IAsynchronousQueue<LargeMessageReference> referenceQueue = _queueFactory.CreateAsynchronousQueue<LargeMessageReference>(storageAccountConnectionString, defaultQueueName);
             IAsynchronousBlockBlobRepository blobRepository = _blobRepositoryFactory.CreateAsynchronousBlockBlobRepository(storageAccountConnectionString, blobContainerName);
 
-            return Create<T>(referenceQueue, blobRepository);
+            return Create<T>(referenceQueue, blobRepository, errorHandler);
         }
 
         public ILargeMessageQueue<T> Create<T>(string connectionString, string queueName, string blobContainerName) where T : class
         {
+            return Create<T>(connectionString, queueName, blobContainerName, null);
+        }
+
+        public ILargeMessageQueue<T> Create<T>(string connectionString, string queueName, string blobContainerName, ILargeMessageQueueErrorHandler errorHandler) where T : class
+        {
             IAsynchronousQueue<LargeMessageReference> referenceQueue = _queueFactory.CreateAsynchronousQueue<LargeMessageReference>(connectionString, queueName);
             IAsynchronousBlockBlobRepository blobRepository = _blobRepositoryFactory.CreateAsynchronousBlockBlobRepository(connectionString, blobContainerName);
 
-            ILargeMessageQueue<T> queue = new LargeMessageQueue<T>(_serializer, referenceQueue, blobRepository, _logger);
+            ILargeMessageQueue<T> queue = new LargeMessageQueue<T>(_serializer, referenceQueue, blobRepository, _logger, errorHandler);
             return queue;
-        } 
+        }
 
         public ILargeMessageQueue<T> Create<T>(IAsynchronousQueue<LargeMessageReference> referenceQueue, IAsynchronousBlockBlobRepository blobRepository) where T : class
         {
-            return new LargeMessageQueue<T>(_serializer, referenceQueue, blobRepository, _logger);
+            return Create<T>(referenceQueue, blobRepository, null);
+        }
+
+        public ILargeMessageQueue<T> Create<T>(
+            IAsynchronousQueue<LargeMessageReference> referenceQueue,
+            IAsynchronousBlockBlobRepository blobRepository,
+            ILargeMessageQueueErrorHandler errorHandler) where T : class
+        {
+            return new LargeMessageQueue<T>(_serializer, referenceQueue, blobRepository, _logger, errorHandler);
         }
     }
 }

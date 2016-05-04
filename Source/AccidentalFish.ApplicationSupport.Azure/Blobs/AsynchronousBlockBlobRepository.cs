@@ -30,7 +30,9 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
             client.DefaultRequestOptions.RetryPolicy = new ExponentialRetry(TimeSpan.FromSeconds(120), 3);
             _container = client.GetContainerReference(containerName);
 
-            _endpoint = $"{client.BaseUri}{containerName}";
+            // Development storage doesn't return a '/' on the end, live storage does. 
+            _endpoint = !client.BaseUri.ToString().EndsWith("/") ? $"{client.BaseUri}/{containerName}" : $"{client.BaseUri}{containerName}";
+            
 
             _logger?.Verbose("AsynchronousBlockBlobRepository: create repository for endpoint {0}", _endpoint);
         }

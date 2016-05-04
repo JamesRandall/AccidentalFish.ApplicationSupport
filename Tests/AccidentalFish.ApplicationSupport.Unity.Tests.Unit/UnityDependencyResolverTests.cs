@@ -84,10 +84,26 @@ namespace AccidentalFish.ApplicationSupport.Unity.Tests.Unit
         }
 
         [TestMethod]
-        public void NamedRegistrationResovles()
+        public void NamedRegistrationResolves()
         {
             _resolver.Register<ITestObject, SecondTestObject>("something");
             ITestObject result = _resolver.Resolve<ITestObject>("something");
+            Assert.IsInstanceOfType(result, typeof(SecondTestObject));
+        }
+
+        [TestMethod]
+        public void TypeCanResolveRegisteredInterfaceNonGenerically()
+        {
+            _resolver.Register(typeof(ITestObject), typeof(TestObject));
+            ITestObject result = (ITestObject)_resolver.Resolve(typeof(ITestObject));
+            Assert.IsInstanceOfType(result, typeof(TestObject));
+        }
+
+        [TestMethod]
+        public void NamedRegistrationResolvesNonGenerically()
+        {
+            _resolver.Register<ITestObject, SecondTestObject>("something");
+            ITestObject result = (ITestObject)_resolver.Resolve(typeof(ITestObject), "something");
             Assert.IsInstanceOfType(result, typeof(SecondTestObject));
         }
 

@@ -100,6 +100,22 @@ namespace AccidentalFish.ApplicationSupport.Ninject.Tests.Unit
         }
 
         [TestMethod]
+        public void TypeCanResolveRegisteredInterfaceNonGenerically()
+        {
+            _resolver.Register(typeof(ITestObject), typeof(TestObject));
+            ITestObject result = (ITestObject)_resolver.Resolve(typeof(ITestObject));
+            Assert.IsInstanceOfType(result, typeof(TestObject));
+        }
+
+        [TestMethod]
+        public void NamedRegistrationResolvesNonGenerically()
+        {
+            _resolver.Register<ITestObject, SecondTestObject>("something");
+            ITestObject result = (ITestObject)_resolver.Resolve(typeof(ITestObject), "something");
+            Assert.IsInstanceOfType(result, typeof(SecondTestObject));
+        }
+
+        [TestMethod]
         public void TwoNamedRegistrationsCoexist()
         {
             _resolver.Register<ITestObject, TestObject>("something.else");

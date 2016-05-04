@@ -59,5 +59,9 @@ namespace AccidentalFish.ApplicationSupport.Autofac
         public abstract T Resolve<T>();
 
         public abstract T Resolve<T>(string name);
+
+        public abstract object Resolve(Type type);
+
+        public abstract object Resolve(Type type, string name);        
     }
 }

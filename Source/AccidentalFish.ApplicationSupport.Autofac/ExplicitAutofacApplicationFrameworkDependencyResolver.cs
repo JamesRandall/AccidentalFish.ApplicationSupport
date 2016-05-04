@@ -37,6 +37,16 @@ namespace AccidentalFish.ApplicationSupport.Autofac
             return _container.ResolveNamed<T>(name);
         }
 
+        public override object Resolve(Type type)
+        {
+            return _container.Resolve(type);
+        }
+
+        public override object Resolve(Type type, string name)
+        {
+            return _container.ResolveNamed(name, type);
+        }
+
         public IContainer Build(ContainerBuildOptions options = ContainerBuildOptions.None)
         {
             _container = Builder.Build(options);

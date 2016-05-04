@@ -64,5 +64,15 @@ namespace AccidentalFish.ApplicationSupport.Ninject
         {
             return _kernel.Get<T>(name);
         }
+
+        public object Resolve(Type type)
+        {
+            return _kernel.Get(type);
+        }
+
+        public object Resolve(Type type, string name)
+        {
+            return _kernel.Get(type, name);
+        }
     }
 }

@@ -35,7 +35,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Queues.Implementatio
         {
             // Act
             // ReSharper disable once ObjectCreationAsStatement
-            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object);
+            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object, null);
 
             // Assert
             Assert.AreEqual(_referenceQueueMock.Object, queue.ReferenceQueue);
@@ -46,7 +46,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Queues.Implementatio
         public async Task EnqueuePostsQueueAndBlob()
         {
             // Arrange
-            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object);
+            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object, null);
             var item = new TestQueueItem {Name = "Zaphod"};
             var mockBlob = new Mock<IBlob>();
             string blobName = null;
@@ -69,7 +69,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Queues.Implementatio
         public async Task EnqueuePostsQueueAndBlobWithVisibilityDelay()
         {
             // Arrange
-            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object);
+            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object, null);
             var item = new TestQueueItem { Name = "Zaphod" };
             var mockBlob = new Mock<IBlob>();
             string blobName = null;
@@ -93,7 +93,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Queues.Implementatio
         public async Task ExtendLeaseWithDelayCallsReferenceQueue()
         {
             // Arrange
-            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object);
+            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object, null);
             var item = new TestQueueItem { Name = "Zaphod" };
             var timespan = TimeSpan.FromSeconds(30);
             var underlyingQueueItem = new Mock<IQueueItem<LargeMessageReference>>();
@@ -110,7 +110,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Queues.Implementatio
         public async Task ExtendLeaseCallsReferenceQueue()
         {
             // Arrange
-            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object);
+            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object, null);
             var item = new TestQueueItem { Name = "Zaphod" };
             var underlyingQueueItem = new Mock<IQueueItem<LargeMessageReference>>();
             var queueItem = new LargeMessageQueueItem<TestQueueItem>(item, 1, underlyingQueueItem.Object);
@@ -129,7 +129,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Queues.Implementatio
             var didDeque = false;
             var blob = new Mock<IBlob>();
             _blobRepository.Setup(x => x.Get("hello")).Returns(blob.Object);
-            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object);
+            var queue = new LargeMessageQueue<TestQueueItem>(_queueSerializerMock.Object, _referenceQueueMock.Object, _blobRepository.Object, _loggerMock.Object, null);
             var item = new TestQueueItem { Name = "Zaphod" };
             var reference = new LargeMessageReference {BlobReference = "hello"};
             //var referenceQueueItem = new Mock<IQueueItem>();

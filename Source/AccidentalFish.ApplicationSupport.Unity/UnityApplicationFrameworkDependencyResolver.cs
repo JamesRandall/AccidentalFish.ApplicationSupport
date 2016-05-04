@@ -57,5 +57,15 @@ namespace AccidentalFish.ApplicationSupport.Unity
         {
             return _container.Resolve<T>(name);
         }
+
+        public object Resolve(Type type)
+        {
+            return _container.Resolve(type);
+        }
+
+        public object Resolve(Type type, string name)
+        {
+            return _container.Resolve(type, name);
+        }
     }
 }

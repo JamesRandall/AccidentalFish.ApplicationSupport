@@ -15,17 +15,20 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
         private readonly IAsynchronousQueue<LargeMessageReference> _referenceQueue;
         private readonly IAsynchronousBlockBlobRepository _blobRepository;
         private readonly ICoreAssemblyLogger _logger;
+        private readonly ILargeMessageQueueErrorHandler _errorHandler;
 
         public LargeMessageQueue(
             IQueueSerializer serializer,
             IAsynchronousQueue<LargeMessageReference> referenceQueue,
             IAsynchronousBlockBlobRepository blobRepository,
-            ICoreAssemblyLogger logger)
+            ICoreAssemblyLogger logger,
+            ILargeMessageQueueErrorHandler errorHandler)
         {
             _serializer = serializer;
             _referenceQueue = referenceQueue;
             _blobRepository = blobRepository;
             _logger = logger;
+            _errorHandler = errorHandler;
 
             _logger.Verbose("LargeMessageQueue<T>: constructing");
         }
@@ -71,6 +74,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
                     catch (Exception ex)
                     {
                         _logger.Verbose("LargeMessageQueue<T>: DequeueAsync - unable to download blob {0}", message.Item.BlobReference);
+                        if (_errorHandler != null)
+                        {
+                            return await _errorHandler.UnableToDownloadBlobAsync(ex, message);
+                        }
                         throw new LargeMessageQueueException("Unable to download blob", ex, message);
                     }
                     
@@ -87,6 +94,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
                         catch (Exception ex)
                         {
                             _logger.Verbose("LargeMessageQueue<T>: DequeueAsync - unable to delete blob reference {0}", message.Item.BlobReference);
+                            if (_errorHandler != null)
+                            {
+                                return await _errorHandler.UnableToDeleteBlobAsync(ex, message);
+                            }
                             throw new LargeMessageQueueException("Unable to delete blob, abandoning queue item", ex, message);
                         }
                     }

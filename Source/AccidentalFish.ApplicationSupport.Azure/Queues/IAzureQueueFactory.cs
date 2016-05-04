@@ -7,6 +7,6 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         IQueue<T> CreateBrokeredMessageQueue<T>(string queueName) where T : class;
         IQueue<T> CreateBrokeredMessageQueue<T>(string storageAccountConnectionString, string queueName) where T : class;
         IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string queueName) where T : class;
-        IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string storageAccountConnectionString, string queueName) where T : class;
+        IAsynchronousQueue<T> CreateAsynchronousBrokeredMessageQueue<T>(string storageAccountConnectionString, string queueName) where T : class;        
     }
 }

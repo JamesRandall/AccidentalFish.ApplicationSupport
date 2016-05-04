@@ -114,6 +114,7 @@
     <Compile Include="Policies\Implementation\NotSupportedLeaseManagerFactory.cs" />
     <Compile Include="Policies\Implementation\TimerFactory.cs" />
     <Compile Include="Queues\ILargeMessageQueue.cs" />
+    <Compile Include="Queues\ILargeMessageQueueErrorHandler.cs" />
     <Compile Include="Queues\ILargeMessageQueueFactory.cs" />
     <Compile Include="Queues\Implementation\LargeMessageQueue.cs" />
     <Compile Include="Queues\Implementation\LargeMessageQueueFactory.cs" />
