@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AccidentalFish.ApplicationSupport.Powershell</id>
-    <version>3.4.0</version>
+    <version>3.5.0</version>
     <title>AccidentalFish Application Support Powershell Cmdlets</title>
     <authors>James Randall</authors>
     <owners>James Randall</owners>
@@ -11,7 +11,7 @@
     <iconUrl>http://www.accidentalfish.com/nugetidentity.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Powershell cmdlets for application configuration and resource creation.</description>
-    <releaseNotes>See v3.3.0.md for release details</releaseNotes>
+    <releaseNotes>See v3.5.0.md for release details</releaseNotes>
     <copyright>Copyright 2015 Accidental Fish Ltd.</copyright>
     <tags>azure paas application framework table sql queue deployment configuration powershell cmdlet</tags>
   </metadata>

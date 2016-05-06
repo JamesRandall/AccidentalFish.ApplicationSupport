@@ -8,9 +8,14 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
     public class ComponentConfiguration
     {
         /// <summary>
-        /// Name of the component (used to instantiate it using the IComponentFactory)
+        /// Name of the component. If no factory is specified this will be used to instantiate the name via the IComponentFactory
         /// </summary>
         public IComponentIdentity ComponentIdentity { get; set; }
+
+        /// <summary>
+        /// If this is specified then the supplied factory will be used to instantiate the component
+        /// </summary>
+        public Func<IHostableComponent> Factory { get; set; }
 
         /// <summary>
         /// Number of instances to run in parallel

@@ -37,7 +37,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                     $"Starting {componentConfiguration.Instances} instances of {componentConfiguration.ComponentIdentity}");
                 for (int instance = 0; instance < componentConfiguration.Instances; instance++)
                 {
-                    tasks.Add(StartTask(componentConfiguration.ComponentIdentity, componentConfiguration.RestartEvaluator));
+                    tasks.Add(StartTask(componentConfiguration.ComponentIdentity, componentConfiguration.Factory, componentConfiguration.RestartEvaluator));
                 }
             }
             return tasks;
@@ -48,7 +48,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
             _cancellationTokenSource.Cancel();
         }
 
-        private Task StartTask(IComponentIdentity componentIdentity, Func<Exception, int, bool> restartEvaluator)
+        private Task StartTask(IComponentIdentity componentIdentity, Func<IHostableComponent> factory, Func<Exception, int, bool> restartEvaluator)
         {
             return Task.Run(async () =>
             {
@@ -60,8 +60,33 @@ namespace AccidentalFish.ApplicationSupport.Core.Runtime.Implementation
                     {
                         await Task.Run(async () =>
                         {
-                            _logger?.Verbose($"Hostable component {componentIdentity} is starting");
-                            IHostableComponent component = _componentFactory.Create(componentIdentity);
+                            IHostableComponent component;
+                            if (factory == null)
+                            {
+                                _logger?.Verbose($"Creating component {componentIdentity} with IComponentFactory");
+                                component = _componentFactory.Create(componentIdentity);
+                                _logger?.Verbose($"Hostable component {componentIdentity} is starting");
+                            }
+                            else
+                            {
+                                if (componentIdentity != null)
+                                {
+                                    _logger?.Verbose($"Creating component {componentIdentity} with supplied factory");
+                                }
+                                else
+                                {
+                                    _logger?.Verbose($"Creating unnamed component with supplied factory");
+                                }
+                                component = factory();
+                                if (componentIdentity != null)
+                                {
+                                    _logger?.Verbose($"Starting hostable component {componentIdentity}");
+                                }
+                                else
+                                {
+                                    _logger?.Verbose($"Starting unnamed hostable component with supplied factory");
+                                }
+                            }                            
                             await component.StartAsync(_cancellationTokenSource.Token);
                             shouldRetry = false; // normal exit
                             _logger?.Verbose($"Hostable component {componentIdentity} is exiting");
