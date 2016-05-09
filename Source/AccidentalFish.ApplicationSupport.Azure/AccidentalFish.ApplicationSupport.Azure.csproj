@@ -132,6 +132,7 @@
     <Compile Include="Blobs\BlobRepositoryFactory.cs" />
     <Compile Include="Blobs\BlockBlob.cs" />
     <Compile Include="Blobs\IAsynchronousBlockBlobRepositoryExtensions.cs" />
+    <Compile Include="Blobs\IBlobExtensions.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\IAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\Implementation\AzureApplicationResourceFactory.cs" />

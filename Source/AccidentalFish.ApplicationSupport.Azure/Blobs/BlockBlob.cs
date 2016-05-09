@@ -26,6 +26,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
             _logger = logger;
         }
 
+        internal CloudBlockBlob CloudBlockBlob => _blockBlob;
+
         public async Task<string> DownloadStringAsync()
         {
             _logger?.Verbose("BlockBlob: DownloadStringAsync - attempting download of {0}", _name);
