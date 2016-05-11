@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.Logging;
 using AccidentalFish.ApplicationSupport.Core.Blobs;
@@ -59,6 +61,34 @@ namespace AccidentalFish.ApplicationSupport.Azure.Blobs
         {
             CloudBlockBlob blob = _container.GetBlockBlobReference(name);
             return new BlockBlob(blob, name, _logger);
+        }
+
+        public async Task<IReadOnlyCollection<IBlob>> ListAsync()
+        {
+            BlobContinuationToken continuationToken = null;
+            List<IBlob> results = new List<IBlob>();
+            do
+            {
+                var response = await _container.ListBlobsSegmentedAsync(continuationToken);
+                continuationToken = response.ContinuationToken;
+                results.AddRange(response.Results.Select(x => new BlockBlob(x as CloudBlockBlob, Path.GetFileName(x.Uri.LocalPath), _logger)));
+            }
+            while (continuationToken != null);
+            return results;
+        }
+
+        public async Task<IReadOnlyCollection<IBlob>> ListAsync(string prefix)
+        {
+            BlobContinuationToken continuationToken = null;
+            List<IBlob> results = new List<IBlob>();
+            do
+            {
+                var response = await _container.ListBlobsSegmentedAsync(prefix, continuationToken);
+                continuationToken = response.ContinuationToken;
+                results.AddRange(response.Results.Select(x => new BlockBlob(x as CloudBlockBlob, Path.GetFileName(x.Uri.LocalPath), _logger)));
+            }
+            while (continuationToken != null);
+            return results;
         }
 
         public string Endpoint => _endpoint;

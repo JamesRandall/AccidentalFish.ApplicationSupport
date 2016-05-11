@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -26,5 +27,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Blobs
         /// The endpoint of the blob container
         /// </summary>
         string Endpoint { get; }
+        /// <summary>
+        /// Returns a list of all blobs in the container
+        /// </summary>
+        Task<IReadOnlyCollection<IBlob>> ListAsync();
+        /// <summary>
+        /// Returns a list of all blobs in the container prefixed with the prefix parameter
+        /// </summary>
+        Task<IReadOnlyCollection<IBlob>> ListAsync(string prefix);
     }
 }
