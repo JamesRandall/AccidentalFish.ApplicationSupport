@@ -14,12 +14,32 @@ namespace AccidentalFish.ApplicationSupport.Core.Queues.Implementation
             throw new NotImplementedException();
         }
 
+        public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string storageAccountConnectionString, string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
         public IQueue<T> CreateQueue<T>(string queueName) where T : class
         {
             throw new NotImplementedException();
         }
 
         public IQueue<T> CreateQueue<T>(string storageAccountConnectionString, string queueName) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueue<T> CreateQueue<T>(string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueue<T> CreateQueue<T>(string storageAccountConnectionString, string queueName, IQueueSerializer queueSerializer) where T : class
         {
             throw new NotImplementedException();
         }

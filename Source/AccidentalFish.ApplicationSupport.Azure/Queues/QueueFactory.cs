@@ -32,6 +32,26 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             return new AsynchronousQueue<T>(_queueSerializer, storageAccountConnectionString, queueName, _logger);
         }
 
+        public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            return new AsynchronousQueue<T>(queueSerializer, _configuration.StorageAccountConnectionString, queueName, _logger);
+        }
+
+        public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string storageAccountConnectionString, string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            return new AsynchronousQueue<T>(queueSerializer, storageAccountConnectionString, queueName, _logger);
+        }
+
+        public IQueue<T> CreateQueue<T>(string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            return new StorageQueue<T>(queueSerializer, _configuration.StorageAccountConnectionString, queueName, _logger);
+        }
+
+        public IQueue<T> CreateQueue<T>(string storageAccountConnectionString, string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            return new StorageQueue<T>(queueSerializer, storageAccountConnectionString, queueName, _logger);
+        }
+
         public IQueue<T> CreateQueue<T>(string queueName) where T : class
         {
             return new StorageQueue<T>(_queueSerializer, _configuration.StorageAccountConnectionString, queueName, _logger);

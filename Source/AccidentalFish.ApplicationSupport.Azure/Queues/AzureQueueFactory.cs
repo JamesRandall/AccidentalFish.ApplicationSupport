@@ -35,6 +35,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
             return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queueName);
         }
 
+        public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            return _queueFactory.CreateAsynchronousQueue<T>(queueName, queueSerializer);
+        }
+
+        public IAsynchronousQueue<T> CreateAsynchronousQueue<T>(string storageAccountConnectionString, string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queueName, queueSerializer);
+        }
+
         public IQueue<T> CreateQueue<T>(string queueName) where T : class
         {
             return _queueFactory.CreateQueue<T>(queueName);
@@ -43,6 +53,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.Queues
         public IQueue<T> CreateQueue<T>(string storageAccountConnectionString, string queueName) where T : class
         {
             return _queueFactory.CreateQueue<T>(storageAccountConnectionString, queueName);
+        }
+
+        public IQueue<T> CreateQueue<T>(string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            return _queueFactory.CreateQueue<T>(queueName, queueSerializer);
+        }
+
+        public IQueue<T> CreateQueue<T>(string storageAccountConnectionString, string queueName, IQueueSerializer queueSerializer) where T : class
+        {
+            return _queueFactory.CreateQueue<T>(storageAccountConnectionString, queueName, queueSerializer);
         }
 
         public IAsynchronousTopic<T> CreateAsynchronousTopic<T>(string topicName) where T : class
