@@ -55,6 +55,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
             return _applicationResourceFactory.GetAsyncQueue<T>(queuename, componentIdentity);
         }
 
+        public IAsynchronousQueue<T> GetAsyncQueue<T>(IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class
+        {
+            return _applicationResourceFactory.GetAsyncQueue<T>(componentIdentity, queueSerializer);
+        }
+
+        public IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class
+        {
+            return _applicationResourceFactory.GetAsyncQueue<T>(queuename, componentIdentity, queueSerializer);
+        }
+
         public IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetQueue<T>(componentIdentity);
@@ -63,6 +73,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.Components.Implementation
         public IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class
         {
             return _applicationResourceFactory.GetQueue<T>(queuename, componentIdentity);
+        }
+
+        public IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class
+        {
+            return _applicationResourceFactory.GetQueue<T>(componentIdentity, queueSerializer);
+        }
+
+        public IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class
+        {
+            return _applicationResourceFactory.GetQueue<T>(queuename, componentIdentity, queueSerializer);
         }
 
         public IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class

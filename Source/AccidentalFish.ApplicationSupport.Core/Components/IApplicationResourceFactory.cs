@@ -52,6 +52,25 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
 
         /// <summary>
+        /// Get an asynchronous queue implementation for the given component using the default queue name
+        /// </summary>
+        /// <typeparam name="T">The type of the queue items</typeparam>
+        /// <param name="componentIdentity">The name of the component the queue is for</param>
+        /// <param name="queueSerializer">Custom queue serializer</param>
+        /// <returns>A queue</returns>
+        IAsynchronousQueue<T> GetAsyncQueue<T>(IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class;
+
+        /// <summary>
+        /// Get an asynchronous queue implementation for the given component
+        /// </summary>
+        /// <typeparam name="T">The type of the queue items</typeparam>
+        /// <param name="queuename">The name of the queue</param>
+        /// <param name="componentIdentity">The name of the component the queue is for</param>
+        /// <param name="queueSerializer">Custom queue serializer</param>
+        /// <returns>A queue</returns>
+        IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class;
+
+        /// <summary>
         /// Get a queue implementation for the given component using the default queue name
         /// </summary>
         /// <typeparam name="T">The type of the queue items</typeparam>
@@ -67,6 +86,25 @@ namespace AccidentalFish.ApplicationSupport.Core.Components
         /// <param name="componentIdentity">The name of the component the queue is for</param>
         /// <returns>A queue</returns>
         IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity) where T : class;
+
+        /// <summary>
+        /// Get a queue implementation for the given component using the default queue name
+        /// </summary>
+        /// <typeparam name="T">The type of the queue items</typeparam>
+        /// <param name="componentIdentity">The name of the component the queue is for</param>
+        /// <param name="queueSerializer">Custom queue serializer</param>
+        /// <returns>A queue</returns>
+        IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class;
+
+        /// <summary>
+        /// Get a queue implementation for the given component
+        /// </summary>
+        /// <typeparam name="T">The type of the queue items</typeparam>
+        /// <param name="queuename">The name of the queue</param>
+        /// <param name="componentIdentity">The name of the component the queue is for</param>
+        /// <param name="queueSerializer">Custom queue serializer</param>
+        /// <returns>A queue</returns>
+        IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class;
 
         /// <summary>
         /// Get an asynchronous topic for a component using the default topic name

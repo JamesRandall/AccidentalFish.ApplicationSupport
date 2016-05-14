@@ -92,7 +92,26 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
             return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queuename);
         }
 
-        
+        public IAsynchronousQueue<T> GetAsyncQueue<T>(IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncQueue - {0}", componentIdentity);
+
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            string defaultQueueName = _applicationResourceSettingProvider.DefaultQueueName(componentIdentity);
+            return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, defaultQueueName, queueSerializer);
+        }
+
+        public IAsynchronousQueue<T> GetAsyncQueue<T>(string queuename, IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetAsyncQueue - {0},{1}", queuename, componentIdentity);
+
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            return _queueFactory.CreateAsynchronousQueue<T>(storageAccountConnectionString, queuename, queueSerializer);
+        }
 
         public IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity) where T : class
         {
@@ -113,6 +132,27 @@ namespace AccidentalFish.ApplicationSupport.Core.Components.Implementation
 
             string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
             return _queueFactory.CreateQueue<T>(storageAccountConnectionString, queuename);
+        }
+
+        public IQueue<T> GetQueue<T>(IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetQueue - {0}", componentIdentity);
+
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            string defaultQueueName = _applicationResourceSettingProvider.DefaultQueueName(componentIdentity);
+            return _queueFactory.CreateQueue<T>(storageAccountConnectionString, defaultQueueName, queueSerializer);
+        }
+
+        public IQueue<T> GetQueue<T>(string queuename, IComponentIdentity componentIdentity, IQueueSerializer queueSerializer) where T : class
+        {
+            if (componentIdentity == null) throw new ArgumentNullException(nameof(componentIdentity));
+
+            _logger?.Verbose("ApplicationResourceFactory - GetQueue - {0},{1}", queuename, componentIdentity);
+
+            string storageAccountConnectionString = _applicationResourceSettingProvider.StorageAccountConnectionString(componentIdentity);
+            return _queueFactory.CreateQueue<T>(storageAccountConnectionString, queuename, queueSerializer);
         }
 
         public IAsynchronousTopic<T> GetAsyncTopic<T>(IComponentIdentity componentIdentity) where T : class
