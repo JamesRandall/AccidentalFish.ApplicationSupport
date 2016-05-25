@@ -45,36 +45,66 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         public List<ApplicationComponent> ApplicationComponents { get; set; }
 
         /// <summary>
+        /// Secrets associated with this configuration
+        /// </summary>
+        public IReadOnlyCollection<string> Secrets { get; set; }
+
+        /// <summary>
         /// Loads the application configuration from an XML file
         /// </summary>
         /// <param name="filename">The filename</param>
         /// <param name="settings">An optional settings file</param>
         /// <param name="checkForMissingSettings">If set to true then any missing settings generate an exception</param>
         /// <returns></returns>
-        public static ApplicationConfiguration FromFile(string filename, ApplicationConfigurationSettings settings, bool checkForMissingSettings)
+        public static ApplicationConfiguration FromFile(string filename, ApplicationConfigurationSettings settings,
+            bool checkForMissingSettings)
         {
-            ApplicationConfiguration configuration = new ApplicationConfiguration();
             XDocument document;
             using (StreamReader reader = new StreamReader(filename))
             {
-                if (settings != null)
-                {
-                    string processedXml = settings.Merge(reader);
+                document = XDocument.Load(reader);
+            }
+            return FromXDocument(document, settings, checkForMissingSettings);
+        }
 
-                    if (checkForMissingSettings)
+        /// <summary>
+        /// Loads the application configuration from an XML document
+        /// </summary>
+        /// <param name="document">The document</param>
+        /// <param name="settings">An optional settings file</param>
+        /// <param name="checkForMissingSettings">If set to true then any missing settings generate an exception</param>
+        /// <returns>An application configuration</returns>
+        public static ApplicationConfiguration FromXDocument(XDocument document, ApplicationConfigurationSettings settings, bool checkForMissingSettings)
+        {
+            HashSet<string> secrets = new HashSet<string>();
+
+            ApplicationConfiguration configuration = new ApplicationConfiguration();
+            IEnumerable<XElement> allDescendants = document.Descendants();
+            Regex settingPattern = new Regex(@"(?:\{\{)([^}]*)(?:\}\})");
+            foreach (XElement element in allDescendants)
+            {
+                if (!element.HasElements)
+                {
+                    Match match = settingPattern.Match(element.Value);
+                    string value = element.Value;
+                    bool containsSecret = false;
+                    while (match.Success)
                     {
-                        Regex settingPattern = new Regex(@"(?<!\{)\{\{(?!\{).*(?<!\})\}\}(?!\})");
-                        if (settingPattern.Match(processedXml).Success)
+                        string settingName = match.Groups[1].Value;
+                        ApplicationConfigurationSetting setting;
+                        if (!settings.Settings.TryGetValue(settingName, out setting))
                         {
                             throw new MissingSettingException();
                         }
+                        containsSecret |= setting.IsSecret;
+                        value = value.Replace($"{{{{{settingName}}}}}", setting.Value);
+                        match = match.NextMatch();
                     }
-
-                    document = XDocument.Parse(processedXml);
-                }
-                else
-                {
-                    document = XDocument.Load(reader);
+                    element.Value = value;
+                    if (containsSecret)
+                    {
+                        secrets.Add(value);
+                    }
                 }
             }
 
@@ -206,6 +236,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
 
                 configuration.ApplicationComponents.Add(component);
             });
+
+            configuration.Secrets = secrets.ToList();
 
             return configuration;
         }

@@ -84,6 +84,7 @@
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
     <Compile Include="Components\MissingComponentIdentityException.cs" />
+    <Compile Include="Configuration\ApplicationConfigurationSetting.cs" />
     <Compile Include="Configuration\ApplicationCorsRule.cs" />
     <Compile Include="Configuration\ApplicationStorageAccount.cs" />
     <Compile Include="Configuration\BlobContainerPublicAccessTypeEnum.cs" />

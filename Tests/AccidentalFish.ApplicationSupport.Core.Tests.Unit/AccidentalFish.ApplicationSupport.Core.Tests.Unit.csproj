@@ -92,6 +92,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ApplicationConfigurationTests.cs" />
     <Compile Include="Logging\Implementation\LoggerTests.cs" />
     <Compile Include="Policies\Implementation\AsynchronousIntervalTimerTests.cs" />
     <Compile Include="Policies\Implementation\AsynchronousRegularTimerTests.cs" />
@@ -122,6 +123,11 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\configuration.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

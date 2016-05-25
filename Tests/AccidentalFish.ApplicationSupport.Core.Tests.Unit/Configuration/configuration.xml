@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<application-configuration>
+  <!-- The system section contains your infrastructure configuration information and your deployment specifc secrets -->
+  <!-- In general these are pulled out into settings files -->
+  <infrastructure>
+    <service-bus>
+      <fqn>accidentalfish.samples.topicsandsubscriptions.servicebus</fqn>
+      <connection-string>{{service-bus-connection-string}}</connection-string>
+    </service-bus>
+  </infrastructure>
+  
+  <!-- the components section describes how the application makes use of the infrastructure - in general this should not be edited -->
+  <component fqn="accidentalfish.samples.topicsandsubscriptions.processor">
+    <service-bus>accidentalfish.samples.topicsandsubscriptions.servicebus</service-bus>
+    <default-topic-name>mytopic</default-topic-name>
+    <default-subscription-name>demosubscription</default-subscription-name>
+    <settings>
+      <somesetting>{{this}} is a {{message}}</somesetting>
+    </settings>
+  </component>
+</application-configuration>

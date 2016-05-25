@@ -4,6 +4,7 @@ using System.IO;
 using System.Management.Automation;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers;
+using AccidentalFish.ApplicationSupport.Powershell.SecretStore;
 
 namespace AccidentalFish.ApplicationSupport.Powershell
 {
@@ -21,7 +22,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
         [Parameter(HelpMessage = "The application configuration file", Mandatory = true)]
         public string Configuration { get; set; }
 
-        [Parameter(HelpMessage = "The application settings file to update - this can be a .cscfg, a .csdef or a .config file.", Mandatory = true)]
+        [Parameter(HelpMessage = "The application settings file to update - this can be a .cscfg, a .csdef or a .config file.", Mandatory = false)]
         public string Target { get; set; }
 
         [Parameter(HelpMessage = "Optional settings file(s). If more than one file is specified they are combined.", Mandatory = false)]
@@ -29,6 +30,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
 
         [Parameter(HelpMessage = "Defaults to false, if set to true then an exception will be thrown if a setting is required in a configuration file but not supplied", Mandatory = false)]
         public bool CheckForMissingSettings { get; set; }
+
 
         protected override void ProcessRecord()
         {
@@ -44,15 +46,17 @@ namespace AccidentalFish.ApplicationSupport.Powershell
             ApplicationConfigurationSettings settings = Settings != null && Settings.Length > 0 ? ApplicationConfigurationSettings.FromFiles(Settings) :null;
             ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings, CheckForMissingSettings);
 
-            string extension = Path.GetExtension(Target).ToLower();
-            Type configurationApplierType;
-            if (!FileProcessors.TryGetValue(extension, out configurationApplierType))
+            if (!string.IsNullOrWhiteSpace(Target))
             {
-                throw new InvalidOperationException("File extension not recognized");
-            }
-
-            IConfigurationApplier configurationApplier = (IConfigurationApplier)Activator.CreateInstance(configurationApplierType);
-            configurationApplier.Apply(configuration, settings, Target);
+                string extension = Path.GetExtension(Target).ToLower();
+                Type configurationApplierType;
+                if (!FileProcessors.TryGetValue(extension, out configurationApplierType))
+                {
+                    throw new InvalidOperationException("File extension not recognized");
+                }
+                IConfigurationApplier configurationApplier = (IConfigurationApplier)Activator.CreateInstance(configurationApplierType);
+                configurationApplier.Apply(configuration, settings, Target);
+            }            
         }
     }
 }

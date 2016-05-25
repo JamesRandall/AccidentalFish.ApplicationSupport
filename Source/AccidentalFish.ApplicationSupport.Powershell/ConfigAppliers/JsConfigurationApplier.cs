@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
+using AccidentalFish.ApplicationSupport.Powershell.SecretStore;
 
 namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
 {
@@ -14,9 +15,9 @@ namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
                 contents = reader.ReadToEnd();
             }
 
-            foreach (KeyValuePair<string, string> setting in settings.Settings)
+            foreach (KeyValuePair<string, ApplicationConfigurationSetting> setting in settings.Settings)
             {
-                contents = contents.Replace("{{" + setting.Key + "}}", setting.Value);
+                contents = contents.Replace("{{" + setting.Key + "}}", setting.Value.Value);
             }
 
             using (StreamWriter writer = new StreamWriter(targetFile, false))
