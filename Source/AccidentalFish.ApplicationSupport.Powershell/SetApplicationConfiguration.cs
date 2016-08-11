@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers;
 using AccidentalFish.ApplicationSupport.Powershell.SecretStore;
@@ -9,7 +10,7 @@ using AccidentalFish.ApplicationSupport.Powershell.SecretStore;
 namespace AccidentalFish.ApplicationSupport.Powershell
 {
     [Cmdlet(VerbsCommon.Set, "ApplicationConfiguration")]
-    public class SetApplicationConfiguration : PSCmdlet
+    public class SetApplicationConfiguration : AsyncPSCmdlet
     {
         private static readonly Dictionary<string, Type> FileProcessors = new Dictionary<string, Type>()
         {
@@ -32,7 +33,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
         public bool CheckForMissingSettings { get; set; }
 
 
-        protected override void ProcessRecord()
+        protected override async Task ProcessRecordAsync()
         {
             if (!File.Exists(Configuration))
             {
@@ -44,7 +45,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
             }
 
             ApplicationConfigurationSettings settings = Settings != null && Settings.Length > 0 ? ApplicationConfigurationSettings.FromFiles(Settings) :null;
-            ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings, CheckForMissingSettings);
+            ApplicationConfiguration configuration = await ApplicationConfiguration.FromFileAsync(Configuration, settings, CheckForMissingSettings);
 
             if (!string.IsNullOrWhiteSpace(Target))
             {

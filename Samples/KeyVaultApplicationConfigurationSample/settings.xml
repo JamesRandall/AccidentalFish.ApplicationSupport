@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+  <setting key="service-bus-connection-string" is-secret="true">Endpoint=sb://afappsupport.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=KREKdiBl4ia8dE3JttrVoTiStKqvC6HK2FBkcrzhL6Q=</setting>
+</settings>

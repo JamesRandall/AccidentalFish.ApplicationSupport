@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using AccidentalFish.ApplicationSupport.Core.Components;
 
 namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
@@ -55,16 +57,18 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         /// <param name="filename">The filename</param>
         /// <param name="settings">An optional settings file</param>
         /// <param name="checkForMissingSettings">If set to true then any missing settings generate an exception</param>
+        /// <param name="applicationSecretStore">Optional secret store to use in addition to the settings</param>
+        /// <param name="verboseLogger">Optional verbose logger</param>
         /// <returns></returns>
-        public static ApplicationConfiguration FromFile(string filename, ApplicationConfigurationSettings settings,
-            bool checkForMissingSettings)
+        public static async Task<ApplicationConfiguration> FromFileAsync(string filename, ApplicationConfigurationSettings settings,
+            bool checkForMissingSettings, IConfiguration applicationSecretStore=null, Action<string> verboseLogger = null)
         {
             XDocument document;
             using (StreamReader reader = new StreamReader(filename))
             {
                 document = XDocument.Load(reader);
             }
-            return FromXDocument(document, settings, checkForMissingSettings);
+            return await FromXDocumentAsync(document, settings, checkForMissingSettings, applicationSecretStore, verboseLogger);
         }
 
         /// <summary>
@@ -73,12 +77,18 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         /// <param name="document">The document</param>
         /// <param name="settings">An optional settings file</param>
         /// <param name="checkForMissingSettings">If set to true then any missing settings generate an exception</param>
+        /// <param name="applicationSecretStore">Optional secret store to use in addition to the settings</param>
+        /// <param name="verboseLogger">Optional verbose logger</param>
         /// <returns>An application configuration</returns>
-        public static ApplicationConfiguration FromXDocument(XDocument document, ApplicationConfigurationSettings settings, bool checkForMissingSettings)
+        public static async Task<ApplicationConfiguration> FromXDocumentAsync(XDocument document, ApplicationConfigurationSettings settings,
+            bool checkForMissingSettings, IConfiguration applicationSecretStore = null, Action<string> verboseLogger = null)
         {
+            if (document.Root == null) return null;
             HashSet<string> secrets = new HashSet<string>();
-
+            
+            verboseLogger?.Invoke("Processing settings");
             ApplicationConfiguration configuration = new ApplicationConfiguration();
+            IApplicationResourceSettingNameProvider nameProvider = new ApplicationResourceSettingNameProvider();
             IEnumerable<XElement> allDescendants = document.Descendants();
             Regex settingPattern = new Regex(@"(?:\{\{)([^}]*)(?:\}\})");
             foreach (XElement element in allDescendants)
@@ -92,12 +102,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     {
                         string settingName = match.Groups[1].Value;
                         ApplicationConfigurationSetting setting;
-                        if (!settings.Settings.TryGetValue(settingName, out setting))
+                        if (!settings.Settings.TryGetValue(settingName, out setting) && checkForMissingSettings)
                         {
                             throw new MissingSettingException();
                         }
-                        containsSecret |= setting.IsSecret;
-                        value = value.Replace($"{{{{{settingName}}}}}", setting.Value);
+                        if (setting != null)
+                        {
+                            containsSecret |= setting.IsSecret;
+                            value = value.Replace($"{{{{{settingName}}}}}", setting.Value);
+                        }
                         match = match.NextMatch();
                     }
                     element.Value = value;
@@ -107,8 +120,6 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     }
                 }
             }
-
-            if (document.Root == null) return null;
             
             document.Root.XPathSelectElements("infrastructure/sql-server").ToList().ForEach(element =>
             {
@@ -136,12 +147,15 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 }
             });
 
-            document.Root.Elements("component").ToList().ForEach(element =>
+            foreach (XElement element in document.Root.Elements("component").ToList())
             {
                 ApplicationComponent component = new ApplicationComponent
                 {
                     Fqn = element.Attribute("fqn").Value
                 };
+                IComponentIdentity componentIdentity = new ComponentIdentity(component.Fqn);
+                verboseLogger?.Invoke($"Parsing component {componentIdentity}");
+
                 XElement sqlServerElement = element.Element("sql-server");
                 XElement storageElement = element.Element("storage-account");
                 XElement serviceBusElement = element.Element("service-bus");
@@ -157,11 +171,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 XElement settingsElement = element.Element("settings");
                 XAttribute defaultBlobContainerAccessAttribute = defaultBlobContainerNameElement?.Attribute("public-permission");
 
+                
                 if (sqlServerElement != null)
                 {
                     try
                     {
-                        component.SqlServerConnectionString = configuration.SqlServerConnectionStrings[sqlServerElement.Value]; component.SqlServerConnectionString = configuration.SqlServerConnectionStrings[sqlServerElement.Value];
+                        string secret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.SqlConnectionString(componentIdentity)) : null;
+                        component.SqlServerConnectionString = secret ?? configuration.SqlServerConnectionStrings[sqlServerElement.Value];
                     }
                     catch (KeyNotFoundException)
                     {
@@ -173,7 +189,8 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 {
                     try
                     {
-                        component.StorageAccountConnectionString = configuration.StorageAccounts[storageElement.Value].ConnectionString;
+                        string secret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.StorageAccountConnectionString(componentIdentity)) : null;
+                        component.StorageAccountConnectionString = secret ?? configuration.StorageAccounts[storageElement.Value].ConnectionString;
                     }
                     catch (Exception)
                     {
@@ -184,7 +201,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 {
                     try
                     {
-                        component.ServiceBusConnectionString = configuration.ServiceBusConnectionStrings[serviceBusElement.Value];
+                        verboseLogger?.Invoke($"Looking for service bus connection string for component {componentIdentity}");
+                        string secret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.ServiceBusConnectionString(componentIdentity)) : null;                        
+                        if (secret != null)
+                        {
+                            verboseLogger?.Invoke($"Using secret store service bus connection string for component {componentIdentity}");
+                        }
+                        component.ServiceBusConnectionString = secret ?? configuration.ServiceBusConnectionStrings[serviceBusElement.Value];
                     }
                     catch (Exception)
                     {
@@ -192,15 +215,62 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     }
                 }
 
-                component.DbContextType = dbContextTypeElement?.Value;
-                component.DefaultBlobContainerName = defaultBlobContainerNameElement?.Value;
-                component.DefaultQueueName = defaultQueueNameElement?.Value;
-                component.DefaultTableName = defaultTableNameElement?.Value;
+                verboseLogger?.Invoke("1");
+
+                string name = nameProvider.SqlContextType(componentIdentity);
+                verboseLogger?.Invoke(name);
+                string dbContextTypeSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(name) : null;
+                verboseLogger?.Invoke("1.1");
+                if (!string.IsNullOrWhiteSpace(dbContextTypeSecret)) verboseLogger?.Invoke($"Using secret store for dbContextType for component {componentIdentity}");
+                verboseLogger?.Invoke("1.2");
+                component.DbContextType = dbContextTypeSecret ?? dbContextTypeElement?.Value;
+
+                verboseLogger?.Invoke("2");
+
+                string defaultBlobContainerNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultBlobContainerName(componentIdentity)) : null;
+                if (!string.IsNullOrWhiteSpace(defaultBlobContainerNameSecret)) verboseLogger?.Invoke($"Using secret store for default blob container name for component {componentIdentity}");
+                component.DefaultBlobContainerName = defaultBlobContainerNameSecret ?? defaultBlobContainerNameElement?.Value;
+
+                verboseLogger?.Invoke("3");
+
+                string defaultQueueNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultQueueName(componentIdentity)) : null;
+                if (!string.IsNullOrWhiteSpace(defaultQueueNameSecret)) verboseLogger?.Invoke($"Using secret store for default queue name for component {componentIdentity}");
+                component.DefaultQueueName = defaultQueueNameSecret ?? defaultQueueNameElement?.Value;
+
+                verboseLogger?.Invoke("4");
+
+                string defaultTableNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultTableName(componentIdentity)) : null;
+                if (!string.IsNullOrWhiteSpace(defaultTableNameSecret)) verboseLogger?.Invoke($"Using secret store for default table name for component {componentIdentity}");
+                component.DefaultTableName = defaultTableNameSecret ?? defaultTableNameElement?.Value;
+
                 component.DefaultBlobContainerAccessType = BlobContainerPublicAccessTypeEnum.Off;
-                component.DefaultLeaseBlockName = defaultLeaseBlockNameElement?.Value;
-                component.DefaultTopicName = defaultTopicNameElement?.Value;
-                component.DefaultSubscriptionName = defaultSubscriptionNameElement?.Value;
-                component.DefaultBrokeredMessageQueueName = defaultBrokeredMessageQueueNameElement?.Value;
+
+                verboseLogger?.Invoke("5");
+
+                string defaultLeaseBlockNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultLeaseBlockName(componentIdentity)) : null;
+                if (!string.IsNullOrWhiteSpace(defaultLeaseBlockNameSecret)) verboseLogger?.Invoke($"Using secret store for default lease block name for component {componentIdentity}");
+                component.DefaultLeaseBlockName = defaultLeaseBlockNameSecret ?? defaultLeaseBlockNameElement?.Value;
+
+                verboseLogger?.Invoke("6");
+
+                string defaultTopicNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultTopicName(componentIdentity)) : null;
+                if (!string.IsNullOrWhiteSpace(defaultTopicNameSecret)) verboseLogger?.Invoke($"Using secret store for default topic name for component {componentIdentity}");
+                component.DefaultTopicName = defaultTopicNameSecret ?? defaultTopicNameElement?.Value;
+
+                verboseLogger?.Invoke("7");
+
+                string defaultSubscriptionNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultSubscriptionName(componentIdentity)) : null;
+                if (!string.IsNullOrWhiteSpace(defaultSubscriptionNameSecret)) verboseLogger?.Invoke($"Using secret store for default subscription name for component {componentIdentity}");
+                component.DefaultSubscriptionName = defaultSubscriptionNameSecret ?? defaultSubscriptionNameElement?.Value;
+
+                verboseLogger?.Invoke("8");
+
+                string defaultBrokeredMessageQueueNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultBrokeredMessageQueueName(componentIdentity)) : null;
+                if (!string.IsNullOrWhiteSpace(defaultBrokeredMessageQueueNameSecret)) verboseLogger?.Invoke($"Using secret store for default brokered message queue name for component {componentIdentity}");
+                component.DefaultBrokeredMessageQueueName = defaultBrokeredMessageQueueNameSecret ?? defaultBrokeredMessageQueueNameElement?.Value;
+
+                verboseLogger?.Invoke("9");
+
                 component.TableData = defaultTableData?.Value;
                 component.Uploads = element.Elements("upload").Select(x => x.Value).ToList();
                 if (defaultBlobContainerAccessAttribute != null)
@@ -216,26 +286,31 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     }
                 }
 
-                settingsElement?.Elements().ToList().ForEach(x =>
+                verboseLogger?.Invoke($"Processing settings for {componentIdentity}");
+                if (settingsElement != null)
                 {
-                    string resourceType = null;
-                    XAttribute resourceTypeAttr = x.Attribute("resource-type");
-                    if (resourceTypeAttr != null)
+                    foreach (XElement componentSettingsElement in settingsElement.Elements().ToList())
                     {
-                        resourceType = resourceTypeAttr.Value;
+                        string resourceType = null;
+                        XAttribute resourceTypeAttr = componentSettingsElement.Attribute("resource-type");
+                        if (resourceTypeAttr != null)
+                        {
+                            resourceType = resourceTypeAttr.Value;
+                        }
+                        Dictionary<string, string> attributeDictionary = componentSettingsElement.Attributes().ToDictionary(attribute => attribute.Name.LocalName, attribute => attribute.Value);
+                        component.Settings.Add(new ApplicationComponentSetting
+                        {
+                            Key = componentSettingsElement.Name.LocalName,
+                            ResourceType = resourceType,
+                            Value = (applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.SettingName(componentIdentity, componentSettingsElement.Name.LocalName)) : null) ?? componentSettingsElement.Value,
+                            Attributes = attributeDictionary
+                        });
                     }
-                    Dictionary<string, string> attributeDictionary = x.Attributes().ToDictionary(attribute => attribute.Name.LocalName, attribute => attribute.Value);
-                    component.Settings.Add(new ApplicationComponentSetting
-                    {
-                        Key = x.Name.LocalName,
-                        ResourceType = resourceType,
-                        Value = x.Value,
-                        Attributes = attributeDictionary
-                    });                        
-                });
-
+                }
+                
                 configuration.ApplicationComponents.Add(component);
-            });
+                verboseLogger?.Invoke($"Finished parsing component {componentIdentity}");
+            }
 
             configuration.Secrets = secrets.ToList();
 

@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
+using AccidentalFish.ApplicationSupport.Azure.Configuration;
+using AccidentalFish.ApplicationSupport.Azure.KeyVault.Implementation;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
@@ -14,8 +19,12 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AccidentalFish.ApplicationSupport.Powershell
 {
+    /// <summary>
+    /// This needs some major rework to abstract itself away from Azure and use an implementation assembly. Adding key vault has made this more pronounced.
+    /// Roadmap a future version to account for this and better support for VSTS.
+    /// </summary>
     [Cmdlet(VerbsCommon.New, "ApplicationResources")]
-    public class NewApplicationResources : PSCmdlet
+    public class NewApplicationResources : AsyncPSCmdlet
     {
         [Parameter(HelpMessage = "The application configuration file", Mandatory = true)]
         public string Configuration { get; set; }
@@ -26,199 +35,242 @@ namespace AccidentalFish.ApplicationSupport.Powershell
         [Parameter(HelpMessage = "Optional settings file. If more than one file is specified they are combined.", Mandatory = false)]
         public string[] Settings { get; set; }
 
-        protected override void ProcessRecord()
+        [Parameter(HelpMessage = "Client ID for the key vault to use for secrets. The service principal must have Get rights for key vault secrets.", Mandatory = false)]
+        public string KeyVaultClientId { get; set; }
+
+        [Parameter(HelpMessage = "Client key for the key vault to use for secrets", Mandatory = false)]
+        public string KeyVaultClientKey { get; set; }
+
+        [Parameter(HelpMessage = "Uri of the key vault to use for secrets", Mandatory = false)]
+        public string KeyVaultUri { get; set; }
+
+        protected override async Task ProcessRecordAsync()
         {
-            WriteVerbose(String.Format("Processing configuration file {0}", Configuration));
+            WriteVerbose($"Processing configuration file {Configuration}");
             if (!File.Exists(Configuration))
             {
                 throw new InvalidOperationException("Configuration file does not exist");
             }
 
-            ApplicationConfigurationSettings settings = Settings != null && Settings.Length > 0 ? ApplicationConfigurationSettings.FromFiles(Settings) : null;
-            ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings, CheckForMissingSettings);
+            IConfiguration secretStore = null;
+            bool useKeyVault = !string.IsNullOrWhiteSpace(KeyVaultClientId) && !string.IsNullOrWhiteSpace(KeyVaultClientKey) && !string.IsNullOrWhiteSpace(KeyVaultUri);
+            KeyVault keyVault = new KeyVault(KeyVaultClientId, KeyVaultClientKey, KeyVaultUri, true);
+            KeyVaultConfigurationKeyEncoder keyEncoder = new KeyVaultConfigurationKeyEncoder();
 
-            ApplyCorsRules(configuration);
-
-            foreach (ApplicationComponent component in configuration.ApplicationComponents)
+            if (useKeyVault)
             {
-                if (component.UsesServiceBus)
-                {
-                    if (!String.IsNullOrWhiteSpace(component.DefaultTopicName))
-                    {
-                        NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
-                    
-                        if (!namespaceManager.TopicExists(component.DefaultTopicName))
-                        {
-                            namespaceManager.CreateTopic(new TopicDescription(component.DefaultTopicName));
-                        }
-
-                        if (!String.IsNullOrWhiteSpace(component.DefaultSubscriptionName))
-                        {
-                            if (
-                                !namespaceManager.SubscriptionExists(component.DefaultTopicName,
-                                    component.DefaultSubscriptionName))
-                            {
-                                namespaceManager.CreateSubscription(
-                                    new SubscriptionDescription(component.DefaultTopicName,
-                                        component.DefaultSubscriptionName));
-                            }
-                        }
-                    }
-
-                    if (!String.IsNullOrWhiteSpace(component.DefaultBrokeredMessageQueueName))
-                    {
-                        NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
-                        if (!namespaceManager.QueueExists(component.DefaultBrokeredMessageQueueName))
-                        {
-                            namespaceManager.CreateQueue(component.DefaultBrokeredMessageQueueName);
-                        }
-                    }
-
-                    foreach (ApplicationComponentSetting setting in component.Settings)
-                    {
-                        string resourceType = setting.ResourceType;
-                        if (resourceType != null)
-                        {
-                            resourceType = resourceType.ToLower();
-                            if (resourceType == "topic")
-                            {
-                                NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
-                                if (!namespaceManager.TopicExists(setting.Value))
-                                {
-                                    namespaceManager.CreateTopic(new TopicDescription(setting.Value));
-                                }
-                            }
-                            else if (resourceType == "subscription")
-                            {
-                                NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
-                                string topicPath = setting.Attributes["topic"];
-                                if (!namespaceManager.TopicExists(topicPath))
-                                {
-                                    namespaceManager.CreateTopic(new TopicDescription(topicPath));
-                                }
-                                if (!namespaceManager.SubscriptionExists(topicPath, setting.Value))
-                                {
-                                    namespaceManager.CreateSubscription(new SubscriptionDescription(topicPath, setting.Value));
-                                }
-                            }
-                            else if (resourceType == "brokered-message-queue")
-                            {
-                                NamespaceManager namespaceManager = NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
-                                if (!namespaceManager.QueueExists(setting.Value))
-                                {
-                                    namespaceManager.CreateQueue(setting.Value);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (component.UsesAzureStorage)
-                {
-                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(component.StorageAccountConnectionString);
-                    if (!string.IsNullOrWhiteSpace(component.DefaultBlobContainerName))
-                    {
-                        CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                        CloudBlobContainer blobContainer = blobClient.GetContainerReference(component.DefaultBlobContainerName);
-                        blobContainer.CreateIfNotExists(BlobContainerPublicAccessType(component.DefaultBlobContainerAccessType));
-
-                        WriteVerbose(String.Format("Creating blob container {0} in {1}", component.DefaultBlobContainerName, storageAccount.BlobEndpoint));
-
-                        if (component.Uploads != null)
-                        {
-                            foreach (string uploadFilename in component.Uploads)
-                            {
-                                string fullUploadFilename = Path.Combine(Path.GetDirectoryName(Configuration), uploadFilename);
-                                CloudBlockBlob blob = blobContainer.GetBlockBlobReference(Path.GetFileName(uploadFilename));
-                                blob.UploadFromFile(fullUploadFilename, FileMode.Open);
-                                WriteVerbose(String.Format("Uploading file {0} to blob container {1}", uploadFilename, component.DefaultBlobContainerName));
-                            }
-                        }
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(component.DefaultLeaseBlockName))
-                    {
-                        CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                        CloudBlobContainer blobContainer = blobClient.GetContainerReference(component.DefaultLeaseBlockName);
-                        blobContainer.CreateIfNotExists(BlobContainerPublicAccessType(component.DefaultBlobContainerAccessType));
-
-                        WriteVerbose(String.Format("Creating lease block container {0} in {1}", component.DefaultLeaseBlockName, storageAccount.BlobEndpoint));
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(component.DefaultQueueName))
-                    {
-                        CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-                        CloudQueue queue = queueClient.GetQueueReference(component.DefaultQueueName);
-                        queue.CreateIfNotExists();
-
-                        WriteVerbose(String.Format("Creating queue {0} in {1}", component.DefaultQueueName, storageAccount.QueueEndpoint));
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(component.DefaultTableName))
-                    {
-                        CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-                        CloudTable table = tableClient.GetTableReference(component.DefaultTableName);
-                        table.CreateIfNotExists();
-
-                        WriteVerbose(String.Format("Creating table {0} in {1}", component.DefaultTableName, storageAccount.TableEndpoint));
-
-                        if (!string.IsNullOrWhiteSpace(component.TableData))
-                        {
-                            XDocument document = null;
-                            string tableDataFilename = Path.Combine(Path.GetDirectoryName(Configuration), component.TableData);
-                            try
-                            {
-
-                                using (StreamReader reader = new StreamReader(tableDataFilename))
-                                {
-                                    document = XDocument.Load(reader);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                document = null;
-                                WriteVerbose(String.Format("Unable to load table data document {0}. Error: {1}", tableDataFilename, ex.Message));
-                            }
-                            if (document != null)
-                            {
-                                UploadTableData(table, document);
-                            }   
-                        }
-                    }
-
-
-                    foreach (ApplicationComponentSetting setting in component.Settings)
-                    {
-                        string resourceType = setting.ResourceType;
-                        if (resourceType != null)
-                        {
-                            resourceType = resourceType.ToLower();
-                            if (resourceType == "table")
-                            {
-                                CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-                                CloudTable table = tableClient.GetTableReference(setting.Value);
-                                table.CreateIfNotExists();
-
-                                WriteVerbose(String.Format("Creating table {0} in {1}", setting.Value, storageAccount.TableEndpoint));
-                            }
-                            else if (resourceType == "queue")
-                            {
-                                CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
-                                CloudQueue queue = queueClient.GetQueueReference(setting.Value);
-                                queue.CreateIfNotExists();
-                                WriteVerbose(String.Format("Creating queue {0} in {1}", setting.Value, storageAccount.TableEndpoint));
-                            }
-                            else if (resourceType == "blob-container")
-                            {
-                                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                                CloudBlobContainer blobContainer = blobClient.GetContainerReference(setting.Value);
-                                blobContainer.CreateIfNotExists();
-                                WriteVerbose(String.Format("Creating blob container {0} in {1}", setting.Value, storageAccount.TableEndpoint));
-                            }
-                        }
-                    }
-                }
+                secretStore = new KeyVaultConfiguration(
+                    keyVault,
+                    keyEncoder,
+                    null);
             }
+
+                WriteVerbose("Reading settings");
+                ApplicationConfigurationSettings settings = Settings != null && Settings.Length > 0
+                    ? ApplicationConfigurationSettings.FromFiles(Settings)
+                    : null;
+                WriteVerbose("Reading configuration");
+                ApplicationConfiguration configuration = await ApplicationConfiguration.FromFileAsync(Configuration, settings,
+                    CheckForMissingSettings, secretStore, WriteVerbose);
+
+                ApplyCorsRules(configuration);
+
+                foreach (ApplicationComponent component in configuration.ApplicationComponents)
+                {
+                    if (component.UsesServiceBus)
+                    {
+                        WriteVerbose($"Creating service bus resources for component {component.Fqn}");
+                        if (!String.IsNullOrWhiteSpace(component.DefaultTopicName))
+                        {
+                            NamespaceManager namespaceManager =
+                                NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+
+                            if (!namespaceManager.TopicExists(component.DefaultTopicName))
+                            {
+                                namespaceManager.CreateTopic(new TopicDescription(component.DefaultTopicName));
+                            }
+
+                            if (!String.IsNullOrWhiteSpace(component.DefaultSubscriptionName))
+                            {
+                                if (
+                                    !namespaceManager.SubscriptionExists(component.DefaultTopicName,
+                                        component.DefaultSubscriptionName))
+                                {
+                                    namespaceManager.CreateSubscription(
+                                        new SubscriptionDescription(component.DefaultTopicName,
+                                            component.DefaultSubscriptionName));
+                                }
+                            }
+                        }
+
+                        if (!String.IsNullOrWhiteSpace(component.DefaultBrokeredMessageQueueName))
+                        {
+                            NamespaceManager namespaceManager =
+                                NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                            if (!namespaceManager.QueueExists(component.DefaultBrokeredMessageQueueName))
+                            {
+                                namespaceManager.CreateQueue(component.DefaultBrokeredMessageQueueName);
+                            }
+                        }
+
+                        foreach (ApplicationComponentSetting setting in component.Settings)
+                        {
+                            string resourceType = setting.ResourceType;
+                            if (resourceType != null)
+                            {
+                                resourceType = resourceType.ToLower();
+                                if (resourceType == "topic")
+                                {
+                                    NamespaceManager namespaceManager =
+                                        NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                                    if (!namespaceManager.TopicExists(setting.Value))
+                                    {
+                                        namespaceManager.CreateTopic(new TopicDescription(setting.Value));
+                                    }
+                                }
+                                else if (resourceType == "subscription")
+                                {
+                                    NamespaceManager namespaceManager =
+                                        NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                                    string topicPath = setting.Attributes["topic"];
+                                    if (!namespaceManager.TopicExists(topicPath))
+                                    {
+                                        namespaceManager.CreateTopic(new TopicDescription(topicPath));
+                                    }
+                                    if (!namespaceManager.SubscriptionExists(topicPath, setting.Value))
+                                    {
+                                        namespaceManager.CreateSubscription(new SubscriptionDescription(topicPath,
+                                            setting.Value));
+                                    }
+                                }
+                                else if (resourceType == "brokered-message-queue")
+                                {
+                                    NamespaceManager namespaceManager =
+                                        NamespaceManager.CreateFromConnectionString(component.ServiceBusConnectionString);
+                                    if (!namespaceManager.QueueExists(setting.Value))
+                                    {
+                                        namespaceManager.CreateQueue(setting.Value);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (component.UsesAzureStorage)
+                    {
+                        CloudStorageAccount storageAccount =
+                            CloudStorageAccount.Parse(component.StorageAccountConnectionString);
+                        if (!string.IsNullOrWhiteSpace(component.DefaultBlobContainerName))
+                        {
+                            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                            CloudBlobContainer blobContainer =
+                                blobClient.GetContainerReference(component.DefaultBlobContainerName);
+                            blobContainer.CreateIfNotExists(
+                                BlobContainerPublicAccessType(component.DefaultBlobContainerAccessType));
+
+                            WriteVerbose($"Creating blob container {component.DefaultBlobContainerName} in {storageAccount.BlobEndpoint}");
+
+                            if (component.Uploads != null)
+                            {
+                                foreach (string uploadFilename in component.Uploads)
+                                {
+                                    string fullUploadFilename = Path.Combine(Path.GetDirectoryName(Configuration),
+                                        uploadFilename);
+                                    CloudBlockBlob blob =
+                                        blobContainer.GetBlockBlobReference(Path.GetFileName(uploadFilename));
+                                    blob.UploadFromFile(fullUploadFilename, FileMode.Open);
+                                    WriteVerbose($"Uploading file {uploadFilename} to blob container {component.DefaultBlobContainerName}");
+                                }
+                            }
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(component.DefaultLeaseBlockName))
+                        {
+                            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                            CloudBlobContainer blobContainer =
+                                blobClient.GetContainerReference(component.DefaultLeaseBlockName);
+                            blobContainer.CreateIfNotExists(
+                                BlobContainerPublicAccessType(component.DefaultBlobContainerAccessType));
+
+                            WriteVerbose($"Creating lease block container {component.DefaultLeaseBlockName} in {storageAccount.BlobEndpoint}");
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(component.DefaultQueueName))
+                        {
+                            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+                            CloudQueue queue = queueClient.GetQueueReference(component.DefaultQueueName);
+                            queue.CreateIfNotExists();
+
+                            WriteVerbose($"Creating queue {component.DefaultQueueName} in {storageAccount.QueueEndpoint}");
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(component.DefaultTableName))
+                        {
+                            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+                            CloudTable table = tableClient.GetTableReference(component.DefaultTableName);
+                            table.CreateIfNotExists();
+
+                            WriteVerbose($"Creating table {component.DefaultTableName} in {storageAccount.TableEndpoint}");
+
+                            if (!string.IsNullOrWhiteSpace(component.TableData))
+                            {
+                                XDocument document;
+                                string tableDataFilename = Path.Combine(Path.GetDirectoryName(Configuration),
+                                    component.TableData);
+                                try
+                                {
+
+                                    using (StreamReader reader = new StreamReader(tableDataFilename))
+                                    {
+                                        document = XDocument.Load(reader);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    document = null;
+                                    WriteVerbose($"Unable to load table data document {tableDataFilename}. Error: {ex.Message}");
+                                }
+                                if (document != null)
+                                {
+                                    UploadTableData(table, document);
+                                }
+                            }
+                        }
+
+
+                        foreach (ApplicationComponentSetting setting in component.Settings)
+                        {
+                            string resourceType = setting.ResourceType;
+                            if (resourceType != null)
+                            {
+                                resourceType = resourceType.ToLower();
+                                if (resourceType == "table")
+                                {
+                                    CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+                                    CloudTable table = tableClient.GetTableReference(setting.Value);
+                                    table.CreateIfNotExists();
+
+                                    WriteVerbose($"Creating table {setting.Value} in {storageAccount.TableEndpoint}");
+                                }
+                                else if (resourceType == "queue")
+                                {
+                                    CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+                                    CloudQueue queue = queueClient.GetQueueReference(setting.Value);
+                                    queue.CreateIfNotExists();
+                                    WriteVerbose($"Creating queue {setting.Value} in {storageAccount.TableEndpoint}");
+                                }
+                                else if (resourceType == "blob-container")
+                                {
+                                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                                    CloudBlobContainer blobContainer = blobClient.GetContainerReference(setting.Value);
+                                    blobContainer.CreateIfNotExists();
+                                    WriteVerbose($"Creating blob container {setting.Value} in {storageAccount.TableEndpoint}");
+                                }
+                            }
+                        }
+                    }
+                }
+         
         }
 
         private void ApplyCorsRules(ApplicationConfiguration configuration)
@@ -271,18 +323,9 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                     }
                 }
 
-                if (tableClient != null && tableProperties != null)
-                {
-                    tableClient.SetServiceProperties(tableProperties);
-                }
-                if (blobClient != null && blobProperties != null)
-                {
-                    blobClient.SetServiceProperties(blobProperties);
-                }
-                if (queueClient != null && queueProperties != null)
-                {
-                    queueClient.SetServiceProperties(queueProperties);
-                }
+                tableClient?.SetServiceProperties(tableProperties);
+                blobClient?.SetServiceProperties(blobProperties);
+                queueClient?.SetServiceProperties(queueProperties);
             }
         }
 
@@ -429,7 +472,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
             {
                 return new EntityProperty(value);
             }
-            throw new InvalidOperationException(String.Format("Type {0} not understood", type));
+            throw new InvalidOperationException($"Type {type} not understood");
         }
 
         private static BlobContainerPublicAccessType BlobContainerPublicAccessType(

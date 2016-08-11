@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using Microsoft.Azure;
 
@@ -59,6 +60,11 @@ namespace AccidentalFish.ApplicationSupport.Azure.Configuration
                 }
                 return ConfigurationManager.AppSettings[key];
             }
+        }
+
+        public Task<string> GetAsync(string key)
+        {
+            return Task.FromResult(this[key]);
         }
     }
 }

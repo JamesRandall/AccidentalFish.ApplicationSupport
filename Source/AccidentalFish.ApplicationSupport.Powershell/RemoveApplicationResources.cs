@@ -15,7 +15,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 namespace AccidentalFish.ApplicationSupport.Powershell
 {
     [Cmdlet(VerbsCommon.Remove, "ApplicationResources")]
-    public class RemoveApplicationResources : PSCmdlet
+    public class RemoveApplicationResources : AsyncPSCmdlet
     {
         [Parameter(HelpMessage = "The application configuration file", Mandatory = true)]
         public string Configuration { get; set; }
@@ -26,7 +26,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
         [Parameter(HelpMessage = "Defaults to false, if set to true then an exception will be thrown if a setting is required in a configuration file but not supplied", Mandatory = false)]
         public bool CheckForMissingSettings { get; set; }
 
-        protected override void ProcessRecord()
+        protected override async Task ProcessRecordAsync()
         {
             WriteVerbose(String.Format("Processing configuration file {0}", Configuration));
             if (!File.Exists(Configuration))
@@ -35,7 +35,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
             }
 
             ApplicationConfigurationSettings settings = Settings != null && Settings.Length > 0 ? ApplicationConfigurationSettings.FromFiles(Settings) : null;
-            ApplicationConfiguration configuration = ApplicationConfiguration.FromFile(Configuration, settings, CheckForMissingSettings);
+            ApplicationConfiguration configuration = await ApplicationConfiguration.FromFileAsync(Configuration, settings, CheckForMissingSettings);
 
             foreach (ApplicationComponent component in configuration.ApplicationComponents)
             {

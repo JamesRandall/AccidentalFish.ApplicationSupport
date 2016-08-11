@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
@@ -28,5 +29,10 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         /// <param name="key">Key for the setting</param>
         /// <returns>Setting value</returns>
         public string this[string key] => ConfigurationManager.AppSettings[key];
+
+        public Task<string> GetAsync(string key)
+        {
+            return Task.FromResult(this[key]);
+        }
     }
 }

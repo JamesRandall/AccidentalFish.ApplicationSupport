@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.KeyVault;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
@@ -21,9 +22,15 @@ namespace AccidentalFish.ApplicationSupport.Powershell.SecretStore
             _keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(GetAccessToken));
         }
 
+        public string EncodeKey(string key)
+        {
+            return key.Replace(".", "AFDOT").Replace("-", "AFDASH");
+        }
+
         public async Task Save(string key, string value)
         {
-            await _keyVaultClient.SetSecretAsync(_vaultName, key, value);
+            string encodedKey = EncodeKey(key);
+            await _keyVaultClient.SetSecretAsync(_vaultName, encodedKey, value);
         }
 
         private async Task<string> GetAccessToken(string authority, string resource, string scope)

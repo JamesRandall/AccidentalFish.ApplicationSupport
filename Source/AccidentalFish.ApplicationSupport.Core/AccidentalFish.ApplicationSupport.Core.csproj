@@ -89,6 +89,7 @@
     <Compile Include="Configuration\ApplicationStorageAccount.cs" />
     <Compile Include="Configuration\BlobContainerPublicAccessTypeEnum.cs" />
     <Compile Include="Configuration\DefaultConfiguration.cs" />
+    <Compile Include="Configuration\IApplicationSecretStore.cs" />
     <Compile Include="Configuration\MissingSettingException.cs" />
     <Compile Include="Email\EmailQueueItem.cs" />
     <Compile Include="Email\IEmailManager.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Repository\IUnitOfWork.cs" />
     <Compile Include="Repository\IUnitOfWorkFactory.cs" />
     <Compile Include="Queues\IQueueSerializer.cs" />
+    <Compile Include="Threading\AsyncPump.cs" />
     <Compile Include="Threading\Implementation\ManualResetEventWaitHandle.cs" />
     <Compile Include="Threading\IWaitHandle.cs" />
   </ItemGroup>

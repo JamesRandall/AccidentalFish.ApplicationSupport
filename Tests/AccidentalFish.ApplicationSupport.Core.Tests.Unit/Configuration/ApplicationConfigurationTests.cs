@@ -29,7 +29,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Configuration
         }
 
         [TestMethod]
-        public void ReplacesSettings()
+        public async Task ReplacesSettings()
         {
             // Arrange
             XDocument configurationDocument = GetEmbeddedConfigurationFile();
@@ -41,7 +41,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Configuration
             });
 
             // Act
-            ApplicationConfiguration configuration = ApplicationConfiguration.FromXDocument(configurationDocument, settings, true);
+            ApplicationConfiguration configuration = await ApplicationConfiguration.FromXDocumentAsync(configurationDocument, settings, true);
 
             // Assert
             ApplicationComponent component = configuration.ApplicationComponents.Single(x => x.Fqn == "accidentalfish.samples.topicsandsubscriptions.processor");
@@ -50,7 +50,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Configuration
         }
 
         [TestMethod]
-        public void SecretIsCollected()
+        public async Task SecretIsCollected()
         {
             // Arrange
             XDocument configurationDocument = GetEmbeddedConfigurationFile();
@@ -62,7 +62,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Configuration
             });
 
             // Act
-            ApplicationConfiguration configuration = ApplicationConfiguration.FromXDocument(configurationDocument, settings, true);
+            ApplicationConfiguration configuration = await ApplicationConfiguration.FromXDocumentAsync(configurationDocument, settings, true);
 
             // Assert
             Assert.AreEqual("*** is a ###", configuration.Secrets.Single());
@@ -70,7 +70,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Configuration
 
         [TestMethod]
         [ExpectedException(typeof(MissingSettingException))]
-        public void ThrowsMissingSettingException()
+        public async Task ThrowsMissingSettingException()
         {
             // Arrange
             XDocument configurationDocument = GetEmbeddedConfigurationFile();
@@ -80,7 +80,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Tests.Unit.Configuration
             });
 
             // Act
-            ApplicationConfiguration configuration = ApplicationConfiguration.FromXDocument(configurationDocument, settings, true);            
+            ApplicationConfiguration configuration = await ApplicationConfiguration.FromXDocumentAsync(configurationDocument, settings, true);            
         }
     }
 }

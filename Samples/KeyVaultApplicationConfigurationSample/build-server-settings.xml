@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+  <!--
+  This settings file is intended for a build server that you don't want to have direct access to secrets, settings marked is-secret are removed.
+  The settings will generally then be retrieved from the secret store.
+  -->
+</settings>

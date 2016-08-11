@@ -1,4 +1,6 @@
-﻿namespace AccidentalFish.ApplicationSupport.Core.Configuration
+﻿using System.Threading.Tasks;
+
+namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
     /// <summary>
     /// Interface for supplying global configuration information
@@ -23,5 +25,12 @@
         /// <param name="key">Setting name</param>
         /// <returns>Setting value</returns>
         string this[string key] { get; }
+
+        /// <summary>
+        /// Application setting
+        /// </summary>
+        /// <param name="key">Setting name</param>
+        /// <returns>Setting value</returns>
+        Task<string> GetAsync(string key);
     }
 }

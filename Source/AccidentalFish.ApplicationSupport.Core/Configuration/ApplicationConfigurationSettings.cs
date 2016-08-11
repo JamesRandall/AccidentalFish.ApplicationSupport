@@ -43,7 +43,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                 document.Root.Elements("setting").ToList().ForEach(element => settings._settings.Add(element.Attribute("key").Value, new ApplicationConfigurationSetting {
                     Key = element.Attribute("key").Value,
                     Value = element.Value,
-                    IsSecret = element.Attribute("is-secret") != null
+                    IsSecret = element.Attribute("is-secret") != null && element.Attribute("is-secret").Value?.ToLower() == "true"
                 }));
                 return settings;
             }
@@ -66,7 +66,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     {
                         Key = element.Attribute("key").Value,
                         Value = element.Value,
-                        IsSecret = element.Attribute("isSecret") != null
+                        IsSecret = element.Attribute("is-secret") != null && element.Attribute("is-secret").Value?.ToLower() == "true"
                     });
                 }
             }

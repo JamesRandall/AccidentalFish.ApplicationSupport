@@ -137,6 +137,7 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="AsyncPSCmdlet.cs" />
     <Compile Include="ConfigAppliers\JsConfigurationApplier.cs" />
     <Compile Include="SecretStore\ISecretStore.cs" />
     <Compile Include="SecretStore\KeyVaultSecretStore.cs" />
@@ -151,6 +152,10 @@
     <Compile Include="SetKeyVaultSecrets.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Azure\AccidentalFish.ApplicationSupport.Azure.csproj">
+      <Project>{f4f8b4b5-4519-4669-8d30-cd7866cc6b33}</Project>
+      <Name>AccidentalFish.ApplicationSupport.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj">
       <Project>{578E1681-F5F4-4CBA-BEC3-7F1D8A765254}</Project>
       <Name>AccidentalFish.ApplicationSupport.Core</Name>

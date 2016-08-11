@@ -174,7 +174,14 @@
     <Compile Include="Components\IAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\Implementation\AzureApplicationResourceFactory.cs" />
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Configuration\IKeyVaultConfigurationKeyEncoder.cs" />
+    <Compile Include="Configuration\KeyVaultConfiguration.cs" />
+    <Compile Include="Configuration\KeyVaultConfigurationKeyEncoder.cs" />
     <Compile Include="Extensions\CloudTableExtensions.cs" />
+    <Compile Include="KeyVault\IKeyVault.cs" />
+    <Compile Include="KeyVault\IKeyVaultFactory.cs" />
+    <Compile Include="KeyVault\Implementation\KeyVault.cs" />
+    <Compile Include="KeyVault\Implementation\KeyVaultFactory.cs" />
     <Compile Include="Logging\IAzureAssemblyLogger.cs" />
     <Compile Include="Logging\Implementation\AzureAssemblyLogger.cs" />
     <Compile Include="Queues\AzureQueueFactory.cs" />
