@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure;
+using AccidentalFish.ApplicationSupport.Azure.Configuration;
 using AccidentalFish.ApplicationSupport.Core;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
-using AccidentalFish.ApplicationSupport.Powershell;
 using AccidentalFish.ApplicationSupport.Unity;
 using Microsoft.Practices.Unity;
 
@@ -42,9 +39,12 @@ namespace KeyVaultApplicationConfigurationSample
                 .UseAzure()
                 .UseKeyVaultApplicationConfiguration(clientId, clientSecret, vaultUri);
 
+            IKeyVaultConfiguration configuration = (IKeyVaultConfiguration)resolver.Resolve<IConfiguration>();
+            configuration.Preload().RunSynchronously();
+
             IApplicationResourceFactory applicationResourceFactory = resolver.Resolve<IApplicationResourceFactory>();
             IAsynchronousTopic<MyMessage> topic = applicationResourceFactory.GetAsyncTopic<MyMessage>(SampleComponent);
-            topic.Send(new MyMessage {SaySomething = "Hello World"});         
+            topic.Send(new MyMessage {SaySomething = "Hello World"});
             
             IAsynchronousSubscription<MyMessage> subscription = applicationResourceFactory.GetAsyncSubscription<MyMessage>(SampleComponent);
             subscription.RecieveAsync(msg =>

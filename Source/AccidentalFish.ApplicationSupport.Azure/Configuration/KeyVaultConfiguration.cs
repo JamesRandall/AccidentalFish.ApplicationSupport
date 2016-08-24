@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,12 +13,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.Configuration
     /// <summary>
     /// This class needs to be thread safe.
     /// </summary>
-    internal class KeyVaultConfiguration : IConfiguration
+    internal class KeyVaultConfiguration : IKeyVaultConfiguration
     {
         private readonly IKeyVault _vault;
         private readonly IKeyVaultConfigurationKeyEncoder _keyEncoder;
         private readonly IConfiguration _localConfiguration;
         private readonly ConcurrentDictionary<string, string> _keyedSettings = new ConcurrentDictionary<string, string>();
+        private bool _isPreloaded;
 
         public KeyVaultConfiguration(IKeyVault vault, IKeyVaultConfigurationKeyEncoder keyEncoder, IConfiguration localConfiguration = null)
         {
@@ -40,7 +42,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Configuration
                 {
                     value = _localConfiguration[key];
                 }
-                if (string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(value) && !_isPreloaded)
                 {
                     try
                     {
@@ -64,6 +66,18 @@ namespace AccidentalFish.ApplicationSupport.Azure.Configuration
                 _keyedSettings.AddOrUpdate(key, value, (s, s1) => value);
             }
             return value;
+        }
+
+        public async Task Preload()
+        {
+            IReadOnlyCollection<string> keys = await _vault.GetSecretKeysAsync();
+            foreach (string key in keys)
+            {
+                string value = await _vault.GetSecretAsync(key);
+                string decodedKey = _keyEncoder.Decode(key);
+                _keyedSettings.AddOrUpdate(decodedKey, value, (s, s1) => value);
+            }
+            _isPreloaded = true;
         }
 
         public string this[string key] => GetAsync(key).Result;

@@ -6,5 +6,10 @@
         {
             return key.Replace(".", "AFDOT").Replace("-", "AFDASH");
         }
+
+        public string Decode(string key)
+        {
+            return key.Replace("AFDOT", ".").Replace("AFDASH", "-");
+        }
     }
 }
