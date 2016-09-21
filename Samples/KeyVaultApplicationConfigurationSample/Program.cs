@@ -40,7 +40,7 @@ namespace KeyVaultApplicationConfigurationSample
                 .UseKeyVaultApplicationConfiguration(clientId, clientSecret, vaultUri);
 
             IKeyVaultConfiguration configuration = (IKeyVaultConfiguration)resolver.Resolve<IConfiguration>();
-            configuration.Preload().RunSynchronously();
+            configuration.Preload().Wait();
 
             IApplicationResourceFactory applicationResourceFactory = resolver.Resolve<IApplicationResourceFactory>();
             IAsynchronousTopic<MyMessage> topic = applicationResourceFactory.GetAsyncTopic<MyMessage>(SampleComponent);

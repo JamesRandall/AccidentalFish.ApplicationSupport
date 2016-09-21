@@ -56,8 +56,16 @@ namespace AccidentalFish.ApplicationSupport.Azure.KeyVault.Implementation
 
         public async Task<IReadOnlyCollection<string>> GetSecretKeysAsync()
         {
+            List<string> results = new List<string>();
             ListSecretsResponseMessage response = await _keyVaultClient.GetSecretsAsync(_vaultUri);
-            return response.Value.Select(x => x.Identifier.Name).ToList();
+            results.AddRange(response.Value.Select(x => x.Identifier.Name));
+
+            while (!string.IsNullOrWhiteSpace(response.NextLink))
+            {
+                response = await _keyVaultClient.GetSecretsNextAsync(response.NextLink);
+                results.AddRange(response.Value.Select(x => x.Identifier.Name));
+            } 
+            return results;
         }
 
         private async Task<string> GetAccessToken(string authority, string resource, string scope)
