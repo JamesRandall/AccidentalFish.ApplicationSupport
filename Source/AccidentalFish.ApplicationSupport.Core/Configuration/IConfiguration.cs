@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace AccidentalFish.ApplicationSupport.Core.Configuration
 {
@@ -26,11 +27,13 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         /// <returns>Setting value</returns>
         string this[string key] { get; }
 
+
         /// <summary>
         /// Application setting
         /// </summary>
         /// <param name="key">Setting name</param>
         /// <returns>Setting value</returns>
+        [Obsolete("Preferred approach is to use the IAsyncConfiguration interface. This will be deprecated in an upcoming major version.")]
         Task<string> GetAsync(string key);
     }
 }

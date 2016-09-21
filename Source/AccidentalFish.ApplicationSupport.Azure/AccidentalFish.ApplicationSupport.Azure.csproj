@@ -173,9 +173,14 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\IAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\Implementation\AzureApplicationResourceFactory.cs" />
+    <Compile Include="Configuration\AsyncConfiguration.cs" />
+    <Compile Include="Configuration\AsyncKeyVaultConfiguration.cs" />
+    <Compile Include="Configuration\CachedApplicationSetting.cs" />
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Configuration\IAsyncKeyVaultConfiguration.cs" />
     <Compile Include="Configuration\IKeyVaultConfiguration.cs" />
     <Compile Include="Configuration\IKeyVaultConfigurationKeyEncoder.cs" />
+    <Compile Include="Configuration\KeyVaultConfigurationCachePolicy.cs" />
     <Compile Include="Configuration\KeyVaultConfiguration.cs" />
     <Compile Include="Configuration\KeyVaultConfigurationKeyEncoder.cs" />
     <Compile Include="Extensions\CloudTableExtensions.cs" />

@@ -77,6 +77,7 @@ namespace AccidentalFish.ApplicationSupport.Core
                 .Register<IUnitOfWorkFactoryProvider, NotSupportedUnitOfWorkFactoryProvider>()
                 .Register<IRuntimeEnvironment, DefaultRuntimeEnvironment>()
                 .Register<IConfiguration>(() => new DefaultConfiguration())
+                .Register<IAsyncConfiguration>(() => new DefaultAsyncConfiguration())
                 .Register<IComponentFactory>(() => new ComponentFactory(container))
                 .Register<IComponentHostRestartHandler, DefaultComponentHostRestartHandler>()
                 .Register<ILargeMessageQueueFactory, LargeMessageQueueFactory>()                
