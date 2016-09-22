@@ -33,7 +33,7 @@ namespace AccidentalFish.ApplicationSupport.Azure.Tests.Unit
             IConfiguration configuration = _resolver.Resolve<IConfiguration>();
 
             // Assert
-            Assert.IsInstanceOfType(configuration, typeof(Configuration.Configuration));
+            Assert.IsInstanceOfType(configuration, typeof(Azure.Configuration.Configuration));
         }
 
         [TestMethod]
