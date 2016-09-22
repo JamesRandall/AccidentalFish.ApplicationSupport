@@ -171,7 +171,9 @@
     <Compile Include="Blobs\IAsynchronousBlockBlobRepositoryExtensions.cs" />
     <Compile Include="Blobs\IBlobExtensions.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Components\IAsyncAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\IAzureApplicationResourceFactory.cs" />
+    <Compile Include="Components\Implementation\AsyncAzureApplicationResourceFactory.cs" />
     <Compile Include="Components\Implementation\AzureApplicationResourceFactory.cs" />
     <Compile Include="Configuration\AsyncConfiguration.cs" />
     <Compile Include="Configuration\AsyncKeyVaultConfiguration.cs" />

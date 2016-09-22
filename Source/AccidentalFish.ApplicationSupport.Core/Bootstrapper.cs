@@ -63,6 +63,8 @@ namespace AccidentalFish.ApplicationSupport.Core
                 .Register<ILeasedRetry, LeasedRetry>()
                 .Register<IWaitHandle, ManualResetEventWaitHandle>()
                 .Register<IApplicationResourceSettingNameProvider, ApplicationResourceSettingNameProvider>()
+                .Register<IAsyncApplicationResourceSettingProvider, AsyncApplicationResourceSettingProvider>()
+                .Register<IAsyncApplicationResourceFactory, AsyncApplicationResourceFactory>()
                 .Register<IApplicationResourceFactory, ApplicationResourceFactory>()
                 .Register<IApplicationResourceSettingProvider, ApplicationResourceSettingProvider>()
                 .Register<IQueueFactory, NotSupportedQueueFactory>()

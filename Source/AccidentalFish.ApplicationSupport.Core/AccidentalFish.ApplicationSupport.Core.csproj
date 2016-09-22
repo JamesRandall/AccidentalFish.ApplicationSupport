@@ -83,6 +83,10 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Components\AbstractApplicationComponent.cs" />
     <Compile Include="Components\ComponentConfiguration.cs" />
+    <Compile Include="Components\IAsyncApplicationResourceFactory.cs" />
+    <Compile Include="Components\IAsyncApplicationResourceSettingProvider.cs" />
+    <Compile Include="Components\Implementation\AsyncApplicationResourceFactory.cs" />
+    <Compile Include="Components\Implementation\AsyncApplicationResourceSettingProvider.cs" />
     <Compile Include="Components\MissingComponentIdentityException.cs" />
     <Compile Include="Configuration\ApplicationConfigurationSetting.cs" />
     <Compile Include="Configuration\ApplicationCorsRule.cs" />
@@ -195,6 +199,7 @@
     <Compile Include="Repository\IUnitOfWork.cs" />
     <Compile Include="Repository\IUnitOfWorkFactory.cs" />
     <Compile Include="Queues\IQueueSerializer.cs" />
+    <Compile Include="Threading\AsyncLazy.cs" />
     <Compile Include="Threading\AsyncPump.cs" />
     <Compile Include="Threading\Implementation\ManualResetEventWaitHandle.cs" />
     <Compile Include="Threading\IWaitHandle.cs" />

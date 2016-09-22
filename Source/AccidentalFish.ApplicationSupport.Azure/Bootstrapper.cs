@@ -136,6 +136,7 @@ namespace AccidentalFish.ApplicationSupport.Azure
                 // azure
                 .Register<IAzureResourceManager, AzureResourceManager>()
                 .Register<IAzureApplicationResourceFactory, AzureApplicationResourceFactory>()
+                .Register<IAsyncAzureApplicationResourceFactory, AsyncAzureApplicationResourceFactory>()
                 // internal
                 .Register<IAzureAssemblyLogger>(() => new AzureAssemblyLogger(
                     dependencyResolver.Resolve<ILoggerFactory>()
