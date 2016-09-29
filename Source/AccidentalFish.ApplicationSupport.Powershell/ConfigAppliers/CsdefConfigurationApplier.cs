@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -7,7 +6,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using AccidentalFish.ApplicationSupport.Core.Components;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
-using AccidentalFish.ApplicationSupport.Powershell.SecretStore;
 
 namespace AccidentalFish.ApplicationSupport.Powershell.ConfigAppliers
 {

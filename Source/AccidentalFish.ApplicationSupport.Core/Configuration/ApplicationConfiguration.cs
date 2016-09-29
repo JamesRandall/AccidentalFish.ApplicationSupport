@@ -61,7 +61,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         /// <param name="verboseLogger">Optional verbose logger</param>
         /// <returns></returns>
         public static async Task<ApplicationConfiguration> FromFileAsync(string filename, ApplicationConfigurationSettings settings,
-            bool checkForMissingSettings, IConfiguration applicationSecretStore=null, Action<string> verboseLogger = null)
+            bool checkForMissingSettings, IAsyncConfiguration applicationSecretStore =null, Action<string> verboseLogger = null)
         {
             XDocument document;
             using (StreamReader reader = new StreamReader(filename))
@@ -81,7 +81,7 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
         /// <param name="verboseLogger">Optional verbose logger</param>
         /// <returns>An application configuration</returns>
         public static async Task<ApplicationConfiguration> FromXDocumentAsync(XDocument document, ApplicationConfigurationSettings settings,
-            bool checkForMissingSettings, IConfiguration applicationSecretStore = null, Action<string> verboseLogger = null)
+            bool checkForMissingSettings, IAsyncConfiguration applicationSecretStore = null, Action<string> verboseLogger = null)
         {
             if (document.Root == null) return null;
             HashSet<string> secrets = new HashSet<string>();
@@ -215,29 +215,19 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
                     }
                 }
 
-                verboseLogger?.Invoke("1");
-
                 string name = nameProvider.SqlContextType(componentIdentity);
                 verboseLogger?.Invoke(name);
                 string dbContextTypeSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(name) : null;
-                verboseLogger?.Invoke("1.1");
                 if (!string.IsNullOrWhiteSpace(dbContextTypeSecret)) verboseLogger?.Invoke($"Using secret store for dbContextType for component {componentIdentity}");
-                verboseLogger?.Invoke("1.2");
                 component.DbContextType = dbContextTypeSecret ?? dbContextTypeElement?.Value;
-
-                verboseLogger?.Invoke("2");
 
                 string defaultBlobContainerNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultBlobContainerName(componentIdentity)) : null;
                 if (!string.IsNullOrWhiteSpace(defaultBlobContainerNameSecret)) verboseLogger?.Invoke($"Using secret store for default blob container name for component {componentIdentity}");
                 component.DefaultBlobContainerName = defaultBlobContainerNameSecret ?? defaultBlobContainerNameElement?.Value;
 
-                verboseLogger?.Invoke("3");
-
                 string defaultQueueNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultQueueName(componentIdentity)) : null;
                 if (!string.IsNullOrWhiteSpace(defaultQueueNameSecret)) verboseLogger?.Invoke($"Using secret store for default queue name for component {componentIdentity}");
                 component.DefaultQueueName = defaultQueueNameSecret ?? defaultQueueNameElement?.Value;
-
-                verboseLogger?.Invoke("4");
 
                 string defaultTableNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultTableName(componentIdentity)) : null;
                 if (!string.IsNullOrWhiteSpace(defaultTableNameSecret)) verboseLogger?.Invoke($"Using secret store for default table name for component {componentIdentity}");
@@ -245,31 +235,21 @@ namespace AccidentalFish.ApplicationSupport.Core.Configuration
 
                 component.DefaultBlobContainerAccessType = BlobContainerPublicAccessTypeEnum.Off;
 
-                verboseLogger?.Invoke("5");
-
                 string defaultLeaseBlockNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultLeaseBlockName(componentIdentity)) : null;
                 if (!string.IsNullOrWhiteSpace(defaultLeaseBlockNameSecret)) verboseLogger?.Invoke($"Using secret store for default lease block name for component {componentIdentity}");
                 component.DefaultLeaseBlockName = defaultLeaseBlockNameSecret ?? defaultLeaseBlockNameElement?.Value;
-
-                verboseLogger?.Invoke("6");
 
                 string defaultTopicNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultTopicName(componentIdentity)) : null;
                 if (!string.IsNullOrWhiteSpace(defaultTopicNameSecret)) verboseLogger?.Invoke($"Using secret store for default topic name for component {componentIdentity}");
                 component.DefaultTopicName = defaultTopicNameSecret ?? defaultTopicNameElement?.Value;
 
-                verboseLogger?.Invoke("7");
-
                 string defaultSubscriptionNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultSubscriptionName(componentIdentity)) : null;
                 if (!string.IsNullOrWhiteSpace(defaultSubscriptionNameSecret)) verboseLogger?.Invoke($"Using secret store for default subscription name for component {componentIdentity}");
                 component.DefaultSubscriptionName = defaultSubscriptionNameSecret ?? defaultSubscriptionNameElement?.Value;
 
-                verboseLogger?.Invoke("8");
-
                 string defaultBrokeredMessageQueueNameSecret = applicationSecretStore != null ? await applicationSecretStore.GetAsync(nameProvider.DefaultBrokeredMessageQueueName(componentIdentity)) : null;
                 if (!string.IsNullOrWhiteSpace(defaultBrokeredMessageQueueNameSecret)) verboseLogger?.Invoke($"Using secret store for default brokered message queue name for component {componentIdentity}");
                 component.DefaultBrokeredMessageQueueName = defaultBrokeredMessageQueueNameSecret ?? defaultBrokeredMessageQueueNameElement?.Value;
-
-                verboseLogger?.Invoke("9");
 
                 component.TableData = defaultTableData?.Value;
                 component.Uploads = element.Elements("upload").Select(x => x.Value).ToList();

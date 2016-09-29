@@ -24,7 +24,7 @@ namespace AccidentalFish.ApplicationSupport.Powershell
     /// Roadmap a future version to account for this and better support for VSTS.
     /// </summary>
     [Cmdlet(VerbsCommon.New, "ApplicationResources")]
-    public class NewApplicationResources : AsyncPSCmdlet
+    public class NewApplicationResources : AsyncPSCmdlet 
     {
         [Parameter(HelpMessage = "The application configuration file", Mandatory = true)]
         public string Configuration { get; set; }
@@ -52,14 +52,14 @@ namespace AccidentalFish.ApplicationSupport.Powershell
                 throw new InvalidOperationException("Configuration file does not exist");
             }
 
-            IConfiguration secretStore = null;
+            IAsyncConfiguration secretStore = null;
             bool useKeyVault = !string.IsNullOrWhiteSpace(KeyVaultClientId) && !string.IsNullOrWhiteSpace(KeyVaultClientKey) && !string.IsNullOrWhiteSpace(KeyVaultUri);
             KeyVault keyVault = new KeyVault(KeyVaultClientId, KeyVaultClientKey, KeyVaultUri, true);
             KeyVaultConfigurationKeyEncoder keyEncoder = new KeyVaultConfigurationKeyEncoder();
 
             if (useKeyVault)
             {
-                secretStore = new KeyVaultConfiguration(
+                secretStore = new AsyncKeyVaultConfiguration(
                     keyVault,
                     keyEncoder,
                     null);
