@@ -118,5 +118,6 @@ AccidentalFish.Operations.Web/App_Data
 
 *.nupkg
 nuget-powershell
+nuget-cmdline
 
 Help

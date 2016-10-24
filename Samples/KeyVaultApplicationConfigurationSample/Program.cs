@@ -3,11 +3,7 @@ using System.Configuration;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure;
-using AccidentalFish.ApplicationSupport.Azure.Configuration;
 using AccidentalFish.ApplicationSupport.Core;
-using AccidentalFish.ApplicationSupport.Core.Components;
-using AccidentalFish.ApplicationSupport.Core.Configuration;
-using AccidentalFish.ApplicationSupport.Core.Queues;
 using AccidentalFish.ApplicationSupport.DependencyResolver;
 using AccidentalFish.ApplicationSupport.Unity;
 using Microsoft.Practices.Unity;
@@ -23,34 +19,28 @@ namespace KeyVaultApplicationConfigurationSample
 
     class Program
     {
-        private static readonly IComponentIdentity SampleComponent = new ComponentIdentity("accidentalfish.samples.topicsandsubscriptions.processor");
-
         static void Main(string[] args)
         {
-            IUnityContainer container = new UnityContainer();
-            IDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
-
-            string clientId = ConfigurationManager.AppSettings["keyVaultClientId"];
-            string clientSecret = ConfigurationManager.AppSettings["keyVaultClientSecret"];
-            string vaultUri = ConfigurationManager.AppSettings["keyVaultUri"];
-
-            resolver
-                .UseCore()
-                .UseAzure()
-                .UseKeyVaultApplicationConfiguration(clientId, clientSecret, vaultUri);
-
-            IKeyVaultConfiguration configuration = (IKeyVaultConfiguration)resolver.Resolve<IConfiguration>();
-            configuration.Preload().Wait();
-
-            IApplicationResourceFactory applicationResourceFactory = resolver.Resolve<IApplicationResourceFactory>();
-            IAsynchronousTopic<MyMessage> topic = applicationResourceFactory.GetAsyncTopic<MyMessage>(SampleComponent);
-            topic.Send(new MyMessage {SaySomething = "Hello World"});
-            
-            IAsynchronousSubscription<MyMessage> subscription = applicationResourceFactory.GetAsyncSubscription<MyMessage>(SampleComponent);
-            subscription.RecieveAsync(msg =>
+            // don't do this in a production app - use something like Stephen Cleary's AsyncContext
+            Task.Run(async () =>
             {
-                return Task.FromResult(msg != null);
-            });
+                IUnityContainer container = new UnityContainer();
+                IDependencyResolver resolver = new UnityApplicationFrameworkDependencyResolver(container);
+
+                string clientId = ConfigurationManager.AppSettings["keyVaultClientId"];
+                string clientSecret = ConfigurationManager.AppSettings["keyVaultClientSecret"];
+                string vaultUri = ConfigurationManager.AppSettings["keyVaultUri"];
+
+                resolver
+                    .UseCore()
+                    .UseAzure()
+                    .UseAsyncKeyVaultApplicationConfiguration(clientId, clientSecret, vaultUri);
+                resolver.Register<ISampleWorker, SampleWorker>();
+
+                ISampleWorker worker = resolver.Resolve<ISampleWorker>();
+                await worker.Post();
+                await worker.Read();
+            }).Wait();
             
             Console.ReadKey();
         }

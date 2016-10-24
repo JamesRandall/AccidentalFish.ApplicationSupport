@@ -27,10 +27,12 @@ Foreach-Object {
 }
 
 Set-ApplicationConfiguration -Configuration $configuration -Target $appconfig -Settings $settings
-Set-KeyVaultSecrets -Configuration $configuration -Settings $settings -KeyVaultClientId YOURCLIENTID -KeyVaultClientKey YOURCLIENTSECRET -KeyVaultUri https://AfAppSupportVault.vault.azure.net
 
-# Create resources using the key vault by supplying the build server settings file (has no info in it)
-New-ApplicationResources -Verbose -CheckForMissingSettings $false -Configuration $configuration -Settings $buildServerSettings -KeyVaultClientId YOURCLIENTID -KeyVaultClientKey YOURCLIENTSECRET -KeyVaultUri https://AfAppSupportVault.vault.azure.net
+# Set the key vault secrets from the secrets file
+..\..\Source\CmdLine\SetKeyVaultSecrets\bin\Debug\SetKeyVaultSecrets.exe -c $configuration -s $settings -i your-kv-clientid -k your-kv-client-secret -u your-keyvault-url -v
+
+# Create resources using the key vault by supplying the build server settings file (has no info in it) and using the key vault for the secret settings
+..\..\Source\CmdLine\NewApplicationResources\bin\Debug\NewApplicationResources.exe -c $configuration -s $buildServerSettings -i your-kv-clientid -k your-kv-client-secret -u your-keyvault-url -v
 
 # Detach the event handler (not detaching can lead to stack overflow issues when closing PS)
 [System.AppDomain]::CurrentDomain.remove_AssemblyResolve($onAssemblyResolveEventHandler)

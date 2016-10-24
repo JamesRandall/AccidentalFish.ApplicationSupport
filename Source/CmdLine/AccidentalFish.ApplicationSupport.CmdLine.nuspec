@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>AccidentalFish.ApplicationSupport.Powershell</id>
+    <id>AccidentalFish.ApplicationSupport.CmdLine</id>
     <version>5.0.0</version>
-    <title>AccidentalFish Application Support Powershell Cmdlets</title>
+    <title>AccidentalFish Application Support Command Line Tools</title>
     <authors>James Randall</authors>
     <owners>James Randall</owners>
     <licenseUrl>https://raw.githubusercontent.com/JamesRandall/AccidentalFish.ApplicationSupport/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/JamesRandall/AccidentalFish.ApplicationSupport</projectUrl>
     <iconUrl>http://www.accidentalfish.com/nugetidentity.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Powershell cmdlets for application configuration and resource creation.</description>
-    <releaseNotes>See v3.9.0.md for release details</releaseNotes>
-    <copyright>Copyright 2015 Accidental Fish Ltd.</copyright>
+    <description>Windows command line tools for application configuration and resource creation.</description>
+    <releaseNotes>See v5.0.0.md for release details</releaseNotes>
+    <copyright>Copyright 2016 Accidental Fish Ltd.</copyright>
     <tags>azure paas application framework table sql queue deployment configuration powershell cmdlet</tags>
   </metadata>
 </package>

@@ -8,6 +8,10 @@ if (Test-Path -Path nuget-powershell)
 {
 	rmdir nuget-powershell -Recurse
 }
+if (Test-Path -Path nuget-cmdline) 
+{
+	rmdir nuget-cmdline -Recurse
+}
 rm *.nupkg
 
 mkdir nuget-powershell
@@ -17,6 +21,16 @@ cp .\Source\AccidentalFish.ApplicationSupport.Powershell\bin\Debug\*.dll nuget-p
 cp package-tools-init.ps1 nuget-powershell\tools\init.ps1
 cp .\Source\AccidentalFish.ApplicationSupport.Powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec nuget-powershell
 .\nuget pack .\nuget-powershell\AccidentalFish.ApplicationSupport.Powershell.nuspec
+
+mkdir nuget-cmdline
+mkdir nuget-cmdline\tools
+mkdir nuget-cmdline\tools\net45
+cp .\Source\CmdLine\NewApplicationResources\bin\Debug\*.dll nuget-cmdline\tools\net45
+cp .\Source\CmdLine\NewApplicationResources\bin\Debug\*.exe nuget-cmdline\tools\net45
+cp .\Source\CmdLine\SetKeyVaultSecrets\bin\Debug\*.dll nuget-cmdline\tools\net45
+cp .\Source\CmdLine\SetKeyVaultSecrets\bin\Debug\*.exe nuget-cmdline\tools\net45
+cp .\Source\CmdLine\AccidentalFish.ApplicationSupport.CmdLine.nuspec nuget-cmdline
+.\nuget pack .\nuget-cmdline\AccidentalFish.ApplicationSupport.CmdLine.nuspec
 
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.DependencyResolver\AccidentalFish.ApplicationSupport.DependencyResolver.csproj
 .\nuget pack .\Source\AccidentalFish.ApplicationSupport.Core\AccidentalFish.ApplicationSupport.Core.csproj -IncludeReferencedProjects

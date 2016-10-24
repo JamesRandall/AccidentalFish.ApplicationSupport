@@ -90,7 +90,7 @@ namespace AccidentalFish.ApplicationSupport.Azure
             {
                 existingConfiguration = dependencyResolver.Resolve<IAsyncConfiguration>();
             }
-            IAsyncKeyVaultConfiguration keyVaultConfiguration = new AsyncKeyVaultConfiguration(
+            IAsyncConfiguration keyVaultConfiguration = new AsyncKeyVaultConfiguration(
                 new KeyVault.Implementation.KeyVault(clientId, clientSecret, vaultUri, checkIfKeyVaultKeyExistsBeforeGet),
                 dependencyResolver.Resolve<IKeyVaultConfigurationKeyEncoder>(),
                 cachePolicy,
