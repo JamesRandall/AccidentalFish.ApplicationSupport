@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AccidentalFish.ApplicationSupport.Azure.KeyVault;
 using AccidentalFish.ApplicationSupport.Core.Configuration;
 using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Models;
 
 namespace AccidentalFish.ApplicationSupport.Azure.Configuration
 {
@@ -64,8 +65,8 @@ namespace AccidentalFish.ApplicationSupport.Azure.Configuration
                     }
                     catch (AggregateException ex)
                     {
-                        KeyVaultClientException kex = ex.InnerExceptions.FirstOrDefault() as KeyVaultClientException;
-                        if (kex != null && kex.Status == HttpStatusCode.NotFound)
+                        KeyVaultErrorException kex = ex.InnerExceptions.FirstOrDefault() as KeyVaultErrorException;
+                        if (kex != null && kex.Response.StatusCode == HttpStatusCode.NotFound)
                         {
                             value = null;
                         }

@@ -183,7 +183,7 @@ namespace NewApplicationResources
                                     uploadFilename);
                                 CloudBlockBlob blob =
                                     blobContainer.GetBlockBlobReference(Path.GetFileName(uploadFilename));
-                                blob.UploadFromFile(fullUploadFilename, FileMode.Open);
+                                blob.UploadFromFile(fullUploadFilename);
                                 WriteVerbose($"Uploading file {uploadFilename} to blob container {component.DefaultBlobContainerName}");
                             }
                         }

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AccidentalFish.ApplicationSupport.CmdLine</id>
-    <version>5.0.0</version>
+    <version>6.0.0</version>
     <title>AccidentalFish Application Support Command Line Tools</title>
     <authors>James Randall</authors>
     <owners>James Randall</owners>

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Models;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.Rest.Azure;
 
 namespace AccidentalFish.ApplicationSupport.Azure.KeyVault.Implementation
 {
@@ -41,12 +44,12 @@ namespace AccidentalFish.ApplicationSupport.Azure.KeyVault.Implementation
                         return null;
                     }
                 }
-                Secret secret = await _keyVaultClient.GetSecretAsync(_vaultUri, key);
+                SecretBundle secret = await _keyVaultClient.GetSecretAsync(_vaultUri, key);
                 return secret.Value;
             }
-            catch (KeyVaultClientException kex)
-            {
-                if (kex.Error.Code == "SecretNotFound")
+            catch (KeyVaultErrorException kex)
+            {                
+                if (kex.Response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return null;
                 }
@@ -57,13 +60,13 @@ namespace AccidentalFish.ApplicationSupport.Azure.KeyVault.Implementation
         public async Task<IReadOnlyCollection<string>> GetSecretKeysAsync()
         {
             List<string> results = new List<string>();
-            ListSecretsResponseMessage response = await _keyVaultClient.GetSecretsAsync(_vaultUri);
-            results.AddRange(response.Value.Select(x => x.Identifier.Name));
+            IPage<SecretItem> response = await _keyVaultClient.GetSecretsAsync(_vaultUri);
+            results.AddRange(response.Select(x => x.Identifier.Name));
 
-            while (!string.IsNullOrWhiteSpace(response.NextLink))
+            while (!string.IsNullOrWhiteSpace(response.NextPageLink))
             {
-                response = await _keyVaultClient.GetSecretsNextAsync(response.NextLink);
-                results.AddRange(response.Value.Select(x => x.Identifier.Name));
+                response = await _keyVaultClient.GetSecretsNextAsync(response.NextPageLink);
+                results.AddRange(response.Select(x => x.Identifier.Name));
             } 
             return results;
         }
