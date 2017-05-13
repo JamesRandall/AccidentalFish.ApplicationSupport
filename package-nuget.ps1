@@ -54,7 +54,7 @@ if ($pushLocal)
 
 if ($pushNuget)
 {
-	.\nuget push *.nupkg
+	.\nuget push *.nupkg -source nuget.org
 }
 
 if ($cleanup)
